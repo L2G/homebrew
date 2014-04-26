@@ -15,6 +15,8 @@ HOMEBREW_LIBRARY_PATH = Pathname.new(__FILE__).realpath.dirname.parent.join("Lib
 $:.unshift(HOMEBREW_LIBRARY_PATH.to_s)
 require 'global'
 
+include R18n::Helpers
+
 if ARGV.help?
   require 'cmd/help'
   puts ARGV.usage
@@ -23,7 +25,7 @@ elsif ARGV.version?
   puts HOMEBREW_VERSION
   exit 0
 elsif ARGV.first == '-v'
-  puts "Homebrew #{HOMEBREW_VERSION}"
+  puts t.brew.homebrew_version(HOMEBREW_VERSION)
   # Shift the -v to the end of the parameter list
   ARGV << ARGV.shift
   # If no other arguments, just quit here.
@@ -34,31 +36,20 @@ end
 # many other things will hang
 # Note that this bug was fixed in 10.9
 if OS.mac? && MacOS.version < :mavericks && MacOS.active_developer_dir == "/"
-  odie <<-EOS.undent
-  Your xcode-select path is currently set to '/'.
-  This causes the `xcrun` tool to hang, and can render Homebrew unusable.
-  If you are using Xcode, you should:
-    sudo xcode-select -switch /Applications/Xcode.app
-  Otherwise, you should:
-    sudo rm -rf /usr/share/xcode-select
-  EOS
+  odie t.brew.bad_xcode_path
 end
 
 case HOMEBREW_PREFIX.to_s when '/', '/usr'
   # it may work, but I only see pain this route and don't want to support it
-  abort "Cowardly refusing to continue at this prefix: #{HOMEBREW_PREFIX}"
+  abort t.brew.refuse_root_or_usr(HOMEBREW_PREFIX)
 end
 if OS.mac? and MacOS.version < "10.5"
-  abort <<-EOABORT.undent
-    Homebrew requires Leopard or higher. For Tiger support, see:
-    https://github.com/mistydemeo/tigerbrew
-  EOABORT
+  abort t.brew.no_tiger_support
 end
 
 # Many Pathname operations use getwd when they shouldn't, and then throw
 # odd exceptions. Reduce our support burden by showing a user-friendly error.
-Dir.getwd rescue abort "The current working directory doesn't exist, cannot proceed."
-
+Dir.getwd rescue abort t.brew.no_working_dir
 
 def require? path
   require path
@@ -94,7 +85,7 @@ begin
 
   if sudo_check.include? cmd
     if Process.uid.zero? and not File.stat(HOMEBREW_BREW_FILE).uid.zero?
-      raise "Cowardly refusing to `sudo brew #{cmd}`\n#{SUDO_BAD_ERRMSG}"
+      raise t.brew.bad_sudo(cmd) + "\n" + SUDO_BAD_ERRMSG
     end
   end
 
@@ -111,16 +102,16 @@ begin
   elsif require? which("brew-#{cmd}.rb")
     exit Homebrew.failed? ? 1 : 0
   else
-    onoe "Unknown command: #{cmd}"
+    onoe t.brew.unknown_command(cmd)
     exit 1
   end
 
 rescue FormulaUnspecifiedError
-  abort "This command requires a formula argument"
+  abort t.brew.formula_unspecified
 rescue KegUnspecifiedError
-  abort "This command requires a keg argument"
+  abort t.brew.keg_unspecified
 rescue UsageError
-  onoe "Invalid usage"
+  onoe t.brew.invalid_usage
   abort ARGV.usage
 rescue SystemExit
   puts "Kernel.exit" if ARGV.verbose?
@@ -138,7 +129,7 @@ rescue RuntimeError, SystemCallError => e
   exit 1
 rescue Exception => e
   onoe e
-  puts "#{Tty.white}Please report this bug:"
+  puts Tty.white + t.brew.please_report_bug
   puts "    #{Tty.em}#{ISSUES_URL}#{Tty.reset}"
   puts e.backtrace
   exit 1
