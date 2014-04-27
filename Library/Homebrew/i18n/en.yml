@@ -1,4 +1,5 @@
 ---
+# `brew` command
 brew:
   bad_sudo: "Cowardly refusing to `sudo brew %1`"
   bad_xcode_path: |
