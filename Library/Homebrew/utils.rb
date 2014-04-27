@@ -53,12 +53,12 @@ def oh1 title
 end
 
 def opoo warning
-  STDERR.puts "#{Tty.red}Warning#{Tty.reset}: #{warning}"
+  STDERR.puts "#{Tty.red}#{t.utils.warning}#{Tty.reset}: #{warning}"
 end
 
 def onoe error
   lines = error.to_s.split("\n")
-  STDERR.puts "#{Tty.red}Error#{Tty.reset}: #{lines.shift}"
+  STDERR.puts "#{Tty.red}#{t.utils.error}#{Tty.reset}: #{lines.shift}"
   STDERR.puts lines unless lines.empty?
 end
 
@@ -73,9 +73,8 @@ def odie error
 end
 
 def pretty_duration s
-  return "2 seconds" if s < 3 # avoids the plural problem ;)
-  return "#{s.to_i} seconds" if s < 120
-  return "%.1f minutes" % (s/60)
+  return t.utils.seconds(s) if s < 120
+  return t.utils.minutes(sprintf('%.1f', s/60))
 end
 
 def interactive_shell f=nil
@@ -87,7 +86,7 @@ def interactive_shell f=nil
   Process.wait fork { exec ENV['SHELL'] }
 
   unless $?.success?
-    puts "Aborting due to non-zero exit status"
+    puts t.utils.interactive_shell_abort
     exit $?
   end
 end
@@ -118,7 +117,7 @@ end
 def safe_system cmd, *args
   unless Homebrew.system cmd, *args
     args = args.map{ |arg| arg.to_s.gsub " ", "\\ " } * " "
-    raise ErrorDuringExecution, "Failure while executing: #{cmd} #{args}"
+    raise ErrorDuringExecution, t.utils.failure_while_executing("#{cmd} #{args}")
   end
 end
 
@@ -134,7 +133,7 @@ end
 
 def curl *args
   curl = Pathname.new '/usr/bin/curl'
-  raise "#{curl} is not executable" unless curl.exist? and curl.executable?
+  raise t.utils.not_executable(curl) unless curl.exist? and curl.executable?
 
   flags = HOMEBREW_CURL_ARGS
   flags = flags.delete("#") if ARGV.verbose?
@@ -222,7 +221,7 @@ end
 
 def ignore_interrupts(opt = nil)
   std_trap = trap("INT") do
-    puts "One sec, just cleaning up" unless opt == :quietly
+    puts t.utils.cleaning_up unless opt == :quietly
   end
   yield
 ensure
@@ -249,7 +248,7 @@ def paths
     begin
       File.expand_path(p).chomp('/')
     rescue ArgumentError
-      onoe "The following PATH component is invalid: #{p}"
+      onoe t.utils.path_component_invalid(p)
     end
   end.uniq.compact
 end
@@ -262,30 +261,21 @@ module GitHub extend self
 
   class RateLimitExceededError < Error
     def initialize(reset, error)
-      super <<-EOS.undent
-        GitHub #{error}
-        Try again in #{pretty_ratelimit_reset(reset)}, or create an API token:
-          https://github.com/settings/applications
-        and then set HOMEBREW_GITHUB_API_TOKEN.
-        EOS
+      super t.utils.rate_limit_exceeded(error, pretty_ratelimit_reset(reset))
     end
 
     def pretty_ratelimit_reset(reset)
-      if (seconds = Time.at(reset) - Time.now) > 180
-        "%d minutes %d seconds" % [seconds / 60, seconds % 60]
+      if (seconds = Time.at(reset) - Time.now) > 60
+        t.utils.rate_limit_time_m_s(t.utils.minutes(seconds / 60), t.utils.seconds(seconds % 60))
       else
-        "#{seconds} seconds"
+        t.utils.seconds(seconds)
       end
     end
   end
 
   class AuthenticationFailedError < Error
     def initialize(error)
-      super <<-EOS.undent
-        GitHub #{error}
-        HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
-          https://github.com/settings/applications
-        EOS
+      super t.utils.authentication_failed(error)
     end
   end
 
@@ -307,9 +297,9 @@ module GitHub extend self
   rescue OpenURI::HTTPError => e
     handle_api_error(e)
   rescue SocketError, OpenSSL::SSL::SSLError => e
-    raise Error, "Failed to connect to: #{url}\n#{e.message}", e.backtrace
+    raise Error, "#{t.utils.failed_to_connect(url)}\n#{e.message}", e.backtrace
   rescue Utils::JSON::Error => e
-    raise Error, "Failed to parse JSON response\n#{e.message}", e.backtrace
+    raise Error, "#{t.utils.failed_to_parse_json}\n#{e.message}", e.backtrace
   end
 
   def handle_api_error(e)
@@ -365,22 +355,22 @@ module GitHub extend self
 
   def print_pull_requests_matching(query)
     return [] if ENV['HOMEBREW_NO_GITHUB_API']
-    puts "Searching pull requests..."
+    puts t.utils.searching_pull_requests
 
     open_or_closed_prs = issues_matching(query, :type => "pr")
 
     open_prs = open_or_closed_prs.select {|i| i["state"] == "open" }
     if open_prs.any?
-      puts "Open pull requests:"
+      puts t.utils.open_pull_requests
       prs = open_prs
     elsif open_or_closed_prs.any?
-      puts "Closed pull requests:"
+      puts t.utils.closed_pull_requests
       prs = open_or_closed_prs
     else
       return
     end
 
-    prs.each { |i| puts "#{i["title"]} (#{i["html_url"]})" }
+    prs.each { |i| puts t.utils.pull_request_with_url(i["title"], i["html_url"]) }
   end
 
   def private_repo?(user, repo)

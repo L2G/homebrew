@@ -21,6 +21,43 @@ brew:
   refuse_root_or_usr: "Cowardly refusing to continue at this prefix: %1"
   unknown_command: "Unknown command: %1"
 
+# utils.rb
+utils:
+  authentication_failed: |
+    GitHub %1
+    HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
+      https://github.com/settings/applications
+  cleaning_up: "One sec, just cleaning up"
+  closed_pull_requests: "Closed pull requests:"
+  # Indicates errors that are logged on-screen
+  error: "Error"
+  failed_to_connect: "Failed to connect to: %1"
+  failed_to_parse_json: "Failed to parse JSON response"
+  failure_while_executing: "Failure while executing: %1"
+  interactive_shell_abort: "Aborting due to non-zero exit status"
+  minutes: !!pl
+    1: "%1 minute"
+    n: "%1 minutes"
+  not_executable: "%1 is not executable"
+  open_pull_requests: "Open pull requests:"
+  path_component_invalid: "The following PATH component is invalid: %1"
+  # Used to print pull request titles together with their URLs
+  pull_request_with_url: "%1 (%2)"
+  rate_limit_exceeded: |
+    GitHub %1
+    Try again in %2, or create an API token:
+      https://github.com/settings/applications
+    and then set HOMEBREW_GITHUB_API_TOKEN.
+  # For rate limit time message, e.g. "3 minutes 2 seconds"
+  rate_limit_time_m_s: "%1 %2"
+  searching_pull_requests: "Searching pull requests..."
+  seconds: !!pl
+    1: "1 second"
+    n: "%1 seconds"
+  # Indicates warnings that are logged on-screen
+  warning: "Warning"
+
+# Sub-commands of `brew`
 cmd:
 
   # `help` command
