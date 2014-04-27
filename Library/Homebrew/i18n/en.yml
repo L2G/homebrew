@@ -21,6 +21,32 @@ brew:
   refuse_root_or_usr: "Cowardly refusing to continue at this prefix: %1"
   unknown_command: "Unknown command: %1"
 
+# caveats.rb
+caveats:
+  app: |
+    .app bundles were installed.
+    Run `brew linkapps` to symlink these to /Applications.
+  bash_completion: |
+    Bash completion has been installed to:
+      %1
+  plist_load: "To load %1:"
+  plist_login: "To have launchd start %1 at login:"
+  plist_manual: "Or, if you don't want/need launchctl, you can just run:"
+  plist_startup: "To have launchd start %1 at startup:"
+  plist_then_load: "Then to load %1 now:"
+  plist_tmux_warning: "WARNING: launchctl will fail when run under tmux."
+  plist_upgrade: "To reload %1 after an upgrade:"
+  python: |
+    If you need Python to find the installed site-packages:
+      mkdir -p %1
+      echo '%2' > %3
+  python_no_dir: |
+    If you need Python to find the installed site-packages:
+      echo '%1' > %2
+  zsh_completion: |
+    zsh completion has been installed to:
+      %1
+
 # utils.rb
 utils:
   authentication_failed: |

@@ -30,18 +30,14 @@ class Caveats
   end
 
   def bash_completion_caveats
-    if keg and keg.completion_installed? :bash then <<-EOS.undent
-      Bash completion has been installed to:
-        #{HOMEBREW_PREFIX}/etc/bash_completion.d
-      EOS
+    if keg and keg.completion_installed? :bash
+      t.caveats.bash_completion("#{HOMEBREW_PREFIX}/etc/bash_completion.d")
     end
   end
 
   def zsh_completion_caveats
-    if keg and keg.completion_installed? :zsh then <<-EOS.undent
-      zsh completion has been installed to:
-        #{HOMEBREW_PREFIX}/share/zsh/site-functions
-      EOS
+    if keg and keg.completion_installed? :zsh
+      t.caveats.zsh_completion("#{HOMEBREW_PREFIX}/share/zsh/site-functions")
     end
   end
 
@@ -59,19 +55,16 @@ class Caveats
     file = "#{dir}/homebrew.pth"
     file_path = Pathname.new(file).expand_path
     if !file_path.readable? || !file_path.read.include?(site_packages)
-      s = "If you need Python to find the installed site-packages:\n"
-      s += "  mkdir -p #{dir}\n" unless dir_path.exist?
-      s += "  echo '#{site_packages}' > #{file}"
+      if dir_path.exist?
+        s = t.caveats.python(dir, site_packages, file)
+      else
+        s = t.caveats.python_no_dir(site_packages, file)
+      end
     end
   end
 
   def app_caveats
-    if keg and keg.app_installed?
-      <<-EOS.undent
-        .app bundles were installed.
-        Run `brew linkapps` to symlink these to /Applications.
-      EOS
-    end
+    t.caveats.app if keg and keg.app_installed?
   end
 
   def plist_caveats
@@ -90,26 +83,26 @@ class Caveats
       # occurs before the link step of installation
       if (not plist_path.file?) and (not plist_path.symlink?)
         if f.plist_startup
-          s << "To have launchd start #{f.name} at startup:"
+          s << t.caveats.plist_startup(f.name)
           s << "    sudo mkdir -p #{destination}" unless destination_path.directory?
           s << "    sudo cp -fv #{HOMEBREW_PREFIX}/opt/#{f.name}/*.plist #{destination}"
         else
-          s << "To have launchd start #{f.name} at login:"
+          s << t.caveats.plist_login(f.name)
           s << "    mkdir -p #{destination}" unless destination_path.directory?
           s << "    ln -sfv #{HOMEBREW_PREFIX}/opt/#{f.name}/*.plist #{destination}"
         end
-        s << "Then to load #{f.name} now:"
+        s << t.caveats.plist_then_load(f.name)
         if f.plist_startup
           s << "    sudo launchctl load #{plist_link}"
         else
           s << "    launchctl load #{plist_link}"
         end
         if f.plist_manual
-          s << "Or, if you don't want/need launchctl, you can just run:"
+          s << t.caveats.plist_manual
           s << "    #{f.plist_manual}"
         end
       elsif Kernel.system "/bin/launchctl list #{plist_domain} &>/dev/null"
-        s << "To reload #{f.name} after an upgrade:"
+        s << t.caveats.plist_upgrade(f.name)
         if f.plist_startup
           s << "    sudo launchctl unload #{plist_link}"
           s << "    sudo cp -fv #{HOMEBREW_PREFIX}/opt/#{f.name}/*.plist #{destination}"
@@ -119,18 +112,18 @@ class Caveats
           s << "    launchctl load #{plist_link}"
         end
       else
-        s << "To load #{f.name}:"
+        s << t.caveats.plist_load(f.name)
         if f.plist_startup
           s << "    sudo launchctl load #{plist_link}"
         else
           s << "    launchctl load #{plist_link}"
         end
         if f.plist_manual
-          s << "Or, if you don't want/need launchctl, you can just run:"
+          s << t.caveats.plist_manual
           s << "    #{f.plist_manual}"
         end
       end
-      s << '' << "WARNING: launchctl will fail when run under tmux." if ENV['TMUX']
+      s << '' << t.caveats.plist_tmux_warning if ENV['TMUX']
     end
     s.join("\n") unless s.empty?
   end
