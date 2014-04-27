@@ -334,7 +334,7 @@ cmd:
       Leaving kegs unlinked can lead to build-trouble and cause brews that depend on
       those kegs to fail to run properly once built. Run `brew link` on these:
 
-          %1
+              %1
     unsupported_ruby: |
       Ruby version %1 is unsupported.
       Homebrew is developed and tested on Ruby 1.8.x, and may not work correctly
