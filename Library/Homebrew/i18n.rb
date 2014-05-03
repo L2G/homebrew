@@ -5,3 +5,6 @@ require 'r18n-desktop'
 
 # Locale info is in Library/Homebrew/i18n
 R18n.from_env(File.expand_path('i18n', File.dirname(__FILE__)))
+
+# Sets up t and l methods
+include R18n::Helpers

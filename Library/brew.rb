@@ -15,8 +15,6 @@ HOMEBREW_LIBRARY_PATH = Pathname.new(__FILE__).realpath.dirname.parent.join("Lib
 $:.unshift(HOMEBREW_LIBRARY_PATH.to_s)
 require 'global'
 
-include R18n::Helpers
-
 if ARGV.help?
   require 'cmd/help'
   puts ARGV.usage
