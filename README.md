@@ -1,3 +1,17 @@
+About i18nbrew
+==============
+
+i18nbrew is an experimental fork of [Homebrew][home] to facilitate localizing it
+for all human languages.
+
+It is _highly unstable_ at this time, but if you are interested in experimenting
+with it, please email [Larry Gilbert](mailto:larry+i18nbrew@l2g.to).
+
+The original README for Homebrew is included below.
+
+----
+
+
 Homebrew
 ========
 Features, usage and installation instructions are [summarized on the homepage][home].
