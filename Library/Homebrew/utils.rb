@@ -73,8 +73,8 @@ def odie error
 end
 
 def pretty_duration s
-  return t.utils.seconds(s) if s < 120
-  return t.utils.minutes(sprintf('%.1f', s/60))
+  return t.utils.seconds(s.to_i) if s < 120
+  return t.utils.minutes((s/6).to_i/10.0)
 end
 
 def interactive_shell f=nil
