@@ -48,6 +48,49 @@ caveats:
     zsh completion has been installed to:
       %1
 #==============================================================================
+# extend/
+extend:
+  #----------------------------------------------------------------------------
+  # extend/ARGV.rb
+  argv:
+    multiple_kegs: |
+      Multiple kegs installed to %1
+      However we don''t know which one you refer to.
+      Please delete (with rm -rf!) all but one and then try again.
+      Sorry, we know this is lame.
+  #----------------------------------------------------------------------------
+  # extend/ENV
+  env:
+    #----------------------------------------------------------------------------
+    # extend/ENV/shared
+    shared:
+      alternative_fc: "Building with an alternative Fortran compiler"
+      can_change_fc: "This may be changed by setting the FC environment variable."
+      gcc_formula_not_found: |
+        Homebrew GCC requested, but formula %1 not found!
+        You may need to: brew tap homebrew/versions
+      gcc_not_installed: |
+        The requested Homebrew GCC, %1, was not installed.
+        You must:
+          brew tap homebrew/versions
+          brew install %1
+      gcc_not_installed_brew: |
+        The Homebrew GCC was not installed.
+        You must:
+          brew install gcc
+      gcc42_not_found: "gcc-4.2 not found!"
+      gfortran_homebrew: "Using Homebrew-provided fortran compiler."
+      gfortran_other: "Using a fortran compiler found at %1."
+      invalid_cc: "Invalid value for --cc: %1"
+      no_fc_flags: |
+        No Fortran optimization information was provided.  You may want to consider
+        setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
+        `brew install` if your compiler is compatible with GCC.
+
+        If you like the default optimization level of your compiler, ignore this
+        warning.
+      unsupported: "This is unsupported."
+#==============================================================================
 # utils.rb
 utils:
   authentication_failed: |

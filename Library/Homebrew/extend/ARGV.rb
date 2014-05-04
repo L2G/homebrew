@@ -41,12 +41,7 @@ module HomebrewArgvExtension
     end
   rescue FormulaUnavailableError
     if rack
-      raise <<-EOS.undent
-        Multiple kegs installed to #{rack}
-        However we don't know which one you refer to.
-        Please delete (with rm -rf!) all but one and then try again.
-        Sorry, we know this is lame.
-      EOS
+      raise t.extend.argv.multiple_kegs(rack)
     else
       raise
     end

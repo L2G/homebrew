@@ -94,7 +94,7 @@ module SharedEnvExtension
       COMPILER_SYMBOL_MAP.fetch(cc) do |other|
         if other =~ GNU_GCC_REGEXP then other
         else
-          raise "Invalid value for --cc: #{other}"
+          raise t.extend.env.shared.invalid_cc(other)
         end
       end
     elsif ARGV.include? '--use-gcc'
@@ -103,7 +103,7 @@ module SharedEnvExtension
       if MacOS.locate('gcc-4.2') || gcc_installed
         :gcc
       else
-        raise "gcc-4.2 not found!"
+        raise t.extend.env.shared.gcc42_not_found
       end
     elsif ARGV.include? '--use-llvm'
       :llvm
@@ -144,31 +144,24 @@ module SharedEnvExtension
     flags = []
 
     if fc
-      ohai "Building with an alternative Fortran compiler"
-      puts "This is unsupported."
+      ohai t.extend.env.shared.alternative_fc
+      puts t.extend.env.shared.unsupported
       self['F77'] ||= fc
 
       if ARGV.include? '--default-fortran-flags'
         flags = FC_FLAG_VARS.reject { |key| self[key] }
       elsif values_at(*FC_FLAG_VARS).compact.empty?
-        opoo <<-EOS.undent
-          No Fortran optimization information was provided.  You may want to consider
-          setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
-          `brew install` if your compiler is compatible with GCC.
-
-          If you like the default optimization level of your compiler, ignore this
-          warning.
-        EOS
+        opoo t.extend.env.shared.no_fc_flags
       end
 
     else
       if (gfortran = which('gfortran', (HOMEBREW_PREFIX/'bin').to_s))
-        ohai "Using Homebrew-provided fortran compiler."
+        ohai t.extend.env.shared.gfortran_homebrew
       elsif (gfortran = which('gfortran', ORIGINAL_PATHS.join(File::PATH_SEPARATOR)))
-        ohai "Using a fortran compiler found at #{gfortran}."
+        ohai t.extend.env.shared.gfortran_other(gfortran)
       end
       if gfortran
-        puts "This may be changed by setting the FC environment variable."
+        puts t.extend.env.shared.can_change_fc
         self['FC'] = self['F77'] = gfortran
         flags = FC_FLAG_VARS
       end
@@ -213,26 +206,14 @@ module SharedEnvExtension
       gcc_formula = gcc_version_formula(gcc)
       if gcc_formula.name == "gcc"
         return if gcc_formula.opt_prefix.exist?
-        raise <<-EOS.undent
-        The Homebrew GCC was not installed.
-        You must:
-          brew install gcc
-        EOS
+        raise t.extend.env.shared.gcc_not_installed_brew
       end
 
       if !gcc_formula.opt_prefix.exist?
-        raise <<-EOS.undent
-        The requested Homebrew GCC, #{gcc_name}, was not installed.
-        You must:
-          brew tap homebrew/versions
-          brew install #{gcc_name}
-        EOS
+        raise t.extend.env.shared.gcc_not_installed(gcc_name)
       end
     rescue FormulaUnavailableError
-      raise <<-EOS.undent
-      Homebrew GCC requested, but formula #{gcc_name} not found!
-      You may need to: brew tap homebrew/versions
-      EOS
+      raise t.extend.env.shared.gcc_formula_not_found(gcc_name)
     end
   end
 end
