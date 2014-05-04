@@ -1,4 +1,5 @@
 ---
+#==============================================================================
 # `brew` command
 brew:
   bad_sudo: "Cowardly refusing to `sudo brew %1`"
@@ -20,7 +21,7 @@ brew:
   please_report_bug: "Please report this bug:"
   refuse_root_or_usr: "Cowardly refusing to continue at this prefix: %1"
   unknown_command: "Unknown command: %1"
-
+#==============================================================================
 # caveats.rb
 caveats:
   app: |
@@ -46,7 +47,7 @@ caveats:
   zsh_completion: |
     zsh completion has been installed to:
       %1
-
+#==============================================================================
 # utils.rb
 utils:
   authentication_failed: |
@@ -82,10 +83,10 @@ utils:
     n: "%1 seconds"
   # Indicates warnings that are logged on-screen
   warning: "Warning"
-
+#==============================================================================
 # Sub-commands of `brew`
 cmd:
-
+  #------------------------------------------------------------------------------
   # `help` command
   #
   # NOTE Keep the lenth of vanilla --help less than 25 lines!
@@ -118,7 +119,7 @@ cmd:
     Further help:
       man brew
       brew home
-
+  #------------------------------------------------------------------------------
   # `doctor` command
   doctor:
     autoconf_xcode: |
@@ -251,6 +252,10 @@ cmd:
           brew install %1
 
       Run `brew missing` for more details.
+    # Packages mentioned by name
+    name:
+      macfuse: "MacFuse"
+      os_x_10_8_2_supplemental: "OS X 10.8.2 Supplemental Update"
     # Keep non_homebrew_gettext within 72 columns
     # <---------------------------------------------------------------------->
     non_homebrew_gettext: |
@@ -505,8 +510,4 @@ cmd:
       Your XQuartz (%1) is outdated
       Please install XQuartz %2:
         https://xquartz.macosforge.org
-
-    # Packages mentioned by name
-    name:
-      macfuse: "MacFuse"
-      os_x_10_8_2_supplemental: "OS X 10.8.2 Supplemental Update"
+#==============================================================================
