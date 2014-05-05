@@ -15,7 +15,7 @@ module FileUtils extend self
     # prefix if they need to.
 
     tempd = with_system_path { `mktemp -d #{HOMEBREW_TEMP}/#{prefix}-XXXX` }.chuzzle
-    raise t.extend.fileutils.sandbox_failed if tempd.nil?
+    raise t[:extend].fileutils.sandbox_failed if tempd.nil?
     prevd = pwd
     cd tempd
     yield

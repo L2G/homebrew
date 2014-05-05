@@ -17,13 +17,13 @@ class Pathname
         src.resource.stage { install(*src.files) }
       when Array
         if src.empty?
-          opoo t.extend.pathname.tried_to_install_empty_array_to(self)
+          opoo t[:extend].pathname.tried_to_install_empty_array_to(self)
           return
         end
         src.each {|s| install_p(s) }
       when Hash
         if src.empty?
-          opoo t.extend.pathname.tried_to_install_empty_hash_to(self)
+          opoo t[:extend].pathname.tried_to_install_empty_hash_to(self)
           return
         end
         src.each {|s, new_basename| install_p(s, new_basename) }
@@ -48,7 +48,7 @@ class Pathname
     # files one by one, it's likely we will break the symlink by moving what
     # it points to before we move it
     # and also broken symlinks are not the end of the world
-    raise t.extend.pathname.does_not_exist(src) unless File.symlink? src or File.exist? src
+    raise t[:extend].pathname.does_not_exist(src) unless File.symlink? src or File.exist? src
 
     dst = yield(src, dst) if block_given?
 
@@ -90,7 +90,7 @@ class Pathname
   # we assume this pathname object is a file obviously
   alias_method :old_write, :write if method_defined?(:write)
   def write content
-    raise t.extend.pathname.will_not_overwrite(to_s) if exist?
+    raise t[:extend].pathname.will_not_overwrite(to_s) if exist?
     dirname.mkpath
     File.open(self, 'w') {|f| f.write content }
   end
@@ -140,11 +140,11 @@ class Pathname
   end
 
   def cp_path_sub pattern, replacement
-    raise t.extend.pathname.does_not_exist(self) unless self.exist?
+    raise t[:extend].pathname.does_not_exist(self) unless self.exist?
 
     src = self.to_s
     dst = src.sub(pattern, replacement)
-    raise t.extend.pathname.same_file(src, dst) if src == dst
+    raise t[:extend].pathname.same_file(src, dst) if src == dst
 
     dst_path = Pathname.new dst
 
@@ -334,7 +334,7 @@ class Pathname
   def write_exec_script *targets
     targets.flatten!
     if targets.empty?
-      opoo t.extend.pathname.exec_scripts_empty_targets(self)
+      opoo t[:extend].pathname.exec_scripts_empty_targets(self)
       return
     end
     targets.each do |target|
@@ -396,7 +396,7 @@ class Pathname
   def abv
     out=''
     n=`find #{to_s} -type f ! -name .DS_Store | wc -l`.to_i
-    out << t.extend.pathname.files(n)
+    out << t[:extend].pathname.files(n)
     out << `/usr/bin/du -hs #{to_s} | cut -d"\t" -f1`.strip
   end
 

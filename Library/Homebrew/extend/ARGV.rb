@@ -41,7 +41,7 @@ module HomebrewArgvExtension
     end
   rescue FormulaUnavailableError
     if rack
-      raise t.extend.argv.multiple_kegs(rack)
+      raise t[:extend].argv.multiple_kegs(rack)
     else
       raise
     end
