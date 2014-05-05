@@ -8,19 +8,19 @@ class Ffmpeg < Formula
     sha1 'c5f8d103b20cd73d329401d85ced4a014757f8b9'
 
     patch do
-      # fixes an api incompability with latest x265 0.9, to be removed with next ffmpeg 2.2.x+ release
-      url "http://git.videolan.org/?p=ffmpeg.git;a=patch;h=d67dbfa7c195fabce706ca03c439419450f9bd8a"
-      sha1 'f9481393869a8f38912faf935fb584c8e41d5c50'
+      # fixes an api incompability with latest x265 1.0, to be removed with next ffmpeg 2.2.x+ release
+      url "http://git.videolan.org/?p=ffmpeg.git;a=patch;h=96e13c9897501d91f1e2d493eee93a4f897ea462"
+      sha1 'a869377c45692220f7f4c96b3b7b159b14e5047b'
     end
   end
 
   head 'git://git.videolan.org/ffmpeg.git'
 
   bottle do
-    revision 1
-    sha1 "481c5c8f83b914719e633dc5f35e156e1b026d88" => :mavericks
-    sha1 "c0753de98914bd6a2d053b24c2cdb6ea92ac2f9c" => :mountain_lion
-    sha1 "b620f59e56a7b2013d5401456862eaa64321d2ec" => :lion
+    revision 2
+    sha1 "1e87dc5a5f48481f5fcb864262b4f4291d15596c" => :mavericks
+    sha1 "15bd444bcd5e1d6441e9d44a15698d88654875b7" => :mountain_lion
+    sha1 "77ca50cf51b78efa6f5b6f2993ff147b1e360c51" => :lion
   end
 
   option "without-x264", "Disable H.264 encoder"
