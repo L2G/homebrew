@@ -270,7 +270,7 @@ module Stdenv
     elsif compiler =~ /gcc-4\.(8|9)/
       append 'CXX', '-std=c++11'
     else
-      raise "The selected compiler doesn't support C++11: #{compiler}"
+      raise t.extend.env.cxx11_not_supported(compiler)
     end
   end
 

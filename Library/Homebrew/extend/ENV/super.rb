@@ -272,7 +272,7 @@ module Superenv
     elsif self['HOMEBREW_CC'] =~ /gcc-4\.(8|9)/
       append 'HOMEBREW_CCCFG', "x", ''
     else
-      raise "The selected compiler doesn't support C++11: #{self['HOMEBREW_CC']}"
+      raise t.extend.env.cxx11_not_supported(self['HOMEBREW_CC'])
     end
   end
 

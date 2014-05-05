@@ -94,7 +94,7 @@ module SharedEnvExtension
       COMPILER_SYMBOL_MAP.fetch(cc) do |other|
         if other =~ GNU_GCC_REGEXP then other
         else
-          raise t.extend.env.shared.invalid_cc(other)
+          raise t.extend.env.invalid_cc(other)
         end
       end
     elsif ARGV.include? '--use-gcc'
@@ -103,7 +103,7 @@ module SharedEnvExtension
       if MacOS.locate('gcc-4.2') || gcc_installed
         :gcc
       else
-        raise t.extend.env.shared.gcc42_not_found
+        raise t.extend.env.gcc42_not_found
       end
     elsif ARGV.include? '--use-llvm'
       :llvm
@@ -144,24 +144,24 @@ module SharedEnvExtension
     flags = []
 
     if fc
-      ohai t.extend.env.shared.alternative_fc
-      puts t.extend.env.shared.unsupported
+      ohai t.extend.env.alternative_fc
+      puts t.extend.env.unsupported
       self['F77'] ||= fc
 
       if ARGV.include? '--default-fortran-flags'
         flags = FC_FLAG_VARS.reject { |key| self[key] }
       elsif values_at(*FC_FLAG_VARS).compact.empty?
-        opoo t.extend.env.shared.no_fc_flags
+        opoo t.extend.env.no_fc_flags
       end
 
     else
       if (gfortran = which('gfortran', (HOMEBREW_PREFIX/'bin').to_s))
-        ohai t.extend.env.shared.gfortran_homebrew
+        ohai t.extend.env.gfortran_homebrew
       elsif (gfortran = which('gfortran', ORIGINAL_PATHS.join(File::PATH_SEPARATOR)))
-        ohai t.extend.env.shared.gfortran_other(gfortran)
+        ohai t.extend.env.gfortran_other(gfortran)
       end
       if gfortran
-        puts t.extend.env.shared.can_change_fc
+        puts t.extend.env.can_change_fc
         self['FC'] = self['F77'] = gfortran
         flags = FC_FLAG_VARS
       end
@@ -206,14 +206,14 @@ module SharedEnvExtension
       gcc_formula = gcc_version_formula(gcc)
       if gcc_formula.name == "gcc"
         return if gcc_formula.opt_prefix.exist?
-        raise t.extend.env.shared.gcc_not_installed_brew
+        raise t.extend.env.gcc_not_installed_brew
       end
 
       if !gcc_formula.opt_prefix.exist?
-        raise t.extend.env.shared.gcc_not_installed(gcc_name)
+        raise t.extend.env.gcc_not_installed(gcc_name)
       end
     rescue FormulaUnavailableError
-      raise t.extend.env.shared.gcc_formula_not_found(gcc_name)
+      raise t.extend.env.gcc_formula_not_found(gcc_name)
     end
   end
 end

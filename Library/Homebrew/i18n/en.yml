@@ -59,37 +59,52 @@ extend:
       Please delete (with rm -rf!) all but one and then try again.
       Sorry, we know this is lame.
   #----------------------------------------------------------------------------
-  # extend/ENV
+  # extend/ENV*
   env:
-    #----------------------------------------------------------------------------
-    # extend/ENV/shared
-    shared:
-      alternative_fc: "Building with an alternative Fortran compiler"
-      can_change_fc: "This may be changed by setting the FC environment variable."
-      gcc_formula_not_found: |
-        Homebrew GCC requested, but formula %1 not found!
-        You may need to: brew tap homebrew/versions
-      gcc_not_installed: |
-        The requested Homebrew GCC, %1, was not installed.
-        You must:
-          brew tap homebrew/versions
-          brew install %1
-      gcc_not_installed_brew: |
-        The Homebrew GCC was not installed.
-        You must:
-          brew install gcc
-      gcc42_not_found: "gcc-4.2 not found!"
-      gfortran_homebrew: "Using Homebrew-provided fortran compiler."
-      gfortran_other: "Using a fortran compiler found at %1."
-      invalid_cc: "Invalid value for --cc: %1"
-      no_fc_flags: |
-        No Fortran optimization information was provided.  You may want to consider
-        setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
-        `brew install` if your compiler is compatible with GCC.
+    alternative_fc: "Building with an alternative Fortran compiler"
+    can_change_fc: "This may be changed by setting the FC environment variable."
+    cxx11_not_supported: "The selected compiler doesn't support C++11: %1"
+    gcc_formula_not_found: |
+      Homebrew GCC requested, but formula %1 not found!
+      You may need to: brew tap homebrew/versions
+    gcc_not_installed: |
+      The requested Homebrew GCC, %1, was not installed.
+      You must:
+        brew tap homebrew/versions
+        brew install %1
+    gcc_not_installed_brew: |
+      The Homebrew GCC was not installed.
+      You must:
+        brew install gcc
+    gcc42_not_found: "gcc-4.2 not found!"
+    gfortran_homebrew: "Using Homebrew-provided fortran compiler."
+    gfortran_other: "Using a fortran compiler found at %1."
+    invalid_cc: "Invalid value for --cc: %1"
+    no_fc_flags: |
+      No Fortran optimization information was provided.  You may want to consider
+      setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
+      `brew install` if your compiler is compatible with GCC.
 
-        If you like the default optimization level of your compiler, ignore this
-        warning.
-      unsupported: "This is unsupported."
+      If you like the default optimization level of your compiler, ignore this
+      warning.
+    unsupported: "This is unsupported."
+  #----------------------------------------------------------------------------
+  # extend/fileutils.rb
+  fileutils:
+    sandbox_failed: "Failed to create sandbox"
+  #----------------------------------------------------------------------------
+  # extend/pathname.rb
+  pathname:
+    does_not_exist: "%1 does not exist"
+    files: !!pl
+      0: "No files, "
+      1: "%1 file, "
+      n: "%1 files, "
+    exec_scripts_empty_targets: "tried to write exec scripts to %1 for an empty list of targets"
+    same_file: "%1 is the same file as %2"
+    tried_to_install_empty_array_to: "tried to install empty array to %1"
+    tried_to_install_empty_hash_to: "tried to install empty hash to %1"
+    will_not_overwrite: "Will not overwrite %1"
 #==============================================================================
 # utils.rb
 utils:
