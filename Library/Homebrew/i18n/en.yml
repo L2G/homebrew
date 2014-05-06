@@ -77,6 +77,21 @@ blacklist:
   xcode_app_store: "Xcode can be installed from the App Store."
   xcode_download: "Xcode can be installed from https://developer.apple.com/downloads/"
 #==============================================================================
+# build.rb
+build:
+  broken_dep_path: |
+    %1 not present or broken
+    Please reinstall %2. Sorry :(
+  git: |
+    This directory is now a git repo. Make your changes and then use:
+      git diff | pbcopy
+    to copy the diff to the clipboard.
+  interactive:
+    entering: "Entering interactive mode"
+    install_to: |
+      Type `exit' to return and finalize the installation
+      Install to this prefix: %1
+#==============================================================================
 # caveats.rb
 caveats:
   app: |

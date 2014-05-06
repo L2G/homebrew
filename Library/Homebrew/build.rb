@@ -152,14 +152,11 @@ class Build
         system "git add -A"
       end
       if ARGV.interactive?
-        ohai "Entering interactive mode"
-        puts "Type `exit' to return and finalize the installation"
-        puts "Install to this prefix: #{f.prefix}"
+        ohai t.build.interactive.entering
+        puts t.build.interactive.install_to(f.prefix)
 
         if ARGV.flag? '--git'
-          puts "This directory is now a git repo. Make your changes and then use:"
-          puts "  git diff | pbcopy"
-          puts "to copy the diff to the clipboard."
+          puts t.build.git
         end
 
         interactive_shell f
@@ -221,5 +218,5 @@ def fixopt f
   end
   Keg.new(path).optlink
 rescue StandardError
-  raise "#{f.opt_prefix} not present or broken\nPlease reinstall #{f}. Sorry :("
+  raise t.build.broken_dep_path(f.opt_prefix, f)
 end
