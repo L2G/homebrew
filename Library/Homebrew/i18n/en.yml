@@ -22,6 +22,61 @@ brew:
   refuse_root_or_usr: "Cowardly refusing to continue at this prefix: %1"
   unknown_command: "Unknown command: %1"
 #==============================================================================
+# blacklist.rb
+blacklist:
+  clojure: |
+    Clojure isn't really a program but a library managed as part of a
+    project and Leiningen is the user interface to that library.
+
+    To install Clojure you should install Leiningen:
+      brew install leiningen
+    and then follow the tutorial:
+      https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
+  distributed_with_os_x: "Apple distributes %1 with OS X, you can find it in %2."
+  gcc: |
+    GCC is now maintained in homebrew-versions, with major version
+    number in formula name as suffix. Please tap using:
+
+        brew tap homebrew/versions
+
+    and then install GCC based on its version, e.g., 'brew install gcc47'.
+  google_tool: |
+    Installing %1 system-wide is not recommended; it should be vendored
+    in your projects that use it.
+  gsutil: "Install gsutil with `pip install gsutil`"
+  libiconv: |
+    Apple distributes %1 with OS X, you can find it in /usr/lib.
+    Some build scripts fail to detect it correctly, please check existing
+    formulae for solutions.
+  lzma: "lzma is now part of the xz formula."
+  macruby: |
+    MacRuby works better when you install their package:
+      http://www.macruby.org/
+  osmium: |
+    The creator of Osmium requests that it not be packaged and that people
+    use the GitHub master branch instead.
+  pil: |
+    Instead of PIL, consider `pip install pillow` or `brew install Homebrew/python/pillow`.
+  pip: |
+    Homebrew provides pip via: `brew install python`. However you will then
+    have two Pythons installed on your Mac, so alternatively you can:
+        sudo easy_install pip
+  rubinius: |
+    Rubinius requires an existing Ruby 2.0 to bootstrap.
+    Doing this through Homebrew is error-prone. Instead, consider using
+    `ruby-build` to build and install specific versions of Ruby:
+        brew install ruby-build
+  sshpass: |
+    We won't add sshpass because it makes it too easy for novice SSH users to
+    ruin SSH's security.
+  tex: |
+    Installing TeX from source is weird and gross, requires a lot of patches,
+    and only builds 32-bit (and thus can't use Homebrew deps on Snow Leopard.)
+
+    We recommend using a MacTeX distribution: http://www.tug.org/mactex/
+  xcode_app_store: "Xcode can be installed from the App Store."
+  xcode_download: "Xcode can be installed from https://developer.apple.com/downloads/"
+#==============================================================================
 # caveats.rb
 caveats:
   app: |
