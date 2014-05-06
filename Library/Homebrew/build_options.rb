@@ -35,9 +35,9 @@ class BuildOptions
   def add_dep_option(dep)
     name = dep.option_name
     if dep.optional? && !has_option?("with-#{name}")
-      add("with-#{name}", t.build_options.with(name)
+      add("with-#{name}", t.build_options.with(name))
     elsif dep.recommended? && !has_option?("without-#{name}")
-      add("without-#{name}", t.build_options.without(name)
+      add("without-#{name}", t.build_options.without(name))
     end
   end
 
