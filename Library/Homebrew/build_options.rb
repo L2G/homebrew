@@ -24,9 +24,9 @@ class BuildOptions
 
   def add name, description=nil
     description ||= case name.to_s
-      when "universal" then "Build a universal binary"
-      when "32-bit" then "Build 32-bit only"
-      when "c++11" then "Build using C++11 mode"
+      when "universal" then t.build_options.universal
+      when "32-bit" then t.build_options.thirty_two_bit
+      when "c++11" then t.build_options.cxx11
       end.to_s
 
     @options << Option.new(name, description)
@@ -35,9 +35,9 @@ class BuildOptions
   def add_dep_option(dep)
     name = dep.option_name
     if dep.optional? && !has_option?("with-#{name}")
-      add("with-#{name}", "Build with #{name} support")
+      add("with-#{name}", t.build_options.with(name)
     elsif dep.recommended? && !has_option?("without-#{name}")
-      add("without-#{name}", "Build without #{name} support")
+      add("without-#{name}", t.build_options.without(name)
     end
   end
 

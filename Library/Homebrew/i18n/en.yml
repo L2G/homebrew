@@ -92,6 +92,14 @@ build:
       Type `exit' to return and finalize the installation
       Install to this prefix: %1
 #==============================================================================
+# build_options.rb
+build_options:
+  cxx11: "Build using C++11 mode"
+  thirty_two_bit: "Build 32-bit only"
+  universal: "Build a universal binary"
+  with: "Build with %1 support"
+  without: "Build without %1 support"
+#==============================================================================
 # caveats.rb
 caveats:
   app: |
