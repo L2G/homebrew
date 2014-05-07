@@ -26,6 +26,10 @@ class Formula
 
   attr_accessor :local_bottle_path
 
+  # Localize formulae's caveats
+  include R18n::Translated
+  translate :caveats
+
   # Homebrew determines the name
   def initialize name='__UNKNOWN__', path=self.class.path(name)
     @name = name
@@ -214,9 +218,6 @@ class Formula
 
   # Can be overridden to run commands on both source and bottle installation.
   def post_install; end
-
-  # tell the user about any caveats regarding this package, return a string
-  def caveats; nil end
 
   # any e.g. configure options for this package
   def options; [] end
