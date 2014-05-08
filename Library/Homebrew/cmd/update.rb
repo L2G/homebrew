@@ -42,8 +42,7 @@ module Homebrew extend self
           updater.pull!
         rescue
           onoe t.cmd.update.update_tap_failed(user.basename,
-                                              repo.basename
-                                                  .sub("homebrew-", ""))
+                                              repo.basename.sub("homebrew-", ""))
         else
           report.merge!(updater.report) do |key, oldval, newval|
             oldval.concat(newval)
