@@ -2,7 +2,7 @@
 #==============================================================================
 # `brew` command
 brew:
-#  bad_sudo: "Cowardly refusing to `sudo brew %1`"
+  bad_sudo: "Malkuraĝe rifuzas plenumi `sudo brew %1`"
 #  bad_xcode_path: |
 #    Your xcode-select path is currently set to '/'.
 #    This causes the `xcrun` tool to hang, and can render Homebrew unusable.
@@ -11,78 +11,214 @@ brew:
 #    Otherwise, you should:
 #      sudo rm -rf /usr/share/xcode-select
 #  formula_unspecified: "This command requires a formula argument"
-#  homebrew_version: "Homebrew %1"
-#  invalid_usage: "Invalid usage"
+  homebrew_version: "Homebrew %1"
+  invalid_usage: "Nevalida uzado"
 #  keg_unspecified: "This command requires a keg argument"
 #  no_tiger_support: |
 #    homebrew requires leopard or higher. for tiger support, see:
 #    https://github.com/mistydemeo/tigerbrew
-#  no_working_dir: "The current working directory doesn't exist, cannot proceed."
+  no_working_dir: "La kuranta dosierujo ne existas. Ne povas procedi."
 #  please_report_bug: "Please report this bug:"
 #  refuse_root_or_usr: "Cowardly refusing to continue at this prefix: %1"
 #  unknown_command: "Unknown command: %1"
 #==============================================================================
+# blacklist.rb
+blacklist:
+  #clojure: |
+  #  Clojure isn't really a program but a library managed as part of a
+  #  project and Leiningen is the user interface to that library.
+  #
+  #  To install Clojure you should install Leiningen:
+  #    brew install leiningen
+  #  and then follow the tutorial:
+  #    https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
+  #distributed_with_os_x: "Apple distributes %1 with OS X, you can find it in %2."
+  #gcc: |
+  #  GCC is now maintained in homebrew-versions, with major version
+  #  number in formula name as suffix. Please tap using:
+  #
+  #      brew tap homebrew/versions
+  #
+  #  and then install GCC based on its version, e.g., 'brew install gcc47'.
+  #google_tool: |
+  #  Installing %1 system-wide is not recommended; it should be vendored
+  #  in your projects that use it.
+  #gsutil: "Install gsutil with `pip install gsutil`"
+  #libiconv: |
+  #  Apple distributes %1 with OS X, you can find it in /usr/lib.
+  #  Some build scripts fail to detect it correctly, please check existing
+  #  formulae for solutions.
+  #lzma: "lzma is now part of the xz formula."
+  #macruby: |
+  #  MacRuby works better when you install their package:
+  #    http://www.macruby.org/
+  #osmium: |
+  #  The creator of Osmium requests that it not be packaged and that people
+  #  use the GitHub master branch instead.
+  #pil: |
+  #  Instead of PIL, consider `pip install pillow` or `brew install Homebrew/python/pillow`.
+  #pip: |
+  #  Homebrew provides pip via: `brew install python`. However you will then
+  #  have two Pythons installed on your Mac, so alternatively you can:
+  #      sudo easy_install pip
+  #rubinius: |
+  #  Rubinius requires an existing Ruby 2.0 to bootstrap.
+  #  Doing this through Homebrew is error-prone. Instead, consider using
+  #  `ruby-build` to build and install specific versions of Ruby:
+  #      brew install ruby-build
+  #sshpass: |
+  #  We won't add sshpass because it makes it too easy for novice SSH users to
+  #  ruin SSH's security.
+  #tex: |
+  #  Installing TeX from source is weird and gross, requires a lot of patches,
+  #  and only builds 32-bit (and thus can't use Homebrew deps on Snow Leopard.)
+  #
+  #  We recommend using a MacTeX distribution: http://www.tug.org/mactex/
+  #xcode_app_store: "Xcode can be installed from the App Store."
+  #xcode_download: "Xcode can be installed from https://developer.apple.com/downloads/"
+#==============================================================================
+# build.rb
+build:
+  #broken_dep_path: |
+  #  %1 not present or broken
+  #  Please reinstall %2. Sorry :(
+  #git: |
+  #  This directory is now a git repo. Make your changes and then use:
+  #    git diff | pbcopy
+  #  to copy the diff to the clipboard.
+  #interactive:
+  #  entering: "Entering interactive mode"
+  #  install_to: |
+  #    Type `exit' to return and finalize the installation
+  #    Install to this prefix: %1
+#==============================================================================
+# build_options.rb
+build_options:
+  #cxx11: "Build using C++11 mode"
+  #thirty_two_bit: "Build 32-bit only"
+  #universal: "Build a universal binary"
+  #with: "Build with %1 support"
+  #without: "Build without %1 support"
+#==============================================================================
 # caveats.rb
-#caveats:
-#  app: |
-#    .app bundles were installed.
-#    Run `brew linkapps` to symlink these to /Applications.
-#  bash_completion: |
-#    Bash completion has been installed to:
-#      %1
-#  plist_load: "To load %1:"
-#  plist_login: "To have launchd start %1 at login:"
-#  plist_manual: "Or, if you don't want/need launchctl, you can just run:"
-#  plist_startup: "To have launchd start %1 at startup:"
-#  plist_then_load: "Then to load %1 now:"
-#  plist_tmux_warning: "WARNING: launchctl will fail when run under tmux."
-#  plist_upgrade: "To reload %1 after an upgrade:"
-#  python: |
-#    If you need Python to find the installed site-packages:
-#      mkdir -p %1
-#      echo '%2' > %3
-#  python_no_dir: |
-#    If you need Python to find the installed site-packages:
-#      echo '%1' > %2
-#  zsh_completion: |
-#    zsh completion has been installed to:
-#      %1
+caveats:
+  #app: |
+  #  .app bundles were installed.
+  #  Run `brew linkapps` to symlink these to /Applications.
+  #bash_completion: |
+  #  Bash completion has been installed to:
+  #    %1
+  #plist_load: "To load %1:"
+  #plist_login: "To have launchd start %1 at login:"
+  #plist_manual: "Or, if you don't want/need launchctl, you can just run:"
+  #plist_startup: "To have launchd start %1 at startup:"
+  #plist_then_load: "Then to load %1 now:"
+  #plist_tmux_warning: "WARNING: launchctl will fail when run under tmux."
+  #plist_upgrade: "To reload %1 after an upgrade:"
+  #python: |
+  #  If you need Python to find the installed site-packages:
+  #    mkdir -p %1
+  #    echo '%2' > %3
+  #python_no_dir: |
+  #  If you need Python to find the installed site-packages:
+  #    echo '%1' > %2
+  #zsh_completion: |
+  #  zsh completion has been installed to:
+  #    %1
+#==============================================================================
+# extend/
+extend:
+  #----------------------------------------------------------------------------
+  # extend/ARGV.rb
+  argv:
+    #multiple_kegs: |
+    #  Multiple kegs installed to %1
+    #  However we don''t know which one you refer to.
+    #  Please delete (with rm -rf!) all but one and then try again.
+    #  Sorry, we know this is lame.
+  #----------------------------------------------------------------------------
+  # extend/ENV*
+  env:
+    #alternative_fc: "Building with an alternative Fortran compiler"
+    #can_change_fc: "This may be changed by setting the FC environment variable."
+    #cxx11_not_supported: "The selected compiler doesn't support C++11: %1"
+    #gcc_formula_not_found: |
+    #  Homebrew GCC requested, but formula %1 not found!
+    #  You may need to: brew tap homebrew/versions
+    #gcc_not_installed: |
+    #  The requested Homebrew GCC, %1, was not installed.
+    #  You must:
+    #    brew tap homebrew/versions
+    #    brew install %1
+    #gcc_not_installed_brew: |
+    #  The Homebrew GCC was not installed.
+    #  You must:
+    #    brew install gcc
+    #gcc42_not_found: "gcc-4.2 not found!"
+    #gfortran_homebrew: "Using Homebrew-provided fortran compiler."
+    #gfortran_other: "Using a fortran compiler found at %1."
+    #invalid_cc: "Invalid value for --cc: %1"
+    #no_fc_flags: |
+    #  No Fortran optimization information was provided.  You may want to consider
+    #  setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
+    #  `brew install` if your compiler is compatible with GCC.
+    #
+    #  If you like the default optimization level of your compiler, ignore this
+    #  warning.
+    #unsupported: "This is unsupported."
+  #----------------------------------------------------------------------------
+  # extend/fileutils.rb
+  fileutils:
+    #sandbox_failed: "Failed to create sandbox"
+  #----------------------------------------------------------------------------
+  # extend/pathname.rb
+  pathname:
+    does_not_exist: "ne ekzistas %1"
+    files: !!pl
+      0: "Nulo dosieroj, "
+      1: "%1 dosiero, "
+      n: "%1 dosieroj, "
+    #exec_scripts_empty_targets: "tried to write exec scripts to %1 for an empty list of targets"
+    #same_file: "%1 is the same file as %2"
+    #tried_to_install_empty_array_to: "tried to install empty array to %1"
+    #tried_to_install_empty_hash_to: "tried to install empty hash to %1"
+    #will_not_overwrite: "Will not overwrite %1"
 #==============================================================================
 # utils.rb
-#utils:
-#  authentication_failed: |
-#    GitHub %1
-#    HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
-#      https://github.com/settings/applications
-#  cleaning_up: "One sec, just cleaning up"
-#  closed_pull_requests: "Closed pull requests:"
-#  # Indicates errors that are logged on-screen
-#  error: "Error"
-#  failed_to_connect: "Failed to connect to: %1"
-#  failed_to_parse_json: "Failed to parse JSON response"
-#  failure_while_executing: "Failure while executing: %1"
-#  interactive_shell_abort: "Aborting due to non-zero exit status"
-#  minutes: !!pl
-#    1: "%1 minute"
-#    n: "%1 minutes"
-#  not_executable: "%1 is not executable"
-#  open_pull_requests: "Open pull requests:"
-#  path_component_invalid: "The following PATH component is invalid: %1"
-#  # Used to print pull request titles together with their URLs
-#  pull_request_with_url: "%1 (%2)"
-#  rate_limit_exceeded: |
-#    GitHub %1
-#    Try again in %2, or create an API token:
-#      https://github.com/settings/applications
-#    and then set HOMEBREW_GITHUB_API_TOKEN.
-#  # For rate limit time message, e.g. "3 minutes 2 seconds"
-#  rate_limit_time_m_s: "%1 %2"
-#  searching_pull_requests: "Searching pull requests..."
-#  seconds: !!pl
-#    1: "1 second"
-#    n: "%1 seconds"
-#  # Indicates warnings that are logged on-screen
-#  warning: "Warning"
+utils:
+  #authentication_failed: |
+  #  GitHub %1
+  #  HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
+  #    https://github.com/settings/applications
+  cleaning_up: "Unu sekundo, nun purigas"
+  #closed_pull_requests: "Closed pull requests:"
+  # Indicates errors that are logged on-screen
+  error: "Eraro"
+  #failed_to_connect: "Failed to connect to: %1"
+  #failed_to_parse_json: "Failed to parse JSON response"
+  failure_while_executing: "Misfino dum plenumago: %1"
+  #interactive_shell_abort: "Aborting due to non-zero exit status"
+  minutes: !!pl
+    1: "%1 minuto"
+    n: "%1 minutoj"
+  not_executable: "%1 ne estas plenumebla"
+  #open_pull_requests: "Open pull requests:"
+  #path_component_invalid: "The following PATH component is invalid: %1"
+  # Used to print pull request titles together with their URLs
+  #pull_request_with_url: "%1 (%2)"
+  #rate_limit_exceeded: |
+  #  GitHub %1
+  #  Try again in %2, or create an API token:
+  #    https://github.com/settings/applications
+  #  and then set HOMEBREW_GITHUB_API_TOKEN.
+  ## For rate limit time message, e.g. "3 minutes 2 seconds"
+  #rate_limit_time_m_s: "%1 %2"
+  #searching_pull_requests: "Searching pull requests..."
+  seconds: !!pl
+    1: "1 sekundo"
+    n: "%1 sekundoj"
+  # Indicates warnings that are logged on-screen
+  warning: "Averto"
 #==============================================================================
 # Sub-commands of `brew`
 cmd:
@@ -95,30 +231,30 @@ cmd:
   # specialising help like the gem command does.
   # NOTE Keep lines less than 80 characters! Wrapping is just not cricket.
   # <----------------------------------------------------------------------------->
-#  help: |
-#    Example usage:
-#      brew [info | home | options ] [FORMULA...]
-#      brew install FORMULA...
-#      brew uninstall FORMULA...
-#      brew search [foo]
-#      brew list [FORMULA...]
-#      brew update
-#      brew upgrade [FORMULA...]
-#      brew pin/unpin [FORMULA...]
-#
-#    Troubleshooting:
-#      brew doctor
-#      brew install -vd FORMULA
-#      brew [--env | config]
-#
-#    Brewing:
-#      brew create [URL [--no-fetch]]
-#      brew edit [FORMULA...]
-#      open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
-#
-#    Further help:
-#      man brew
-#      brew home
+  help: |
+    Ekzemploj de la uzado:
+      brew [info | home | options ] [FORMULA...]
+      brew install FORMULA...
+      brew uninstall FORMULA...
+      brew search [foo]
+      brew list [FORMULA...]
+      brew update
+      brew upgrade [FORMULA...]
+      brew pin/unpin [FORMULA...]
+
+    Diagnozi ĝenaĵojn:
+      brew doctor
+      brew install -vd FORMULA
+      brew [--env | config]
+
+    Fermenti:
+      brew create [URL [--no-fetch]]
+      brew edit [FORMULA...]
+      open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
+
+    Pluaj helpoj:
+      man brew
+      brew home
   #------------------------------------------------------------------------------
   # `doctor` command
   doctor:
@@ -127,9 +263,9 @@ cmd:
 #        %1
 #
 #      This custom autoconf may cause some Homebrew formulae to fail to compile.
-#    broken_symlinks: |
-#      Broken symlinks were found. Remove them with `brew prune`:
-#        %1
+    broken_symlinks: |
+      Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
+        %1
 #    cellar_and_temp_not_same_vol: |
 #      Your Cellar and TEMP directories are on different volumes.
 #      OS X won't move relative symlinks across volumes unless the target file already
@@ -155,9 +291,10 @@ cmd:
 #      This can cause build problems, as this software installs its own
 #      copies of iconv and libxml2 into directories that are picked up by
 #      other build systems.
-#    filesystem_case_sensitive: |
-#      Your file-system on %1 appears to be CaSe SeNsItIvE.
-#      Homebrew is less tested with that - don't worry but please report issues.
+    filesystem_case_sensitive: |
+      Via dosiersistemo ĉe %1 aspektas uSkLeCoDiStInGa.
+      Homebrew estas malpli testata per tio - ne tenu zorgojn, sed bonvolu raporti
+      malfacilaĵojn.
 #    fink_set_macosx_deployment_target: |
 #      MACOSX_DEPLOYMENT_TARGET was set to %1
 #      This is used by Fink, but having it set to a value different from the
@@ -510,4 +647,21 @@ cmd:
 #      Your XQuartz (%1) is outdated
 #      Please install XQuartz %2:
 #        https://xquartz.macosforge.org
+  # `update` command
+  update:
+#    already_up_to_date: "Already up-to-date."
+    deleted_formulae: "Forprenitaj Formuloj"
+#    failure_while_executing: "Failure while executing: %1"
+    install_git: "Bonvolu unue plenumi `brew install git'."
+#    homebrew_tap_structure_1: "Homebrew changed the structure of Taps like <someuser>/<sometap>. %1"
+#    homebrew_tap_structure_2: "So you may need to rename %1 manually."
+#    homebrew_tap_structure_3: "%1 is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."
+    new_formulae: "Novaj Formuloj"
+    no_formula_names: |
+      Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
+      nomojn.  Uzu `brew upgrade <formula>`.
+    renamed_formulae: "Renomitaj Formuloj"
+#    update_tap_failed: "Failed to update tap: %1/%2"
+    updated_formulae: "Ĝisdatigitaj Formuloj"
+    updated_homebrew: "Ĝisdatigis Homebrew-on de %1 ĝis %2"
 #==============================================================================
