@@ -221,7 +221,7 @@ formula_installer:
     %1 is a head-only formula
     Install with `brew install --HEAD %2
   keg_already_linked: "This keg was marked linked already, continuing anyway"
-  install_badge: "\U0001F37A"
+  install_badge: 🍺
   install_plist_failed: "Failed to install plist file"
   installing: "Installing %1"
   installing_dep_for: "Installing %1 dependency: %2"
