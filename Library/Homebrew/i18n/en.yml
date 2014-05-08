@@ -184,6 +184,71 @@ extend:
     tried_to_install_empty_hash_to: "tried to install empty hash to %1"
     will_not_overwrite: "Will not overwrite %1"
 #==============================================================================
+# formula_installer.rb
+formula_installer:
+  all_deps_satisfied: "All dependencies for %1 are satisfied."
+  already_installed: "%1-%2 already installed"
+  already_installed_not_linked: "%1-%2 already installed, it's just not linked"
+  already_installed_unlink: |
+    %1-%2 already installed
+    To install this version, first `brew unlink %1'
+  bottle_blocked_by: "Building source; bottle blocked by %1 requirement"
+  bottle_install_fail: "Bottle installation failed: building from source."
+  brew_link_error_1: "An unexpected error occurred during the `brew link` step"
+  brew_link_error_2: "The formula built, but is not symlinked into %1"
+  brew_link_unfinished_1: "The `brew link` step did not complete successfully"
+  brew_link_unfinished_2: |
+    The formula built, but is not symlinked into %1
+    You can try again using:
+      brew link %2
+
+    Possible conflicting files are:
+  caveats: "Caveats"
+  cellar_bottle: "Building source; cellar of %1's bottle is %2"
+  cleaning: "Cleaning"
+  cleaning_not_complete_1: "The cleaning step did not complete successfully"
+  cleaning_not_complete_2: "Still, the installation was successful, so we will link it into your prefix"
+  dep_message: "%1: %2"
+  empty_install: "Empty installation"
+  failed_to_create_1: "Failed to create: %1"
+  failed_to_create_2: "Things that depend on %1 will probably not build."
+  finishing_up: "Finishing up"
+  fix_install_names_fail_1: "Failed to fix install names"
+  fix_install_names_fail_2: |
+    The formula built, but you may encounter issues using it or linking other
+    formulae against it.
+  head_only: |
+    %1 is a head-only formula
+    Install with `brew install --HEAD %2
+  keg_already_linked: "This keg was marked linked already, continuing anyway"
+  install_badge: "\U0001F37A"
+  install_plist_failed: "Failed to install plist file"
+  installing: "Installing %1"
+  installing_dep_for: "Installing %1 dependency: %2"
+  installing_deps_for: "Installing dependencies for %1: %2"
+  keg_only_1: "This formula is keg-only, so it was not symlinked into %1."
+  # Keep keg_only_2 within 72 columns
+  # <---------------------------------------------------------------------->
+  keg_only_2: |
+
+
+    Generally there are no consequences of this for you. If you build your
+    own software and it requires this formula, you'll need to add to your
+    build variables:
+
+  keg_only_cppflags: "    CPPFLAGS: -I%1\n"
+  keg_only_ldflags: "    LDFLAGS:  -L%1\n"
+  must_link_deps: "You must `brew link %1' before %2 can be installed"
+  no_head: "No head is defined for %1"
+  nothing_installed_to: "Nothing was installed to %1"
+  postinstall_fail_1: "The post-install step did not complete successfully"
+  postinstall_fail_2: "You can try again using `brew postinstall %1`"
+  summary: "%1: %2"
+  summary_title: "Summary"
+  summary_with_build_time: "%1: %2, built in %3"
+  suspicious_install_fail: "Suspicious installation failure"
+  unrecognized_bottle_arch: "Unrecognized architecture for --bottle-arch: %1"
+#==============================================================================
 # utils.rb
 utils:
   authentication_failed: |

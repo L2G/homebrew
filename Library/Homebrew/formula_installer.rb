@@ -61,14 +61,14 @@ class FormulaInstaller
     f.requirements.each do |req|
       next if req.optional? || req.pour_bottle?
       if install_bottle_options[:warn]
-        ohai "Building source; bottle blocked by #{req} requirement"
+        ohai t.formula_installer.bottle_blocked_by(req)
       end
       return false
     end
 
     unless f.bottle.compatible_cellar?
       if install_bottle_options[:warn]
-        opoo "Building source; cellar of #{f}'s bottle is #{f.bottle.cellar}"
+        opoo t.formula_installer.cellar_bottle(f, f.bottle.cellar)
       end
       return false
     end
@@ -104,22 +104,22 @@ class FormulaInstaller
     raise FormulaInstallationAlreadyAttemptedError, f if @@attempted.include? f
 
     if f.installed?
-      msg = "#{f}-#{f.installed_version} already installed"
-      msg << ", it's just not linked" unless f.linked_keg.symlink? or f.keg_only?
+      if f.linked_keg.symlink? or f.keg_only?
+        msg = t.formula_installer.already_installed(f, f.installed_version)
+      else
+        msg = t.formula_installer.already_installed_not_linked(f, f.installed_version)
+      end
       raise FormulaAlreadyInstalledError, msg
     end
 
     # Building head-only without --HEAD is an error
     if not ARGV.build_head? and f.stable.nil?
-      raise CannotInstallFormulaError, <<-EOS.undent
-        #{f} is a head-only formula
-        Install with `brew install --HEAD #{f.name}
-      EOS
+      raise CannotInstallFormulaError, t.formula_installer.head_only(f, f.name)
     end
 
     # Building stable-only with --HEAD is an error
     if ARGV.build_head? and f.head.nil?
-      raise CannotInstallFormulaError, "No head is defined for #{f.name}"
+      raise CannotInstallFormulaError, t.formula_installer.no_head(f.name)
     end
 
     unless ignore_deps?
@@ -127,7 +127,7 @@ class FormulaInstaller
         dep.installed? and not dep.keg_only? and not dep.linked_keg.directory?
       end
       raise CannotInstallFormulaError,
-        "You must `brew link #{unlinked_deps*' '}' before #{f} can be installed" unless unlinked_deps.empty?
+            t.formula_installer.must_link_deps(unlinked_deps * ' ', f)
     end
   end
 
@@ -149,10 +149,10 @@ class FormulaInstaller
     # relink the active keg if possible (because it is slow).
     if f.linked_keg.directory?
       # some other version is already installed *and* linked
-      raise CannotInstallFormulaError, <<-EOS.undent
-        #{f}-#{f.linked_keg.resolved_path.basename} already installed
-        To install this version, first `brew unlink #{f}'
-      EOS
+      raise CannotInstallFormulaError,
+            t.formula_installer.already_installed_unlink(
+              f, f.linked_keg.resolved_path.basename
+            )
     end
 
     check_conflicts
@@ -162,10 +162,10 @@ class FormulaInstaller
     return if only_deps?
 
     if build_bottle? && (arch = ARGV.bottle_arch) && !Hardware::CPU.optimization_flags.include?(arch)
-      raise "Unrecognized architecture for --bottle-arch: #{arch}"
+      raise t.formula_installer.unrecognized_bottle_arch(arch)
     end
 
-    oh1 "Installing #{Tty.green}#{f}#{Tty.reset}" if show_header?
+    oh1 t.formula_installer.installing("{Tty.green}#{f}#{Tty.reset}") if show_header?
 
     @@attempted << f
 
@@ -191,7 +191,7 @@ class FormulaInstaller
       raise e if ARGV.homebrew_developer?
       @pour_failed = true
       onoe e.message
-      opoo "Bottle installation failed: building from source."
+      opoo t.formula_installer.bottle_install_fail
     end
 
     build_bottle_preinstall if build_bottle?
@@ -204,7 +204,7 @@ class FormulaInstaller
 
     build_bottle_postinstall if build_bottle?
 
-    opoo "Nothing was installed to #{f.prefix}" unless f.installed?
+    opoo t.formula_installer.nothing_installed_to(f.prefix) unless f.installed?
   end
 
   # HACK: If readline is present in the dependency tree, it will clash
@@ -237,7 +237,7 @@ class FormulaInstaller
     deps = expand_dependencies(deps)
 
     if deps.empty? and only_deps?
-      puts "All dependencies for #{f} are satisfied."
+      puts t.formula_installer.all_deps_satisfied(f)
     else
       install_dependencies(deps)
     end
@@ -248,7 +248,7 @@ class FormulaInstaller
 
     req_map.each_pair do |dependent, reqs|
       reqs.each do |req|
-        puts "#{dependent}: #{req.message}"
+        puts t.formula_installer.dep_message(dependent, req.message)
         fatals << req if req.fatal?
       end
     end
@@ -338,7 +338,9 @@ class FormulaInstaller
 
   def install_dependencies(deps)
     if deps.length > 1
-      oh1 "Installing dependencies for #{f}: #{Tty.green}#{deps.map(&:first)*", "}#{Tty.reset}"
+      oh1 t.formula_installer.installing_deps_for(
+            f, "#{Tty.green}#{deps.map(&:first)*', '}#{Tty.reset}"
+          )
     end
 
     ARGV.filter_for_dependencies do
@@ -384,7 +386,9 @@ class FormulaInstaller
     fi.verbose            = verbose? unless verbose == :quieter
     fi.debug              = debug?
     fi.prelude
-    oh1 "Installing #{f} dependency: #{Tty.green}#{dep.name}#{Tty.reset}"
+    oh1 t.formula_installer.installing_dep_for(
+          f, "#{Tty.green}#{dep.name}#{Tty.reset}"
+        )
     fi.install
     fi.caveats
     fi.finish
@@ -413,14 +417,14 @@ class FormulaInstaller
 
     unless c.empty?
       @show_summary_heading = true
-      ohai 'Caveats', c.caveats
+      ohai t.formula_installer.caveats, c.caveats
     end
   end
 
   def finish
     return if only_deps?
 
-    ohai 'Finishing up' if verbose?
+    ohai t.formula_installer.finishing_up if verbose?
 
     install_plist
 
@@ -428,8 +432,8 @@ class FormulaInstaller
       begin
         Keg.new(f.prefix).optlink
       rescue Exception
-        onoe "Failed to create: #{f.opt_prefix}"
-        puts "Things that depend on #{f} will probably not build."
+        onoe t.formula_installer.failed_to_create_1(f.opt_prefix)
+        puts t.formula_installer.failed_to_create_2(f)
       end
     else
       link
@@ -439,21 +443,26 @@ class FormulaInstaller
 
     post_install
 
-    ohai "Summary" if verbose? or show_summary_heading?
+    ohai t.formula_installer.summary_title if verbose? or show_summary_heading?
     puts summary
   ensure
     unlock if hold_locks?
   end
 
   def emoji
-    ENV['HOMEBREW_INSTALL_BADGE'] || "\xf0\x9f\x8d\xba"
+    ENV['HOMEBREW_INSTALL_BADGE'] || t.formula_installer.install_badge
   end
 
   def summary
     s = ""
     s << "#{emoji}  " if MacOS.version >= :lion and not ENV['HOMEBREW_NO_EMOJI']
-    s << "#{f.prefix}: #{f.prefix.abv}"
-    s << ", built in #{pretty_duration build_time}" if build_time
+    if build_time
+      s << t.formula_installer.summary_with_build_time(f.prefix,
+                                                       f.prefix.abv,
+                                                       pretty_duration(build_time))
+    else
+      s << t.formula_installer.summary(f.prefix, f.prefix.abv)
+    end
     s
   end
 
@@ -543,10 +552,10 @@ class FormulaInstaller
       read.close
       raise Marshal.load(data) unless data.nil? or data.empty?
       raise Interrupt if $?.exitstatus == 130
-      raise "Suspicious installation failure" unless $?.success?
+      raise t.formula_installer.suspicious_install_fail unless $?.success?
     end
 
-    raise "Empty installation" if Dir["#{f.prefix}/*"].empty?
+    raise t.formula_installer.empty_installation if Dir["#{f.prefix}/*"].empty?
 
   rescue Exception
     ignore_interrupts do
@@ -559,7 +568,7 @@ class FormulaInstaller
 
   def link
     if f.linked_keg.directory? and f.linked_keg.resolved_path == f.prefix
-      opoo "This keg was marked linked already, continuing anyway"
+      opoo t.formula_installer.keg_already_linked
       # otherwise Keg.link will bail
       f.linked_keg.unlink
     end
@@ -569,18 +578,14 @@ class FormulaInstaller
     begin
       keg.link
     rescue Keg::LinkError => e
-      onoe "The `brew link` step did not complete successfully"
-      puts "The formula built, but is not symlinked into #{HOMEBREW_PREFIX}"
-      puts "You can try again using:"
-      puts "  brew link #{f.name}"
-      puts
-      puts "Possible conflicting files are:"
+      onoe t.formula_installer.brew_link_unfinished_1
+      puts t.formula_installer.brew_link_unfinished_2(HOMEBREW_PREFIX, f.name)
       mode = OpenStruct.new(:dry_run => true, :overwrite => true)
       keg.link(mode)
       @show_summary_heading = true
     rescue Exception => e
-      onoe "An unexpected error occurred during the `brew link` step"
-      puts "The formula built, but is not symlinked into #{HOMEBREW_PREFIX}"
+      onoe t.formula_installer.brew_link_error_1
+      puts t.formula_installer.brew_link_error_2(HOMEBREW_PREFIX)
       puts e
       puts e.backtrace if debug?
       @show_summary_heading = true
@@ -594,7 +599,7 @@ class FormulaInstaller
     f.plist_path.atomic_write(f.plist)
     f.plist_path.chmod 0644
   rescue Exception => e
-    onoe "Failed to install plist file"
+    onoe t.formula_installer.install_plist_failed
     ohai e, e.backtrace if debug?
   end
 
@@ -607,19 +612,18 @@ class FormulaInstaller
         Keg::CELLAR_PLACEHOLDER, HOMEBREW_CELLAR.to_s, :keg_only => f.keg_only?
     end
   rescue Exception => e
-    onoe "Failed to fix install names"
-    puts "The formula built, but you may encounter issues using it or linking other"
-    puts "formula against it."
+    onoe t.formula_installer.fix_install_names_fail_1
+    puts t.formula_installer.fix_install_names_fail_2
     ohai e, e.backtrace if debug?
     @show_summary_heading = true
   end
 
   def clean
-    ohai "Cleaning" if verbose?
+    ohai t.formula_installer.cleaning if verbose?
     Cleaner.new(f).clean
   rescue Exception => e
-    opoo "The cleaning step did not complete successfully"
-    puts "Still, the installation was successful, so we will link it into your prefix"
+    opoo t.formula_installer.cleaning_not_complete_1
+    puts t.formula_installer.cleaning_not_complete_2
     ohai e, e.backtrace if debug?
     @show_summary_heading = true
   end
@@ -627,8 +631,8 @@ class FormulaInstaller
   def post_install
     f.post_install
   rescue Exception => e
-    opoo "The post-install step did not complete successfully"
-    puts "You can try again using `brew postinstall #{f.name}`"
+    opoo t.formula_installer.postinstall_fail_1
+    puts t.formula_installer.postinstall_fail_2(f.name)
     ohai e, e.backtrace if debug?
     @show_summary_heading = true
   end
@@ -721,20 +725,16 @@ end
 
 class Formula
   def keg_only_text
-    s = "This formula is keg-only, so it was not symlinked into #{HOMEBREW_PREFIX}."
+    s = t.formula_installer.keg_only_1(HOMEBREW_PREFIX)
     s << "\n\n#{keg_only_reason.to_s}"
     if lib.directory? or include.directory?
-      s <<
-        <<-EOS.undent_________________________________________________________72
-
-
-        Generally there are no consequences of this for you. If you build your
-        own software and it requires this formula, you'll need to add to your
-        build variables:
-
-        EOS
-      s << "    LDFLAGS:  -L#{HOMEBREW_PREFIX}/opt/#{name}/lib\n" if lib.directory?
-      s << "    CPPFLAGS: -I#{HOMEBREW_PREFIX}/opt/#{name}/include\n" if include.directory?
+      s << t.formula_installer.keg_only_2
+      if lib.directory?
+        s << t.formula_installer.keg_only_ldflags("#{HOMEBREW_PREFIX}/opt/#{name}/lib")
+      end
+      if include.directory?
+        s << t.formula_installer.keg_only_cppflags("#{HOMEBREW_PREFIX}/opt/#{name}/include")
+      end
     end
     s << "\n"
   end
