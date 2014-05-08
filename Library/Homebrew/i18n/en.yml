@@ -647,6 +647,14 @@ cmd:
       Please install XQuartz %2:
         https://xquartz.macosforge.org
   #------------------------------------------------------------------------------
+  # `list` command
+  list:
+    files: !!pl
+      n: "%2/ (%1 files)"
+    other_files: !!pl
+      n: "%2/ (%1 other files)"
+    symlink: "%1 -> %2"
+  #------------------------------------------------------------------------------
   # `update` command
   update:
     already_up_to_date: "Already up-to-date."

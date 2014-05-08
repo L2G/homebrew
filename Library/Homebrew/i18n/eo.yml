@@ -647,6 +647,15 @@ cmd:
 #      Your XQuartz (%1) is outdated
 #      Please install XQuartz %2:
 #        https://xquartz.macosforge.org
+  #------------------------------------------------------------------------------
+  # `list` command
+  list:
+    files: !!pl
+      n: "%2/ (%1 dosieroj)"
+    other_files: !!pl
+      n: "%2/ (%1 kromaj dosieroj)"
+    symlink: "%1 → %2"
+  #------------------------------------------------------------------------------
   # `update` command
   update:
 #    already_up_to_date: "Already up-to-date."

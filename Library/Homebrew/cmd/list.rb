@@ -96,7 +96,7 @@ class PrettyListing
       else
         if pn.directory?
           if pn.symlink?
-            puts "#{pn} -> #{pn.readlink}"
+            puts t.cmd.list.symlink(pn, pn.readlink)
           else
             print_dir pn
           end
@@ -110,14 +110,14 @@ class PrettyListing
   def print_dir root
     dirs = []
     remaining_root_files = []
-    other = ''
+    other = false
 
     root.children.sort.each do |pn|
       if pn.directory?
         dirs << pn
       elsif block_given? and yield pn
         puts pn
-        other = 'other '
+        other = true
       else
         remaining_root_files << pn unless pn.basename.to_s == '.DS_Store'
       end
@@ -132,14 +132,18 @@ class PrettyListing
     print_remaining_files remaining_root_files, root, other
   end
 
-  def print_remaining_files files, root, other = ''
+  def print_remaining_files files, root, other = false
     case files.length
     when 0
       # noop
     when 1
       puts files
     else
-      puts "#{root}/ (#{files.length} #{other}files)"
+      if other
+        puts t.cmd.list.other_files(files.length, root)
+      else
+        puts t.cmd.list.files(files.length, root)
+      end
     end
   end
 end
