@@ -126,8 +126,10 @@ class FormulaInstaller
       unlinked_deps = f.recursive_dependencies.map(&:to_formula).select do |dep|
         dep.installed? and not dep.keg_only? and not dep.linked_keg.directory?
       end
-      raise CannotInstallFormulaError,
-            t.formula_installer.must_link_deps(unlinked_deps * ' ', f)
+      unless unlinked_deps.empty?
+        raise CannotInstallFormulaError,
+              t.formula_installer.must_link_deps(unlinked_deps * ' ', f)
+      end
     end
   end
 
