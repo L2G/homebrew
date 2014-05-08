@@ -646,4 +646,22 @@ cmd:
       Your XQuartz (%1) is outdated
       Please install XQuartz %2:
         https://xquartz.macosforge.org
+  #------------------------------------------------------------------------------
+  # `update` command
+  update:
+    already_up_to_date: "Already up-to-date."
+    deleted_formulae: "Deleted Formulae"
+    failure_while_executing: "Failure while executing: %1"
+    install_git: "Please `brew install git' first."
+    homebrew_tap_structure_1: "Homebrew changed the structure of Taps like <someuser>/<sometap>. %1"
+    homebrew_tap_structure_2: "So you may need to rename %1 manually."
+    homebrew_tap_structure_3: "%1 is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."
+    new_formulae: "New Formulae"
+    no_formula_names: |
+      This command updates brew itself, and does not take formula names.
+      Use `brew upgrade <formula>`.
+    renamed_formulae: "Renamed Formulae"
+    update_tap_failed: "Failed to update tap: %1/%2"
+    updated_formulae: "Updated Formulae"
+    updated_homebrew: "Updated Homebrew from %1 to %2"
 #==============================================================================
