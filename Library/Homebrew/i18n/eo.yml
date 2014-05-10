@@ -18,6 +18,17 @@ extend:
       1: "%1 dosiero, "
       n: "%1 dosieroj, "
 #==============================================================================
+# formula_installer.rb
+formula_installer:
+  already_installed: "%1-%2 jam estas instalita"
+  already_installed_not_linked: "%1-%2 jam estas instalita, sed ne ligita"
+  already_installed_unlink: |
+    %1-%2 jam estas instalita
+    Por instali ĉi tiun eldonon, unue rulu `brew unlink %1'
+  brew_link_unfinished_1: "La paŝo `brew link` ne estas sukcese kompletita"
+  summary: "%1: %2"
+  summary_with_build_time: "%1: %2, konstruita dum %3"
+#==============================================================================
 # utils.rb
 utils:
   cleaning_up: "Unu sekundo, nun purigas"
