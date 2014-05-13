@@ -157,46 +157,55 @@ def check_for_broken_symlinks
   end
 end
 
-def check_xcode_clt
-  if MacOS.version >= :mavericks
-    __check_clt_up_to_date
-  elsif MacOS::Xcode.installed?
-    __check_xcode_up_to_date
-  elsif MacOS.version >= :lion
-    __check_clt_up_to_date
-  else
-    t.cmd.doctor.xcode_not_installed
-  end
-end
-
-def __check_xcode_up_to_date
-  if MacOS::Xcode.outdated?
-    message = t.cmd.doctor.xcode_outdated(MacOS::Xcode.version,
-                                          MacOS::Xcode.latest_version)
-    if MacOS.version >= :lion
-      message += t.cmd.doctor.xcode_update_from_app_store
-    else
-      message += t.cmd.doctor.xcode_update_from_web
+if MacOS.version >= "10.9"
+  def check_for_installed_developer_tools
+    unless MacOS::CLT.installed?
+      t.cmd.doctor.install_clt
     end
-    message
   end
-end
 
-def __check_clt_up_to_date
-  if not MacOS::CLT.installed?
-    message = t.cmd.doctor.xcode_clt_not_installed
-    if MacOS.version >= :mavericks
-      message += t.cmd.doctor.xcode_clt_install_from_cli
-    else
-      message += t.cmd.doctor.xcode_clt_install_from_web
+  def check_xcode_up_to_date
+    if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
+      t.cmd.doctor.xcode_outdated_app_store(MacOS::Xcode.version,
+                                            MacOS::Xcode.latest_version)
     end
-    message
-  elsif MacOS::CLT.outdated?
-    message = t.cmd.doctor.xcode_clt_outdated
-    if MacOS.version >= :mavericks
-      message += t.cmd.doctor.xcode_clt_update_from_app_store
-    else
-      message += t.cmd.doctor.xcode_clt_update_from_web
+  end
+
+  def check_clt_up_to_date
+    if MacOS::CLT.installed? && MacOS::CLT.outdated?
+      t.cmd.doctor.xcode_clt_update_from_app_store
+    end
+  end
+elsif MacOS.version == "10.8" || MacOS.version == "10.7"
+  def check_for_installed_developer_tools
+    unless MacOS::Xcode.installed? || MacOS::CLT.installed?
+      t.cmd.doctor.xcode_clt_install_from_web
+    end
+  end
+
+  def check_xcode_up_to_date
+    if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
+      t.cmd.doctor.xcode_outdated_download(MacOS::Xcode.version,
+                                           MacOS::Xcode.latest_version)
+    end
+  end
+
+  def check_clt_up_to_date
+    if MacOS::CLT.installed? && MacOS::CLT.outdated?
+      t.cmd.doctor.xcode_clt_update_from_web
+    end
+  end
+else
+  def check_for_installed_developer_tools
+    unless MacOS::Xcode.installed?
+      t.cmd.doctor.xcode_not_installed
+    end
+  end
+
+  def check_xcode_up_to_date
+    if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
+      t.cmd.doctor.xcode_outdated_download(MacOS::Xcode.version,
+                                           MacOS::Xcode.latest_version)
     end
   end
 end
@@ -221,14 +230,6 @@ def check_for_stray_developer_directory
   uninstaller = Pathname.new("/Developer/Library/uninstall-developer-folder")
   if MacOS::Xcode.version >= "4.3" && uninstaller.exist?
     t.cmd.doctor.stray_dev_dir(uninstaller)
-  end
-end
-
-def check_standard_compilers
-  return if check_xcode_clt # only check if Xcode is up to date
-  compiler_status = MacOS.compilers_standard?
-  if not compiler_status and not compiler_status.nil?
-    t.cmd.doctor.compiler_not_standard
   end
 end
 

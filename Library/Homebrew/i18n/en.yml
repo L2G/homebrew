@@ -338,11 +338,6 @@ cmd:
 
       You should set the "HOMEBREW_TEMP" environmental variable to a suitable
       directory on the same volume as your Cellar.
-    compiler_not_standard: |
-      Your compilers are different from the standard versions for your Xcode.
-      If you have Xcode 4.3 or newer, you should install the Command Line Tools for
-      Xcode from within Xcode's Download preferences.
-      Otherwise, you should reinstall Xcode.
     dyld_vars_are_set: |
       Setting DYLD_* vars can break dynamic linking.
       Set variables:
@@ -408,6 +403,10 @@ cmd:
       You can install Homebrew anywhere you want, but some brews may only build
       correctly if you install in /usr/local. Sorry!
     homebrew_ok: "Your system is ready to brew."
+    install_clt: |
+      No developer tools installed.
+      Install the Command Line Tools:
+        xcode-select --install
     keg_only_formula_linked: |
       Some keg-only formula are linked into the Cellar.
       Linking a keg-only formula, such as gettext, into the cellar with
@@ -667,31 +666,41 @@ cmd:
     xcode_clt_install_from_cli: |
       Run `xcode-select --install` to install them.
     xcode_clt_install_from_web: |
-      The standalone package can be obtained from
-      https://developer.apple.com/downloads/,
-      or it can be installed via Xcode's preferences.
-    xcode_clt_not_installed: |
       No developer tools installed.
       You should install the Command Line Tools.
+      The standalone package can be obtained from
+        https://developer.apple.com/downloads
+      or it can be installed via Xcode's preferences.
     xcode_clt_outdated: |
       A newer Command Line Tools release is available
     xcode_clt_update_from_app_store: |
+      A newer Command Line Tools release is available.
       Update them from Software Update in the App Store.
     xcode_clt_update_from_web: |
+      A newer Command Line Tools release is available.
       The standalone package can be obtained from
-      https://developer.apple.com/downloads/,
+        https://developer.apple.com/downloads
       or it can be installed via Xcode's preferences.
     xcode_license_not_agreed: |
       You have not agreed to the Xcode license.
       Builds will fail! Agree to the license by opening Xcode.app or running:
           xcodebuild -license
     xcode_not_installed: |
-      Xcode is not installed
-      Most formulae need Xcode to build.
-      It can be installed from https://developer.apple.com/downloads/
-    xcode_outdated: |
+      Xcode is not installed. Most formulae need Xcode to build.
+      It can be installed from
+        https://developer.apple.com/downloads
+#   xcode_outdated: |
+#     Your Xcode (%1) is outdated
+#     Please update to Xcode %2.
+    xcode_outdated_app_store: |
       Your Xcode (%1) is outdated
       Please update to Xcode %2.
+      Xcode can be updated from the App Store.
+    xcode_outdated_download: |
+      Your Xcode (%1) is outdated
+      Please update to Xcode %2.
+      Xcode can be updated from
+        https://developer.apple.com/downloads
     xcode_prefix_has_space: |
       Xcode is installed to a directory with a space in the name.
       This will cause some formulae to fail to build.
@@ -703,10 +712,10 @@ cmd:
       Your Xcode is configured with an invalid path.
       You should change it to the correct path:
         sudo xcode-select -switch %1
-    xcode_update_from_app_store: |
-      Xcode can be updated from the App Store.
-    xcode_update_from_web: |
-      Xcode can be updated from https://developer.apple.com/downloads/
+#   xcode_update_from_app_store: |
+#     Xcode can be updated from the App Store.
+#   xcode_update_from_web: |
+#     Xcode can be updated from https://developer.apple.com/downloads/
     xquartz_is_outdated: |
       Your XQuartz (%1) is outdated
       Please install XQuartz %2:
