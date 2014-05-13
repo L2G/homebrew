@@ -689,9 +689,6 @@ cmd:
       Xcode is not installed. Most formulae need Xcode to build.
       It can be installed from
         https://developer.apple.com/downloads
-#   xcode_outdated: |
-#     Your Xcode (%1) is outdated
-#     Please update to Xcode %2.
     xcode_outdated_app_store: |
       Your Xcode (%1) is outdated
       Please update to Xcode %2.
@@ -712,10 +709,6 @@ cmd:
       Your Xcode is configured with an invalid path.
       You should change it to the correct path:
         sudo xcode-select -switch %1
-#   xcode_update_from_app_store: |
-#     Xcode can be updated from the App Store.
-#   xcode_update_from_web: |
-#     Xcode can be updated from https://developer.apple.com/downloads/
     xquartz_is_outdated: |
       Your XQuartz (%1) is outdated
       Please install XQuartz %2:
