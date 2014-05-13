@@ -12,6 +12,7 @@ require 'extend/enumerable'
 require 'exceptions'
 require 'utils'
 require 'rbconfig'
+require 'i18n'
 
 # Constants normally defined in global.rb
 HOMEBREW_PREFIX        = Pathname.new('/private/tmp/testbrew/prefix')
