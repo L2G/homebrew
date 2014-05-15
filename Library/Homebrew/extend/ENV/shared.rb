@@ -220,4 +220,6 @@ module SharedEnvExtension
       raise t[:extend].env.gcc_formula_not_found(gcc_name)
     end
   end
+
+  def permit_arch_flags; end
 end
