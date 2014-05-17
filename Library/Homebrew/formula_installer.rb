@@ -167,7 +167,7 @@ class FormulaInstaller
       raise t.formula_installer.unrecognized_bottle_arch(arch)
     end
 
-    oh1 t.formula_installer.installing("{Tty.green}#{f}#{Tty.reset}") if show_header?
+    oh1 t.formula_installer.installing("#{Tty.green}#{f}#{Tty.reset}") if show_header?
 
     @@attempted << f
 
