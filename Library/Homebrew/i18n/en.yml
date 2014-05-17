@@ -209,7 +209,7 @@ formula_installer:
   cleaning_not_complete_1: "The cleaning step did not complete successfully"
   cleaning_not_complete_2: "Still, the installation was successful, so we will link it into your prefix"
   dep_message: "%1: %2"
-  empty_install: "Empty installation"
+  empty_installation: "Empty installation"
   failed_to_create_1: "Failed to create: %1"
   failed_to_create_2: "Things that depend on %1 will probably not build."
   finishing_up: "Finishing up"
