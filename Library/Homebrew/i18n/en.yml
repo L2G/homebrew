@@ -321,6 +321,109 @@ cmd:
       man brew
       brew home
   #------------------------------------------------------------------------------
+  # `audit` command
+  audit:
+    alias_should_be: "Dependency '%1' is an alias; use the canonical name '%2'."
+    cant_find_conflicting: "Can't find conflicting formula %1."
+    cant_find_dependency: "Can't find dependency %1."
+    checksum_empty: "%1 is empty"
+    checksum_invalid_chars: "%1 contains invalid characters"
+    checksum_should_be_lowercase: "%1 should be lowercase"
+    checksum_should_be_n_chars: "%1 should be %2 characters"
+    class_inheritance_space: "Use a space in class inheritance: class Foo < %1"
+    comment_cmake_found: "Commented cmake call found"
+    comment_remove_default: "Please remove default template comments"
+    commented_out_dep: "Commented-out dep %1"
+    data_without_end: "'DATA' was found, but no '__END__'"
+    define_method_in_class_body: "Define method %1 in the class body, not at the top-level"
+    dependency_has_no_option: "Dependency %1 does not define option %2"
+    depends_on_takes_classes: "`depends_on` can take requirement classes instead of instances"
+    dont_need_to_interpolate: "Don't need to interpolate \"%2\" with %1"
+    dont_negate_build_with: "Don't negate 'build.with?': use 'build.without?'"
+    dont_negate_build_without: "Don't negate 'build.without?': use 'build.with?'"
+    dont_use_dependency: |
+      Don't use %1 as a dependency. We allow non-Homebrew
+      %1 installations.
+    end_without_data: "'__END__' was found, but 'DATA' is not used"
+    fileutils_class_dont_need: "Don't need 'FileUtils.' before %1."
+    formula_factory: "\"Formula.factory(name)\" is deprecated in favor of \"Formula[name]\""
+    formulae: !!pl
+      0: "no formulae"
+      1: "%1 formula"
+      n: "%1 formulae"
+    github_patch_macports: "MacPorts patches should specify a revision instead of trunk:\n%1"
+    github_patch_needs_rev: "GitHub/Gist patches should specify a revision:\n%1"
+    github_patch_use_dot_diff: "GitHub appends a git version to patches; use .diff instead."
+    head_only: "Head-only (no stable download)"
+    homepage_github_https: "Use https:// URLs for homepages on GitHub (url is %1)."
+    homepage_gnu_ftpmirror: "\"ftpmirror.gnu.org\" is preferred for GNU software (url is %1)."
+    homepage_googlecode_end_slash: "Google Code homepage should end with a slash (url is %1)."
+    homepage_should_be_http: "The homepage should start with http or https (url is %1)."
+    inreplace_block_var: "\"inreplace <filenames> do |s|\" is preferred over \"|%1|\"."
+    md5_checksums_deprecated: "MD5 checksums are deprecated, please use SHA1 or SHA256"
+    missing_version: "missing version"
+    needs_ending_newline: "File should end with a newline"
+    no_dashes: "Reference '%1' without dashes"
+    no_hardcoding_compiler: "Use \"%1\" instead of hard-coding \"%2\""
+    path_should_be: "\"%1\" should be \"%2\""
+    permissions_644: "Incorrect file permissions: chmod 644 %1"
+    problems_in: !!pl
+      1: "%1 problem in %2"
+      n: "%1 problems in %2"
+    replace_with_optional_dep: "Replace %1 with \"depends_on %1 => :optional\""
+    replace_with_recommended_dep: "Replace %1 with \"depends_on %1 => :recommended\""
+    resource_problem: "%1 resource %2: %3"
+    scons_args: "use \"scons *args\" instead of \"system 'scons', *args\""
+    should_be_build_dependency: "%1 dependency should be \"depends_on '%1' => :build\""
+    separate_make_calls: "Use separate make calls"
+    skip_clean_all_deprecated: |
+      `skip_clean :all` is deprecated; brew no longer strips symbols
+              Pass explicit paths to prevent Homebrew from removing empty folders.
+    string_concat_in_interpolation: |
+      Try not to concatenate paths in string interpolation:
+         %1
+    trailing_whitespace: "%1: Trailing whitespace was found"
+    unnecessary: "%1 is unnecessary; just use %2"
+    url_github_no_zips: "Use GitHub tarballs rather than zipballs (url is %1)."
+    url_github_tarballs: "Use /archive/ URLs for GitHub tarballs (url is %1)."
+    url_github_use_https: "Use https:// URLs for accessing GitHub repositories (url is %1)."
+    url_googlecode_use_https: "Use https:// URLs for downloads from Google Code (url is %1)."
+    url_sourceforge_geoloc: "Use http://downloads.sourceforge.net to get geolocation (url is %1)."
+    url_sourceforge_no_download: "Don't use /download in SourceForge urls (url is %1)."
+    url_sourceforge_no_mirror: "Don't use %1use_mirror in SourceForge urls (url is %2)."
+    url_sourceforge_no_prdown: |
+      Don't use prdownloads in SourceForge urls (url is %1).
+          See: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/
+    url_sourceforge_no_specific: "Don't use specific dl mirrors in SourceForge urls (url is %1)."
+    url_sourceforge_use_https: "Use https:// URLs for downloads from SourceForge (url is %1)."
+    url_using_redundant: "redundant :using specification in URL"
+    use_build_head: "Use 'build.head?' instead of inspecting 'version'"
+    use_build_instead_of_argv: "Use build instead of ARGV to check options"
+    use_build_with: "Don't duplicate 'with': Use `build.with? \"%1\"` to check for \"--with-%1\""
+    use_build_without: "Don't duplicate 'without': Use `build.without? \"%1\"` to check for \"--without-%1\""
+    use_build_with_not_include: "Use build.with%1? \"%2\" instead of build.include? 'with%1-%2'"
+    use_depends_on_fortran: "Use `depends_on :fortran` instead of `ENV.fortran`"
+    use_if_build_with: "Use if build.with?%1 instead of unless build.without?%1"
+    use_if_build_without: "Use if build.without?%1 instead of unless build.with?%1"
+    use_depends_on_x11: "Use \"depends_on :x11\" instead of \"ENV.x11\""
+    use_env_instead_of: "Use ENV instead of invoking '%1' to modify the environment"
+    use_fortran_not_gfortran: "Use `depends_on :fortran` instead of `depends_on 'gfortran'`"
+    use_if_argv_build: "Use \"if ARGV.build_%1\" instead"
+    use_macos_version: "Use MacOS.version instead of MACOS_VERSION"
+    use_mpi_dependency: |
+      There are multiple conflicting ways to install MPI. Use an MPIDependency:
+        depends_on :mpi => [<lang list>]
+      Where <lang list> is a comma delimited list that can include:
+        :cc, :cxx, :f77, :f90
+    use_new_style_opt_defs: "Use new-style option definitions"
+    use_spaces_not_tabs: "Use spaces instead of tabs for indentation"
+    version_empty_string: "version is set to an empty string"
+    version_no_leading_v: "version %1 should not have a leading 'v'"
+    version_redundant: "version %1 is redundant with version scanned from URL"
+    version_symbol_deprecated: "\"%1\" is deprecated, use a comparison to MacOS.version instead"
+    xcodebuild_args: "use \"xcodebuild *args\" instead of \"system 'xcodebuild', *args\""
+    xcodebuild_symroot: "xcodebuild should be passed an explicit \"SYMROOT\""
+  #------------------------------------------------------------------------------
   # `doctor` command
   doctor:
     autoconf_xcode: |
