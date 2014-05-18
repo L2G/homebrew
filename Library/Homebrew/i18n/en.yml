@@ -817,6 +817,26 @@ cmd:
       Please install XQuartz %2:
         https://xquartz.macosforge.org
   #------------------------------------------------------------------------------
+  # `install` command
+  install:
+    cannot_create_dir: |
+      Could not create %1
+      Check you have permission to write to %2
+    cannot_write_dir: "Cannot write to %1"
+    formula_blacklisted: "No available formula for %1\n%2"
+    head_uppercase: "Specify `--HEAD` in uppercase to build from trunk."
+    macports_or_fink_installed_1: "It appears you have MacPorts or Fink installed."
+    macports_or_fink_installed_2: |
+      Software installed with other package managers causes known problems for
+      Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again.
+    option_use_deprecated: |
+      %1 is deprecated and will be removed in a future version.
+      Please use "--cc=%2" instead.
+    searching_taps: "Searching taps..."
+    unsupported_arch: |
+      Sorry, Homebrew does not support your computer's CPU architecture.
+      For PPC support, see: https://github.com/mistydemeo/tigerbrew
+  #------------------------------------------------------------------------------
   # `list` command
   list:
     files: !!pl

@@ -12,22 +12,18 @@ module Homebrew extend self
       'clang' => 'clang'
     }.each_pair do |old, new|
       opt = "--use-#{old}"
-      if ARGV.include? opt then opoo <<-EOS.undent
-        #{opt.inspect} is deprecated and will be removed in a future version.
-        Please use "--cc=#{new}" instead.
-        EOS
-      end
+      opoo t.cmd.install.option_use_deprecated(opt.inspect, new) if ARGV.include? opt
     end
 
     if ARGV.include? '--head'
-      raise "Specify `--HEAD` in uppercase to build from trunk."
+      raise t.cmd.install.head_uppercase
     end
 
     ARGV.named.each do |name|
       # if a formula has been tapped ignore the blacklisting
       unless Formula.path(name).file?
         msg = blacklisted? name
-        raise "No available formula for #{name}\n#{msg}" if msg
+        raise t.cmd.install.formula_blacklisted(name, msg) if msg
       end
       if not File.exist? name and name =~ HOMEBREW_TAP_FORMULA_REGEX then
         require 'cmd/tap'
@@ -42,23 +38,21 @@ module Homebrew extend self
     rescue FormulaUnavailableError => e
       ofail e.message
       require 'cmd/search'
-      puts 'Searching taps...'
+      puts t.cmd.install.searching_taps
       puts_columns(search_taps(query_regexp(e.name)))
     end
   end
 
   def check_ppc
-    case Hardware::CPU.type when :ppc, :dunno
-      abort <<-EOS.undent
-        Sorry, Homebrew does not support your computer's CPU architecture.
-        For PPC support, see: https://github.com/mistydemeo/tigerbrew
-        EOS
+    case Hardware::CPU.type
+    when :ppc, :dunno
+      abort t.cmd.install.unsupported_arch
     end
   end
 
   def check_writable_install_location
-    raise "Cannot write to #{HOMEBREW_CELLAR}" if HOMEBREW_CELLAR.exist? and not HOMEBREW_CELLAR.writable_real?
-    raise "Cannot write to #{HOMEBREW_PREFIX}" unless HOMEBREW_PREFIX.writable_real? or HOMEBREW_PREFIX.to_s == '/usr/local'
+    raise t.cmd.install.cannot_write_dir(HOMEBREW_CELLAR) if HOMEBREW_CELLAR.exist? and not HOMEBREW_CELLAR.writable_real?
+    raise t.cmd.install.cannot_write_dir(HOMEBREW_PREFIX) unless HOMEBREW_PREFIX.writable_real? or HOMEBREW_PREFIX.to_s == '/usr/local'
   end
 
   def check_xcode
@@ -76,19 +70,15 @@ module Homebrew extend self
 
   def check_macports
     unless MacOS.macports_or_fink.empty?
-      opoo "It appears you have MacPorts or Fink installed."
-      puts "Software installed with other package managers causes known problems for"
-      puts "Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again."
+      opoo t.cmd.install.macports_or_fink_installed_1
+      puts t.cmd.install.macports_or_fink_installed_2
     end
   end
 
   def check_cellar
     FileUtils.mkdir_p HOMEBREW_CELLAR if not File.exist? HOMEBREW_CELLAR
   rescue
-    raise <<-EOS.undent
-      Could not create #{HOMEBREW_CELLAR}
-      Check you have permission to write to #{HOMEBREW_CELLAR.parent}
-    EOS
+    raise t.cmd.install.cannot_create_dir(HOMEBREW_CELLAR, HOMEBREW_CELLAR.parent)
   end
 
   def perform_preinstall_checks
