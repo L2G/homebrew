@@ -6,15 +6,6 @@ module Homebrew extend self
   def install
     raise FormulaUnspecifiedError if ARGV.named.empty?
 
-    {
-      'gcc' => 'gcc-4.2',
-      'llvm' => 'llvm-gcc',
-      'clang' => 'clang'
-    }.each_pair do |old, new|
-      opt = "--use-#{old}"
-      opoo t.cmd.install.option_use_deprecated(opt.inspect, new) if ARGV.include? opt
-    end
-
     if ARGV.include? '--head'
       raise t.cmd.install.head_uppercase
     end

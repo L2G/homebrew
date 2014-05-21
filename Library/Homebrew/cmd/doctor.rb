@@ -159,7 +159,7 @@ end
 
 if MacOS.version >= "10.9"
   def check_for_installed_developer_tools
-    unless MacOS::CLT.installed?
+    unless MacOS::Xcode.installed? || MacOS::CLT.installed?
       t.cmd.doctor.install_clt
     end
   end
@@ -668,7 +668,6 @@ end
 
 def check_for_bad_python_symlink
   return unless which "python"
-  # Indeed Python -V outputs to stderr (WTF?)
   `python -V 2>&1` =~ /Python (\d+)\./
   # This won't be the right warning if we matched nothing at all
   return if $1.nil?

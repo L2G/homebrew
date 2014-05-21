@@ -26,19 +26,17 @@ def blacklisted? name
     t.blacklist.google_tool('gtest')
   when 'gmock', 'googlemock', 'google-mock'
     t.blacklist.google_tool('gmock')
-  when 'gcc'
-    t.blacklist.gcc
   when 'sshpass'
     t.blacklist.sshpass
-    EOS
   when 'gsutil'
     t.blacklist.gsutil
-    EOS
   when 'clojure'
     t.blacklist.clojure
   when 'rubinius'
     t.blacklist.rubinius
   when 'osmium'
     t.blacklist.osmium
+  when 'gfortran'
+    t.blacklist.gfortran
   end
 end

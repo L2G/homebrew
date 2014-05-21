@@ -710,6 +710,7 @@ class FormulaInstaller
         @@locked << dep.to_formula
       end unless ignore_deps?
       @@locked.unshift(f)
+      @@locked.uniq!
       @@locked.each(&:lock)
       @hold_locks = true
     end

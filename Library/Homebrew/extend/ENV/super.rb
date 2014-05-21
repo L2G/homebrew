@@ -66,6 +66,15 @@ module Superenv
     self['CMAKE_LIBRARY_PATH'] = determine_cmake_library_path
     self['ACLOCAL_PATH'] = determine_aclocal_path
     self['M4'] = MacOS.locate("m4") if deps.include? "autoconf"
+    self["HOMEBREW_ISYSTEM_PATHS"] = determine_isystem_paths
+    self["HOMEBREW_INCLUDE_PATHS"] = determine_include_paths
+    self["HOMEBREW_LIBRARY_PATHS"] = determine_library_paths
+
+    # On 10.9 the developer tools honor the correct sysroot by default.
+    # On 10.7 and 10.8 we need to set it ourselves.
+    if MacOS::Xcode.without_clt? && (MacOS.version <= "10.8" || compiler != :clang)
+      self["HOMEBREW_SYSROOT"] = effective_sysroot
+    end
 
     # On 10.9, the tools in /usr/bin proxy to the active developer directory.
     # This means we can use them for any combination of CLT and Xcode.
@@ -87,7 +96,7 @@ module Superenv
     # s - apply fix for sed's Unicode support
     # a - apply fix for apr-1-config path
 
-    warn_about_non_apple_gcc($1) if self["HOMEBREW_CC"] =~ GNU_GCC_REGEXP
+    warn_about_non_apple_gcc($1) if homebrew_cc =~ GNU_GCC_REGEXP
   end
 
   private
@@ -98,6 +107,10 @@ module Superenv
 
   def cxx= val
     self["HOMEBREW_CXX"] = super
+  end
+
+  def effective_sysroot
+    if MacOS::Xcode.without_clt? then MacOS.sdk_path.to_s else "" end
   end
 
   def determine_cc
@@ -125,7 +138,7 @@ module Superenv
 
     # Homebrew's apple-gcc42 will be outside the PATH in superenv,
     # so xcrun may not be able to find it
-    case self["HOMEBREW_CC"]
+    case homebrew_cc
     when "gcc-4.2"
       begin
        apple_gcc42 = Formulary.factory('apple-gcc42')
@@ -159,40 +172,53 @@ module Superenv
     paths.to_path_s
   end
 
-  def determine_cmake_prefix_path
-    paths = keg_only_deps.map{|dep| "#{HOMEBREW_PREFIX}/opt/#{dep}" }
-    paths << HOMEBREW_PREFIX.to_s # put ourselves ahead of everything else
-    paths << "#{MacOS.sdk_path}/usr" if MacOS::Xcode.without_clt?
+  def determine_isystem_paths
+    paths = []
+    paths << "#{HOMEBREW_PREFIX}/include"
+    paths << "#{effective_sysroot}/usr/include/libxml2" unless deps.include? "libxml2"
+    paths << "#{effective_sysroot}/usr/include/apache2" if MacOS::Xcode.without_clt?
+    paths << "#{effective_sysroot}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+    paths << MacOS::X11.include.to_s << "#{MacOS::X11.include}/freetype2" if x11?
     paths.to_path_s
   end
 
-  def determine_cmake_frameworks_path
-    paths = deps.map{|dep| "#{HOMEBREW_PREFIX}/opt/#{dep}/Frameworks" }
-    paths << "#{MacOS.sdk_path}/System/Library/Frameworks" if MacOS::Xcode.without_clt?
+  def determine_include_paths
+    keg_only_deps.map { |dep| "#{HOMEBREW_PREFIX}/opt/#{dep}/include" }.to_path_s
+  end
+
+  def determine_library_paths
+    paths = keg_only_deps.map { |dep| "#{HOMEBREW_PREFIX}/opt/#{dep}/lib" }
+    paths << "#{HOMEBREW_PREFIX}/lib"
+    paths << "#{effective_sysroot}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
+    paths << MacOS::X11.lib.to_s if x11?
+    paths.to_path_s
+  end
+
+  def determine_cmake_prefix_path
+    paths = keg_only_deps.map { |dep| "#{HOMEBREW_PREFIX}/opt/#{dep}" }
+    paths << HOMEBREW_PREFIX.to_s
     paths.to_path_s
   end
 
   def determine_cmake_include_path
-    sdk = MacOS.sdk_path if MacOS::Xcode.without_clt?
     paths = []
-    paths << "#{sdk}/usr/include/libxml2" unless deps.include? 'libxml2'
-    paths << "#{sdk}/usr/include/apache2" if MacOS::Xcode.without_clt?
-    if x11?
-      paths << MacOS::X11.include << "#{MacOS::X11.include}/freetype2"
-    else
-      paths << "#{sdk}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
-    end
+    paths << "#{effective_sysroot}/usr/include/libxml2" unless deps.include? "libxml2"
+    paths << "#{effective_sysroot}/usr/include/apache2" if MacOS::Xcode.without_clt?
+    paths << "#{effective_sysroot}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+    paths << MacOS::X11.include.to_s << "#{MacOS::X11.include}/freetype2" if x11?
     paths.to_path_s
   end
 
   def determine_cmake_library_path
-    sdk = MacOS.sdk_path if MacOS::Xcode.without_clt?
     paths = []
-    if x11?
-      paths << MacOS::X11.lib
-    else
-      paths << "#{sdk}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
-    end
+    paths << "#{effective_sysroot}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
+    paths << MacOS::X11.lib.to_s if x11?
+    paths.to_path_s
+  end
+
+  def determine_cmake_frameworks_path
+    paths = deps.map { |dep| "#{HOMEBREW_PREFIX}/opt/#{dep}/Frameworks" }
+    paths << "#{effective_sysroot}/System/Library/Frameworks" if MacOS::Xcode.without_clt?
     paths.to_path_s
   end
 
@@ -272,14 +298,14 @@ module Superenv
   end
 
   def cxx11
-    case self["HOMEBREW_CC"]
+    case homebrew_cc
     when "clang"
       append 'HOMEBREW_CCCFG', "x", ''
       append 'HOMEBREW_CCCFG', "g", ''
     when /gcc-4\.(8|9)/
       append 'HOMEBREW_CCCFG', "x", ''
     else
-      raise t[:extend].env.cxx11_not_supported(self['HOMEBREW_CC'])
+      raise t[:extend].env.cxx11_not_supported(homebrew_cc)
     end
   end
 
