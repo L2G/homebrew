@@ -32,7 +32,7 @@ module Homebrew extend self
 
     unless problem_count.zero?
       ofail t.cmd.audit.problems_in(
-        problem.count, t.cmd.audit.formulae(formula_count)
+        problem_count, t.cmd.audit.formulae(formula_count)
       )
     end
   end
