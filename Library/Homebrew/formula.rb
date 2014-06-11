@@ -26,8 +26,7 @@ class Formula
 
   attr_accessor :local_bottle_path
 
-  # Homebrew determines the name
-  def initialize name='__UNKNOWN__', path=self.class.path(name)
+  def initialize(name, path)
     @name = name
     @path = path
     @homepage = self.class.homepage
@@ -573,7 +572,7 @@ class Formula
         f.puts
         require 'cmd/config'
         Homebrew.write_build_config(f)
-        raise BuildError.new(self, cmd, args, $?)
+        raise BuildError.new(self, cmd, args)
       end
     end
   ensure

@@ -4,18 +4,15 @@ require 'test/testball'
 class FormulaTests < Test::Unit::TestCase
   include VersionAssertions
 
-  def test_formula_path_initialization
-    name = "formula_name"
+  def test_formula_instantiation
     klass = Class.new(Formula) { url "http://example.com/foo-1.0.tar.gz" }
+    name = "formula_name"
+    path = Formula.path(name)
 
-    f = klass.new(name)
-    assert_equal Formula.path(name), f.path
-
-    f = klass.new(name, path = Object.new)
+    f = klass.new(name, path)
+    assert_equal name, f.name
     assert_equal path, f.path
-
-    f = klass.new(name, nil)
-    assert_nil f.path
+    assert_raises(ArgumentError) { klass.new }
   end
 
   def test_prefix
@@ -126,19 +123,19 @@ class FormulaTests < Test::Unit::TestCase
   def test_equality
     x = TestBall.new
     y = TestBall.new
-    assert x == y
-    assert y == x
+    assert_equal x, y
+    assert_equal y, x
     assert x.eql?(y)
     assert y.eql?(x)
-    assert x.hash == y.hash
+    assert_equal x.hash, y.hash
   end
 
   def test_inequality
     x = TestBall.new("foo")
     y = TestBall.new("bar")
-    assert x != y
-    assert y != x
-    assert x.hash != y.hash
+    assert_not_equal x, y
+    assert_not_equal y, x
+    assert_not_equal x.hash, y.hash
     assert !x.eql?(y)
     assert !y.eql?(x)
   end

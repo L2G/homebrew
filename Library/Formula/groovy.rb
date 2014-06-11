@@ -2,8 +2,8 @@ require 'formula'
 
 class Groovy < Formula
   homepage 'http://groovy.codehaus.org/'
-  url 'http://dl.bintray.com/groovy/maven/groovy-binary-2.3.1.zip'
-  sha1 'd45f23c022e3465614a5ff75041b6b87abe76ea1'
+  url 'http://dl.bintray.com/groovy/maven/groovy-binary-2.3.2.zip'
+  sha1 '10f37e1ebb8c687d3815e29e5cd6b9f0e66ce473'
 
   option 'invokedynamic', "Install the InvokeDynamic version of Groovy (only works with Java 1.7+)"
 
@@ -12,7 +12,7 @@ class Groovy < Formula
     rm_f Dir["bin/*.bat"]
 
     if build.include? 'invokedynamic'
-      Dir['indy/*.jar'].each do |src_path|
+      Dir.glob("indy/*.jar") do |src_path|
         dst_file = File.basename(src_path, '-indy.jar') + '.jar'
         dst_path = File.join('lib', dst_file)
         mv src_path, dst_path

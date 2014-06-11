@@ -703,9 +703,10 @@ cmd:
 
               %1
     unsupported_ruby: |
-      Ruby version %1 is unsupported.
-      Homebrew is developed and tested on Ruby 1.8.x, and may not work correctly
-      on other Rubies. Patches are accepted as long as they don't break on 1.8.x.
+      Ruby version %1 is unsupported on %2. Homebrew
+      is developed and tested on Ruby %3, and may not work correctly
+      on other Rubies. Patches are accepted as long as they don't cause breakage
+      on supported Rubies.
     unwritable_access_logs: |
       %1 isn't writable.
       This can happen if you "sudo make install" software that isn't managed

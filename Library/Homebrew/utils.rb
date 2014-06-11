@@ -89,9 +89,13 @@ def interactive_shell f=nil
 
   Process.wait fork { exec ENV['SHELL'] }
 
-  unless $?.success?
+  if $?.success?
+    return
+  elsif $?.exited?
     puts t.utils.interactive_shell_abort
-    exit $?
+    exit $?.exitstatus
+  else
+    raise $?.inspect
   end
 end
 
@@ -189,7 +193,9 @@ def which_editor
   return 'mate' if which "mate"
   # Find BBEdit / TextWrangler
   return 'edit' if which "edit"
-  # Default to vim
+  # Find vim
+  return 'vim' if which "vim"
+  # Default to standard vim
   return '/usr/bin/vim'
 end
 
