@@ -38,5 +38,7 @@ def blacklisted? name
     t.blacklist.osmium
   when 'gfortran'
     t.blacklist.gfortran
+  when 'play'
+    t.blacklist.play
   end
 end

@@ -57,6 +57,13 @@ blacklist:
     Homebrew provides pip via: `brew install python`. However you will then
     have two Pythons installed on your Mac, so alternatively you can:
         sudo easy_install pip
+  play: |
+    Play 2.3 replaces the play command with activator:
+      brew install typesafe-activator
+
+    You can read more about this change at:
+      http://www.playframework.com/documentation/2.3.x/Migration23
+      http://www.playframework.com/documentation/2.3.x/Highlights23
   rubinius: |
     Rubinius requires an existing Ruby 2.0 to bootstrap.
     Doing this through Homebrew is error-prone. Instead, consider using
@@ -191,13 +198,11 @@ formula_installer:
   bottle_install_fail: "Bottle installation failed: building from source."
   brew_link_error_1: "An unexpected error occurred during the `brew link` step"
   brew_link_error_2: "The formula built, but is not symlinked into %1"
-  brew_link_unfinished_1: "The `brew link` step did not complete successfully"
-  brew_link_unfinished_2: |
-    The formula built, but is not symlinked into %1
+  brew_link_not_complete: "The `brew link` step did not complete successfully"
+  brew_link_possible_conflict: "Possible conflicting files are:"
+  brew_link_try_again_with: |
     You can try again using:
-      brew link %2
-
-    Possible conflicting files are:
+      brew link %1
   caveats: "Caveats"
   cellar_bottle: "Building source; cellar of %1's bottle is %2"
   cleaning: "Cleaning"
@@ -212,15 +217,12 @@ formula_installer:
   fix_install_names_fail_2: |
     The formula built, but you may encounter issues using it or linking other
     formulae against it.
-  head_only: |
-    %1 is a head-only formula
-    Install with `brew install --HEAD %2
-  keg_already_linked: "This keg was marked linked already, continuing anyway"
   install_badge: 🍺
   install_plist_failed: "Failed to install plist file"
   installing: "Installing %1"
   installing_dep_for: "Installing %1 dependency: %2"
   installing_deps_for: "Installing dependencies for %1: %2"
+  keg_already_linked: "This keg was marked linked already, continuing anyway"
   keg_only_1: "This formula is keg-only, so it was not symlinked into %1."
   # Keep keg_only_2 within 72 columns
   # <---------------------------------------------------------------------->
@@ -234,7 +236,6 @@ formula_installer:
   keg_only_cppflags: "    CPPFLAGS: -I%1\n"
   keg_only_ldflags: "    LDFLAGS:  -L%1\n"
   must_link_deps: "You must `brew link %1' before %2 can be installed"
-  no_head: "No head is defined for %1"
   nothing_installed_to: "Nothing was installed to %1"
   postinstall_fail_1: "The post-install step did not complete successfully"
   postinstall_fail_2: "You can try again using `brew postinstall %1`"
@@ -403,7 +404,7 @@ cmd:
     use_depends_on_x11: "Use \"depends_on :x11\" instead of \"ENV.x11\""
     use_env_instead_of: "Use ENV instead of invoking '%1' to modify the environment"
     use_fortran_not_gfortran: "Use `depends_on :fortran` instead of `depends_on 'gfortran'`"
-    use_if_argv_build: "Use \"if ARGV.build_%1\" instead"
+    use_if_argv_build: "Use \"if build.%1?\" instead"
     use_macos_version: "Use MacOS.version instead of MACOS_VERSION"
     use_mpi_dependency: |
       There are multiple conflicting ways to install MPI. Use an MPIDependency:
@@ -452,11 +453,6 @@ cmd:
     filesystem_case_sensitive: |
       Your file-system on %1 appears to be CaSe SeNsItIvE.
       Homebrew is less tested with that - don't worry but please report issues.
-    fink_set_macosx_deployment_target: |
-      MACOSX_DEPLOYMENT_TARGET was set to %1
-      This is used by Fink, but having it set to a value different from the
-      current system version (%2) can cause problems, compiling
-      Git for instance, and should probably be removed.
     git_autocrlf_settings: |
       Suspicious Git newline settings found.
 
@@ -724,8 +720,9 @@ cmd:
 
     unwritable_directory: |
       %1 isn't writable.
+
       This can happen if you "sudo make install" software that isn't managed by
-      by Homebrew. If a brew tries to write a file to this directory, the
+      by Homebrew. If a formula tries to write a file to this directory, the
       install will fail during the link step.
 
       You should probably `chown` %1

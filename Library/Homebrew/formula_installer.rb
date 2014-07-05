@@ -91,10 +91,15 @@ class FormulaInstaller
   end
 
   def verify_deps_exist
-    f.recursive_dependencies.map(&:to_formula)
-  rescue TapFormulaUnavailableError => e
-    Homebrew.install_tap(e.user, e.repo)
-    retry
+    begin
+      f.recursive_dependencies.map(&:to_formula)
+    rescue TapFormulaUnavailableError => e
+      if Homebrew.install_tap(e.user, e.repo)
+        retry
+      else
+        raise
+      end
+    end
   rescue FormulaUnavailableError => e
     e.dependent = f.name
     raise
@@ -110,16 +115,6 @@ class FormulaInstaller
         msg = t.formula_installer.already_installed_not_linked(f, f.installed_version)
       end
       raise FormulaAlreadyInstalledError, msg
-    end
-
-    # Building head-only without --HEAD is an error
-    if not ARGV.build_head? and f.stable.nil?
-      raise CannotInstallFormulaError, t.formula_installer.head_only(f, f.name)
-    end
-
-    # Building stable-only with --HEAD is an error
-    if ARGV.build_head? and f.head.nil?
-      raise CannotInstallFormulaError, t.formula_installer.no_head(f.name)
     end
 
     unless ignore_deps?
@@ -184,7 +179,6 @@ class FormulaInstaller
           opoo e.message
         end
 
-        stdlibs = Keg.new(f.prefix).detect_cxx_stdlibs :skip_executables => true
         tab = Tab.for_keg f.prefix
         tab.poured_from_bottle = true
         tab.write
@@ -221,7 +215,7 @@ class FormulaInstaller
     return if ARGV.force?
 
     conflicts = f.conflicts.reject do |c|
-      keg = Formula.factory(c.name).prefix
+      keg = Formulary.factory(c.name).prefix
       not keg.directory? && Keg.new(keg).linked?
     end
 
@@ -265,26 +259,24 @@ class FormulaInstaller
 
     while f = formulae.pop
 
-      ARGV.filter_for_dependencies do
-        f.recursive_requirements do |dependent, req|
-          build = effective_build_options_for(dependent)
+      f.recursive_requirements do |dependent, req|
+        build = effective_build_options_for(dependent)
 
-          if (req.optional? || req.recommended?) && build.without?(req)
-            Requirement.prune
-          elsif req.build? && dependent == f && pour_bottle?
-            Requirement.prune
-          elsif req.build? && dependent != f && install_bottle_for_dep?(dependent, build)
-            Requirement.prune
-          elsif req.satisfied?
-            Requirement.prune
-          elsif req.default_formula?
-            dep = req.to_dependency
-            deps.unshift(dep)
-            formulae.unshift(dep.to_formula)
-            Requirement.prune
-          else
-            unsatisfied_reqs[dependent] << req
-          end
+        if (req.optional? || req.recommended?) && build.without?(req)
+          Requirement.prune
+        elsif req.build? && dependent == f && pour_bottle?
+          Requirement.prune
+        elsif req.build? && dependent != f && install_bottle_for_dep?(dependent, build)
+          Requirement.prune
+        elsif req.satisfied?
+          Requirement.prune
+        elsif req.default_formula?
+          dep = req.to_dependency
+          deps.unshift(dep)
+          formulae.unshift(dep.to_formula)
+          Requirement.prune
+        else
+          unsatisfied_reqs[dependent] << req
         end
       end
     end
@@ -295,23 +287,21 @@ class FormulaInstaller
   def expand_dependencies(deps)
     inherited_options = {}
 
-    expanded_deps = ARGV.filter_for_dependencies do
-      Dependency.expand(f, deps) do |dependent, dep|
-        options = inherited_options[dep.name] = inherited_options_for(dep)
-        build = effective_build_options_for(
-          dependent,
-          inherited_options.fetch(dependent.name, [])
-        )
+    expanded_deps = Dependency.expand(f, deps) do |dependent, dep|
+      options = inherited_options[dep.name] = inherited_options_for(dep)
+      build = effective_build_options_for(
+        dependent,
+        inherited_options.fetch(dependent.name, [])
+      )
 
-        if (dep.optional? || dep.recommended?) && build.without?(dep)
-          Dependency.prune
-        elsif dep.build? && dependent == f && pour_bottle?
-          Dependency.prune
-        elsif dep.build? && dependent != f && install_bottle_for_dep?(dependent, build)
-          Dependency.prune
-        elsif dep.satisfied?(options)
-          Dependency.skip
-        end
+      if (dep.optional? || dep.recommended?) && build.without?(dep)
+        Dependency.prune
+      elsif dep.build? && dependent == f && pour_bottle?
+        Dependency.prune
+      elsif dep.build? && dependent != f && install_bottle_for_dep?(dependent, build)
+        Dependency.prune
+      elsif dep.satisfied?(options)
+        Dependency.skip
       end
     end
 
@@ -345,9 +335,7 @@ class FormulaInstaller
           )
     end
 
-    ARGV.filter_for_dependencies do
-      deps.each { |dep, options| install_dependency(dep, options) }
-    end
+    deps.each { |dep, options| install_dependency(dep, options) }
 
     @show_header = true unless deps.empty?
   end
@@ -490,8 +478,11 @@ class FormulaInstaller
     args << "--debug" if debug?
     args << "--cc=#{ARGV.cc}" if ARGV.cc
     args << "--env=#{ARGV.env}" if ARGV.env
-    args << "--HEAD" if ARGV.build_head?
-    args << "--devel" if ARGV.build_devel?
+
+    case f.active_spec
+    when f.head  then args << "--HEAD"
+    when f.devel then args << "--devel"
+    end
 
     f.build.each do |opt, _|
       name  = opt.name[/\A(.+)=\z$/, 1]
@@ -569,21 +560,30 @@ class FormulaInstaller
   end
 
   def link
-    if f.linked_keg.directory? and f.linked_keg.resolved_path == f.prefix
-      opoo t.formula_installer.keg_already_linked
-      # otherwise Keg.link will bail
-      f.linked_keg.unlink
-    end
-
     keg = Keg.new(f.prefix)
+
+    if keg.linked?
+      opoo t.formula_installer.keg_already_linked
+      keg.remove_linked_keg_record
+    end
 
     begin
       keg.link
-    rescue Keg::LinkError => e
-      onoe t.formula_installer.brew_link_unfinished_1
-      puts t.formula_installer.brew_link_unfinished_2(HOMEBREW_PREFIX, f.name)
+    rescue Keg::ConflictError => e
+      onoe t.formula_installer.brew_link_not_complete
+      puts t.formula_installer.brew_link_error_2(HOMEBREW_PREFIX)
+      puts e
+      puts
+      puts t.formula_installer.brew_link_possible_conflict
       mode = OpenStruct.new(:dry_run => true, :overwrite => true)
       keg.link(mode)
+      @show_summary_heading = true
+    rescue Keg::LinkError => e
+      onoe t.formula_installer.brew_link_not_complete
+      puts t.formula_installer.brew_link_error_2(HOMEBREW_PREFIX)
+      puts e
+      puts
+      puts t.formula_installer.brew_link_try_again_with(f.name)
       @show_summary_heading = true
     rescue Exception => e
       onoe t.formula_installer.brew_link_error_1
@@ -731,12 +731,8 @@ class Formula
     s << "\n\n#{keg_only_reason.to_s}"
     if lib.directory? or include.directory?
       s << t.formula_installer.keg_only_2
-      if lib.directory?
-        s << t.formula_installer.keg_only_ldflags("#{HOMEBREW_PREFIX}/opt/#{name}/lib")
-      end
-      if include.directory?
-        s << t.formula_installer.keg_only_cppflags("#{HOMEBREW_PREFIX}/opt/#{name}/include")
-      end
+      s << t.formula_installer.keg_only_ldflags(opt_lib) if lib.directory?
+      s << t.formula_installer.keg_only_cppflags(opt_include) if include.directory?
     end
     s << "\n"
   end

@@ -85,11 +85,11 @@ class Caveats
         if f.plist_startup
           s << t.caveats.plist_startup(f.name)
           s << "    sudo mkdir -p #{destination}" unless destination_path.directory?
-          s << "    sudo cp -fv #{HOMEBREW_PREFIX}/opt/#{f.name}/*.plist #{destination}"
+          s << "    sudo cp -fv #{f.opt_prefix}/*.plist #{destination}"
         else
           s << t.caveats.plist_login(f.name)
           s << "    mkdir -p #{destination}" unless destination_path.directory?
-          s << "    ln -sfv #{HOMEBREW_PREFIX}/opt/#{f.name}/*.plist #{destination}"
+          s << "    ln -sfv #{f.opt_prefix}/*.plist #{destination}"
         end
         s << t.caveats.plist_then_load(f.name)
         if f.plist_startup
@@ -105,7 +105,7 @@ class Caveats
         s << t.caveats.plist_upgrade(f.name)
         if f.plist_startup
           s << "    sudo launchctl unload #{plist_link}"
-          s << "    sudo cp -fv #{HOMEBREW_PREFIX}/opt/#{f.name}/*.plist #{destination}"
+          s << "    sudo cp -fv #{f.opt_prefix}/*.plist #{destination}"
           s << "    sudo launchctl load #{plist_link}"
         else
           s << "    launchctl unload #{plist_link}"

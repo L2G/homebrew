@@ -1,4 +1,4 @@
-module Homebrew extend self
+module Homebrew
   def help
     puts t.cmd.help
   end
