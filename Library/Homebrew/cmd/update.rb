@@ -6,7 +6,6 @@ module Homebrew
     unless ARGV.named.empty?
       abort t.cmd.update.no_formula_names
     end
-    abort t.cmd.update.install_git unless which "git"
 
     # ensure GIT_CONFIG is unset as we need to operate on .git/config
     ENV.delete('GIT_CONFIG')
@@ -270,10 +269,10 @@ class Report
   def select_formula key
     fetch(key, []).map do |path|
       case path.to_s
-      when Regexp.new(HOMEBREW_LIBRARY + "/Formula")
+      when %r{^#{Regexp.escape(HOMEBREW_LIBRARY.to_s)}/Formula}o
         path.basename(".rb").to_s
       when HOMEBREW_TAP_PATH_REGEX
-        "#$1/#{$2.sub("homebrew-", "")}/#{path.basename(".rb")}"
+        "#{$1}/#{$2.sub("homebrew-", "")}/#{path.basename(".rb")}"
       end
     end.compact.sort
   end

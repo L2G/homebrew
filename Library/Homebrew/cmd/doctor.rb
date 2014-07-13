@@ -27,12 +27,17 @@ class Volumes
   def get_mounts path=nil
     vols = []
     # get the volume of path, if path is nil returns all volumes
-    raw_df = IO.popen("/bin/df -P #{path}", "rb", &:read)
-    raw_df.split("\n").each do |line|
-      case line
-      # regex matches: /dev/disk0s2   489562928 440803616  48247312    91%    /
-      when /^(.*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]{1,3}\%)\s+(.*)/
-        vols << $6
+
+    args = %w[/bin/df -P]
+    args << path if path
+
+    Utils.popen_read(*args) do |io|
+      io.each_line do |line|
+        case line.chomp
+          # regex matches: /dev/disk0s2   489562928 440803616  48247312    91%    /
+        when /^.+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]{1,3}%\s+(.+)/
+          vols << $1
+        end
       end
     end
     return vols
@@ -514,7 +519,7 @@ def check_filesystem_case_sensitive
     dir.exist? && !(upcased.exist? && downcased.exist?)
   end.map { |case_sensitive_dir| volumes.get_mounts(case_sensitive_dir) }.uniq
   return if case_sensitive_vols.empty?
-  t.cmd.doctor.filesystem_case_sensitive(case_sensitive_vols)
+  t.cmd.doctor.filesystem_case_sensitive(case_sensitive_vols.join(","))
 end
 
 def __check_git_version

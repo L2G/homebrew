@@ -194,7 +194,6 @@ formula_installer:
   already_installed_unlink: |
     %1-%2 already installed
     To install this version, first `brew unlink %1'
-  bottle_blocked_by: "Building source; bottle blocked by %1 requirement"
   bottle_install_fail: "Bottle installation failed: building from source."
   brew_link_error_1: "An unexpected error occurred during the `brew link` step"
   brew_link_error_2: "The formula built, but is not symlinked into %1"
@@ -451,8 +450,8 @@ cmd:
       copies of iconv and libxml2 into directories that are picked up by
       other build systems.
     filesystem_case_sensitive: |
-      Your file-system on %1 appears to be CaSe SeNsItIvE.
-      Homebrew is less tested with that - don't worry but please report issues.
+      The filesystem on %1 appears to be case-sensitive.
+      The default OS X filesystem is case-insensitive. Please report any apparent problems.
     git_autocrlf_settings: |
       Suspicious Git newline settings found.
 
@@ -840,7 +839,6 @@ cmd:
     already_up_to_date: "Already up-to-date."
     deleted_formulae: "Deleted Formulae"
     failure_while_executing: "Failure while executing: %1"
-    install_git: "Please `brew install git' first."
     homebrew_tap_structure_1: "Homebrew changed the structure of Taps like <someuser>/<sometap>. %1"
     homebrew_tap_structure_2: "So you may need to rename %1 manually."
     homebrew_tap_structure_3: "%1 is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."
