@@ -172,20 +172,13 @@ class Updater
     end
   end
 
-  # Matches raw git diff format (see `man git-diff-tree`)
-  DIFFTREE_RX = /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} [0-9a-fA-F]{40} ([ACDMRTUX])\d{0,3}\t(.+?)(?:\t(.+))?$/
-
   def report
     map = Hash.new{ |h,k| h[k] = [] }
 
     if initial_revision && initial_revision != current_revision
-      `git diff-tree -r --raw -M85% #{initial_revision} #{current_revision}`.each_line do |line|
-        DIFFTREE_RX.match line
-        path = case status = $1.to_sym
-          when :R then $3
-          else $2
-          end
-        map[status] << repository.join(path)
+      `git diff-tree -r --name-status --diff-filter=AMD #{initial_revision} #{current_revision}`.each_line do |line|
+        status, path = line.split
+        map[status.to_sym] << repository.join(path)
       end
     end
 
@@ -233,7 +226,6 @@ class Report
     dump_formula_report :A, t.cmd.update.new_formulae
     dump_formula_report :M, t.cmd.update.updated_formulae
     dump_formula_report :D, t.cmd.update.deleted_formulae
-    dump_formula_report :R, t.cmd.update.renamed_formulae
   end
 
   def tapped_formula_for key

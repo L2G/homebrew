@@ -417,18 +417,9 @@ class FormulaInstaller
 
     install_plist
 
-    if f.keg_only?
-      begin
-        Keg.new(f.prefix).optlink
-      rescue Exception
-        onoe t.formula_installer.failed_to_create_1(f.opt_prefix)
-        puts t.formula_installer.failed_to_create_2(f)
-      end
-    else
-      link
-    end
-
-    fix_install_names if OS.mac?
+    keg = Keg.new(f.prefix)
+    link(keg)
+    fix_install_names(keg) if OS.mac?
 
     post_install
 
@@ -558,8 +549,17 @@ class FormulaInstaller
     raise
   end
 
-  def link
-    keg = Keg.new(f.prefix)
+  def link(keg)
+    if f.keg_only?
+      begin
+        keg.optlink
+      rescue Keg::LinkError => e
+        onoe t.formula_installer.failed_to_create_1(f.opt_prefix)
+        puts t.formula_installer.failed_to_create_2(f)
+        puts e
+      end
+      return
+    end
 
     if keg.linked?
       opoo t.formula_installer.keg_already_linked
@@ -604,8 +604,7 @@ class FormulaInstaller
     ohai e, e.backtrace if debug?
   end
 
-  def fix_install_names
-    keg = Keg.new(f.prefix)
+  def fix_install_names(keg)
     keg.fix_install_names(:keg_only => f.keg_only?)
 
     if @poured_bottle
@@ -646,9 +645,8 @@ class FormulaInstaller
     if f.local_bottle_path
       downloader = LocalBottleDownloadStrategy.new(f)
     else
-      bottle = f.bottle
-      downloader = bottle.downloader
-      bottle.verify_download_integrity(bottle.fetch)
+      downloader = f.bottle
+      downloader.verify_download_integrity(downloader.fetch)
     end
     HOMEBREW_CELLAR.cd do
       downloader.stage

@@ -138,7 +138,6 @@ extend:
       Multiple kegs installed to %1
       However we don''t know which one you refer to.
       Please delete (with rm -rf!) all but one and then try again.
-      Sorry, we know this is lame.
   #----------------------------------------------------------------------------
   # extend/ENV*
   env:
@@ -176,9 +175,8 @@ extend:
   # extend/pathname.rb
   pathname:
     does_not_exist: "%1 does not exist"
+    # "files" is used only if there is more than one file
     files: !!pl
-      0: "No files, "
-      1: "%1 file, "
       n: "%1 files, "
     exec_scripts_empty_targets: "tried to write exec scripts to %1 for an empty list of targets"
     same_file: "%1 is the same file as %2"
@@ -209,7 +207,7 @@ formula_installer:
   cleaning_not_complete_2: "Still, the installation was successful, so we will link it into your prefix"
   dep_message: "%1: %2"
   empty_installation: "Empty installation"
-  failed_to_create_1: "Failed to create: %1"
+  failed_to_create_1: "Failed to create %1"
   failed_to_create_2: "Things that depend on %1 will probably not build."
   finishing_up: "Finishing up"
   fix_install_names_fail_1: "Failed to fix install names"
@@ -253,7 +251,8 @@ utils:
   cleaning_up: "One sec, just cleaning up"
   closed_pull_requests: "Closed pull requests:"
   # Indicates errors that are logged on-screen
-  error: "Error"
+  error_1: "Error"
+  error_2: ":"
   failed_to_connect: "Failed to connect to: %1"
   failed_to_parse_json: "Failed to parse JSON response"
   failure_while_executing: "Failure while executing: %1"
@@ -846,7 +845,6 @@ cmd:
     no_formula_names: |
       This command updates brew itself, and does not take formula names.
       Use `brew upgrade <formula>`.
-    renamed_formulae: "Renamed Formulae"
     update_tap_failed: "Failed to update tap: %1/%2"
     updated_formulae: "Updated Formulae"
     updated_homebrew: "Updated Homebrew from %1 to %2"

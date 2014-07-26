@@ -45,7 +45,7 @@ end
 def ohai title, *sput
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
   puts "#{Tty.blue}==>#{Tty.white} #{title}#{Tty.reset}"
-  puts sput unless sput.empty?
+  puts sput
 end
 
 def oh1 title
@@ -59,8 +59,7 @@ end
 
 def onoe error
   lines = error.to_s.split("\n")
-  STDERR.puts "#{Tty.red}#{t.utils.error}#{Tty.reset}: #{lines.shift}"
-  STDERR.puts lines unless lines.empty?
+  STDERR.puts "#{Tty.red}#{t.utils.error_1}#{Tty.reset}#{t.utils.error_2} #{lines.shift}"
 end
 
 def ofail error
@@ -205,7 +204,6 @@ def which_editor
 end
 
 def exec_editor *args
-  return if args.to_s.empty?
   safe_exec(which_editor, *args)
 end
 
