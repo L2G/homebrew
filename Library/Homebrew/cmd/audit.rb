@@ -293,7 +293,7 @@ class FormulaAuditor
   def audit_patches
     legacy_patches = Patch.normalize_legacy_patches(f.patches).grep(LegacyPatch)
     if legacy_patches.any?
-      problem "Use the patch DSL instead of defining a 'patches' method"
+      problem t.cmd.audit.use_patch_dsl
       legacy_patches.each { |p| audit_patch(p) }
     end
   end
@@ -487,7 +487,7 @@ class FormulaAuditor
     end
 
     if line =~ /def test/
-      problem "Use new-style test definitions (test do)"
+      problem t.cmd.audit.use_new_style_test_defs
     end
 
     if line =~ /MACOS_VERSION/

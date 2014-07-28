@@ -410,6 +410,8 @@ cmd:
       Where <lang list> is a comma delimited list that can include:
         :cc, :cxx, :f77, :f90
     use_new_style_opt_defs: "Use new-style option definitions"
+    use_new_style_test_defs: "Use new-style test definitions (test do)"
+    use_patch_dsl: "Use the patch DSL instead of defining a 'patches' method"
     use_spaces_not_tabs: "Use spaces instead of tabs for indentation"
     version_empty_string: "version is set to an empty string"
     version_no_leading_v: "version %1 should not have a leading 'v'"
