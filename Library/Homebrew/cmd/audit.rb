@@ -486,6 +486,10 @@ class FormulaAuditor
       problem t.cmd.audit.use_new_style_opt_defs
     end
 
+    if line =~ /def test/
+      problem "Use new-style test definitions (test do)"
+    end
+
     if line =~ /MACOS_VERSION/
       problem t.cmd.audit.use_macos_version
     end
