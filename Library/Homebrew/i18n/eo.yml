@@ -13,9 +13,8 @@ extend:
   # extend/pathname.rb
   pathname:
     does_not_exist: "ne ekzistas %1"
+    # "files" is used only if there is more than one file
     files: !!pl
-      0: "Nulo dosieroj, "
-      1: "%1 dosiero, "
       n: "%1 dosieroj, "
 #==============================================================================
 # formula_installer.rb
@@ -25,7 +24,7 @@ formula_installer:
   already_installed_unlink: |
     %1-%2 jam estas instalita
     Por instali ĉi tiun eldonon, unue rulu `brew unlink %1'
-  brew_link_unfinished_1: "La paŝo `brew link` ne estas sukcese kompletita"
+  brew_link_not_complete: "La paŝo `brew link` ne estas sukcese kompletita"
   summary: "%1: %2"
   summary_with_build_time: "%1: %2, konstruita dum %3"
 #==============================================================================
@@ -33,7 +32,8 @@ formula_installer:
 utils:
   cleaning_up: "Unu sekundo, nun purigas"
   # Indicates errors that are logged on-screen
-  error: "Eraro"
+  error_1: "Eraro"
+  error_2: ":"
   failure_while_executing: "Misfino dum plenumago: %1"
   minutes: !!pl
     1: "%1 minuto"
@@ -87,9 +87,9 @@ cmd:
       Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
         %1
     filesystem_case_sensitive: |
-      Via dosiersistemo ĉe %1 aspektas uSkLeCoDiStInGa.
-      Homebrew estas malpli testata per tio - ne tenu zorgojn, sed bonvolu raporti
-      malfacilaĵojn.
+      La dosiersistemo ĉe %1 aspektas usklecodistinga.
+      La dosiersistemo de OS X kutime estas ne-usklecodistinga.
+      Bonvolu raporti iujn ajn ŝajnajn zorgojn.
   #------------------------------------------------------------------------------
   # `list` command
   list:
@@ -107,7 +107,6 @@ cmd:
     no_formula_names: |
       Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
       nomojn.  Uzu `brew upgrade <formula>`.
-    renamed_formulae: "Renomitaj Formuloj"
     updated_formulae: "Ĝisdatigitaj Formuloj"
     updated_homebrew: "Ĝisdatigis Homebrew-on de %1 ĝis %2"
 #==============================================================================
