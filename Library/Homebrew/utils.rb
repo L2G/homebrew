@@ -54,12 +54,11 @@ def oh1 title
 end
 
 def opoo warning
-  STDERR.puts "#{Tty.red}#{t.utils.warning}#{Tty.reset}: #{warning}"
+  $stderr.puts "#{Tty.red}#{t.utils.warning}#{Tty.reset}: #{warning}"
 end
 
 def onoe error
-  lines = error.to_s.split("\n")
-  STDERR.puts "#{Tty.red}#{t.utils.error_1}#{Tty.reset}#{t.utils.error_2} #{lines.shift}"
+  $stderr.puts "#{Tty.red}#{t.utils.error_1}#{Tty.reset}#{t.utils.error_2} #{error}"
 end
 
 def ofail error

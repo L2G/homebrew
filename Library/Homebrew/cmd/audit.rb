@@ -38,13 +38,6 @@ module Homebrew
   end
 end
 
-class Module
-  def redefine_const(name, value)
-    __send__(:remove_const, name) if const_defined?(name)
-    const_set(name, value)
-  end
-end
-
 # Formula extensions for auditing
 class Formula
   def head_only?
@@ -103,9 +96,6 @@ class FormulaAuditor
     @problems = []
     @text = f.text.without_patch
     @specs = %w{stable devel head}.map { |s| f.send(s) }.compact
-
-    # We need to do this in case the formula defines a patch that uses DATA.
-    f.class.redefine_const :DATA, ""
   end
 
   def audit_file
@@ -148,7 +138,7 @@ class FormulaAuditor
       end
 
       dep.options.reject do |opt|
-        next true if dep_f.build.has_option?(opt.name)
+        next true if dep_f.option_defined?(opt)
         dep_f.requirements.detect do |r|
           if r.recommended?
             opt.name == "with-#{r.name}"
