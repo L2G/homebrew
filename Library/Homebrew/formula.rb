@@ -3,7 +3,6 @@ require 'formula_lock'
 require 'formula_pin'
 require 'hardware'
 require 'bottles'
-require 'compilers'
 require 'build_environment'
 require 'build_options'
 require 'formulary'
@@ -25,6 +24,7 @@ class Formula
   attr_reader :buildpath, :testpath
 
   attr_accessor :local_bottle_path
+  attr_accessor :build
 
   def initialize(name, path, spec)
     @name = name
@@ -37,8 +37,8 @@ class Formula
 
     @active_spec = determine_active_spec(spec)
     validate_attributes :url, :name, :version
-    active_spec.add_legacy_options(options)
     @pkg_version = PkgVersion.new(version, revision)
+    @build = active_spec.build
     @pin = FormulaPin.new(self)
   end
 
@@ -102,12 +102,16 @@ class Formula
     active_spec.patches
   end
 
+  def options
+    active_spec.options
+  end
+
   def option_defined?(name)
     active_spec.option_defined?(name)
   end
 
-  def build
-    active_spec.build
+  def fails_with?(compiler)
+    active_spec.fails_with?(compiler)
   end
 
   # if the dir is there, but it's empty we consider it not installed
@@ -213,9 +217,6 @@ class Formula
   # tell the user about any caveats regarding this package, return a string
   def caveats; nil end
 
-  # any e.g. configure options for this package
-  def options; [] end
-
   # Deprecated
   DATA = :DATA
   def patches; {} end
@@ -223,16 +224,11 @@ class Formula
   # rarely, you don't want your library symlinked into the main prefix
   # see gettext.rb for an example
   def keg_only?
-    kor = self.class.keg_only_reason
-    not kor.nil? and kor.valid?
+    keg_only_reason && keg_only_reason.valid?
   end
 
   def keg_only_reason
     self.class.keg_only_reason
-  end
-
-  def fails_with? compiler
-    (self.class.cc_failures || []).any? { |failure| failure === compiler }
   end
 
   # sometimes the formula cleaner breaks things
@@ -247,7 +243,11 @@ class Formula
   end
 
   def skip_cxxstdlib_check?
-    self.class.cxxstdlib.include?(:skip)
+    false
+  end
+
+  def require_universal_deps?
+    false
   end
 
   # yields self with current working directory set to the uncompressed tarball
@@ -444,7 +444,7 @@ class Formula
       "caveats" => caveats
     }
 
-    hsh["options"] = build.map { |opt|
+    hsh["options"] = options.map { |opt|
       { "option" => opt.flag, "description" => opt.description }
     }
 
@@ -455,7 +455,7 @@ class Formula
 
         hsh["installed"] << {
           "version" => keg.version.to_s,
-          "used_options" => tab.used_options.map(&:flag),
+          "used_options" => tab.used_options.as_flags,
           "built_as_bottle" => tab.built_bottle,
           "poured_from_bottle" => tab.poured_from_bottle
         }
@@ -477,8 +477,7 @@ class Formula
   end
 
   def test
-    tab = Tab.for_formula(self)
-    extend Module.new { define_method(:build) { tab } }
+    self.build = Tab.for_formula(self)
     ret = nil
     mktemp do
       @testpath = Pathname.pwd
@@ -489,7 +488,7 @@ class Formula
   end
 
   def test_defined?
-    not self.class.instance_variable_get(:@test_defined).nil?
+    false
   end
 
   protected
@@ -591,7 +590,17 @@ class Formula
     when :brew
       raise "You cannot override Formula#brew in class #{name}"
     when :test
-      @test_defined = true
+      define_method(:test_defined?) { true }
+    when :options
+      instance = allocate
+
+      specs.each do |spec|
+        instance.options.each do |opt, desc|
+          spec.option(opt[/^--(.+)$/, 1], desc)
+        end
+      end
+
+      remove_method(:options)
     end
   end
 
@@ -599,7 +608,7 @@ class Formula
   class << self
     include BuildEnvironmentDSL
 
-    attr_reader :keg_only_reason, :cc_failures
+    attr_reader :keg_only_reason
     attr_rw :homepage, :plist_startup, :plist_manual, :revision
 
     def specs
@@ -700,16 +709,9 @@ class Formula
       @keg_only_reason = KegOnlyReason.new(reason, explanation)
     end
 
-    # Flag for marking whether this formula needs C++ standard library
-    # compatibility check
-    def cxxstdlib
-      @cxxstdlib ||= Set.new
-    end
-
-    # Explicitly request changing C++ standard library compatibility check
-    # settings. Use with caution!
+    # Pass :skip to this method to disable post-install stdlib checking
     def cxxstdlib_check check_type
-      cxxstdlib << check_type
+      define_method(:skip_cxxstdlib_check?) { true } if check_type == :skip
     end
 
     # For Apple compilers, this should be in the format:
@@ -739,25 +741,17 @@ class Formula
     # fails_with :gcc => '4.8' do
     #   version '4.8.1'
     # end
-    def fails_with spec, &block
-      @cc_failures ||= Set.new
-      @cc_failures << CompilerFailure.create(spec, &block)
+    def fails_with compiler, &block
+      specs.each { |spec| spec.fails_with(compiler, &block) }
     end
 
     def needs *standards
-      @cc_failures ||= Set.new
-      standards.each do |standard|
-        @cc_failures.merge CompilerFailure.for_standard standard
-      end
-    end
-
-    def require_universal_deps
-      specs.each { |spec| spec.build.universal = true }
+      specs.each { |spec| spec.needs(*standards) }
     end
 
     def test &block
       return @test unless block_given?
-      @test_defined = true
+      define_method(:test_defined?) { true }
       @test = block
     end
   end

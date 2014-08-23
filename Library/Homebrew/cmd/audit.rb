@@ -476,7 +476,7 @@ class FormulaAuditor
       problem t.cmd.audit.use_new_style_opt_defs
     end
 
-    if line =~ /def test/
+    if line =~ /def test$/
       problem t.cmd.audit.use_new_style_test_defs
     end
 

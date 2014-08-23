@@ -209,7 +209,7 @@ formula_installer:
   installing_dep_for: "Installing %1 dependency: %2"
   installing_deps_for: "Installing dependencies for %1: %2"
   keg_already_linked: "This keg was marked linked already, continuing anyway"
-  keg_only_1: "This formula is keg-only, so it was not symlinked into %1."
+  keg_only_1: "This formula is keg-only, which means it was not symlinked into %1."
   # Keep keg_only_2 within 72 columns
   # <---------------------------------------------------------------------->
   keg_only_2: |

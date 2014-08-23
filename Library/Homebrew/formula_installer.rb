@@ -163,13 +163,10 @@ class FormulaInstaller
         pour
         @poured_bottle = true
 
-        stdlibs = Keg.new(f.prefix).detect_cxx_stdlibs
-        stdlib_in_use = CxxStdlib.create(stdlibs.first, MacOS.default_compiler)
-        begin
-          stdlib_in_use.check_dependencies(f, f.recursive_dependencies)
-        rescue IncompatibleCxxStdlibs => e
-          opoo e.message
-        end
+        CxxStdlib.check_compatibility(
+          f, f.recursive_dependencies,
+          Keg.new(f.prefix), MacOS.default_compiler
+        )
 
         tab = Tab.for_keg f.prefix
         tab.poured_from_bottle = true
@@ -221,8 +218,7 @@ class FormulaInstaller
 
     check_requirements(req_map)
 
-    deps = [].concat(req_deps).concat(f.deps)
-    deps = expand_dependencies(deps)
+    deps = expand_dependencies(req_deps + f.deps)
 
     if deps.empty? and only_deps?
       puts t.formula_installer.all_deps_satisfied(f)
@@ -244,9 +240,9 @@ class FormulaInstaller
     raise UnsatisfiedRequirements.new(f, fatals) unless fatals.empty?
   end
 
-  def install_requirement_default_formula?(req)
+  def install_requirement_default_formula?(req, build)
     return false unless req.default_formula?
-    return false if req.optional?
+    return false if build.without?(req) && (req.recommended? || req.optional?)
     return true unless req.satisfied?
     pour_bottle? || build_bottle?
   end
@@ -267,7 +263,7 @@ class FormulaInstaller
           Requirement.prune
         elsif req.build? && dependent != f && install_bottle_for_dep?(dependent, build)
           Requirement.prune
-        elsif install_requirement_default_formula?(req)
+        elsif install_requirement_default_formula?(req, build)
           dep = req.to_dependency
           deps.unshift(dep)
           formulae.unshift(dep.to_formula)
@@ -308,21 +304,15 @@ class FormulaInstaller
   end
 
   def effective_build_options_for(dependent, inherited_options=[])
-    if dependent == f
-      build = dependent.build.dup
-      build.args |= options
-      build
-    else
-      build = dependent.build.dup
-      build.args |= inherited_options
-      build
-    end
+    args  = dependent.build.used_options
+    args |= dependent == f ? options : inherited_options
+    BuildOptions.new(args, dependent.options)
   end
 
   def inherited_options_for(dep)
     inherited_options = Options.new
     u = Option.new("universal")
-    if (options.include?(u) || f.build.universal?) && !dep.build? && dep.to_formula.option_defined?(u)
+    if (options.include?(u) || f.require_universal_deps?) && !dep.build? && dep.to_formula.option_defined?(u)
       inherited_options << u
     end
     inherited_options
@@ -475,7 +465,7 @@ class FormulaInstaller
     when f.devel then args << "--devel"
     end
 
-    f.build.each do |opt, _|
+    f.options.each do |opt|
       name  = opt.name[/\A(.+)=\z$/, 1]
       value = ARGV.value(name)
       args << "--#{name}=#{value}" if name && value
@@ -485,9 +475,7 @@ class FormulaInstaller
   end
 
   def build_argv
-    opts = Options.coerce(sanitized_ARGV_options)
-    opts.concat(options)
-    opts
+    Options.create(sanitized_ARGV_options) + options
   end
 
   def build

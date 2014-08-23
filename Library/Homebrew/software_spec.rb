@@ -7,6 +7,7 @@ require 'build_options'
 require 'dependency_collector'
 require 'bottles'
 require 'patch'
+require 'compilers'
 
 class SoftwareSpec
   extend Forwardable
@@ -21,6 +22,7 @@ class SoftwareSpec
   attr_reader :build, :resources, :patches, :options
   attr_reader :dependency_collector
   attr_reader :bottle_specification
+  attr_reader :compiler_failures
 
   def_delegators :@resource, :stage, :fetch, :verify_download_integrity
   def_delegators :@resource, :cached_download, :clear_cache
@@ -34,7 +36,8 @@ class SoftwareSpec
     @bottle_specification = BottleSpecification.new
     @patches = []
     @options = Options.new
-    @build = BuildOptions.new(ARGV.options_only, options)
+    @build = BuildOptions.new(Options.create(ARGV.options_only), options)
+    @compiler_failures = []
   end
 
   def owner= owner
@@ -112,6 +115,20 @@ class SoftwareSpec
     patches << Patch.create(strip, src, &block)
   end
 
+  def fails_with? compiler
+    compiler_failures.any? { |failure| failure === compiler }
+  end
+
+  def fails_with compiler, &block
+    compiler_failures << CompilerFailure.create(compiler, &block)
+  end
+
+  def needs *standards
+    standards.each do |standard|
+      compiler_failures.concat CompilerFailure.for_standard(standard)
+    end
+  end
+
   def add_legacy_patches(list)
     list = Patch.normalize_legacy_patches(list)
     list.each { |p| p.owner = self }
@@ -126,10 +143,6 @@ class SoftwareSpec
     elsif dep.recommended? && !option_defined?("without-#{name}")
       options << Option.new("without-#{name}", t.software_spec.without(name))
     end
-  end
-
-  def add_legacy_options(list)
-    list.each { |opt, desc| options << Option.new(opt[/^--(.+)$/, 1], desc) }
   end
 end
 
