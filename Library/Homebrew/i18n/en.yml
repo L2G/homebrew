@@ -437,6 +437,7 @@ cmd:
     dyld_vars_are_set: |
       Setting DYLD_* vars can break dynamic linking.
       Set variables:
+    dyld_vars_are_set_2: "    %1: %2\n"
     dyld_vars_have_go_conflict: |
 
       Setting DYLD_INSERT_LIBRARIES can cause Go builds to fail.
@@ -487,7 +488,7 @@ cmd:
         https://github.com/Homebrew/homebrew.git
     homebrew_is_outdated: |
       Your Homebrew is outdated.
-      You haven't updated for at least 24 hours, this is a long time in brewland!
+      You haven't updated for at least 24 hours. This is a long time in brewland!
       To update Homebrew, run `brew update`.
     homebrew_not_in_usr_local: |
       Your Homebrew is not installed to /usr/local

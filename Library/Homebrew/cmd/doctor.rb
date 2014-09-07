@@ -467,9 +467,7 @@ def check_DYLD_vars
   found = ENV.keys.grep(/^DYLD_/)
   unless found.empty?
     s = t.cmd.doctor.dyld_vars_are_set
-    found.each do |e|
-      s << "    #{e}\n"
-    end
+    s << found.map { |e| t.cmd.doctor.dyld_vars_are_set_2(e, ENV.fetch(e)) }.join
     if found.include? 'DYLD_INSERT_LIBRARIES'
       s += t.cmd.doctor.dyld_vars_have_go_conflict
     end
@@ -769,6 +767,10 @@ end
   def check_for_old_env_vars
     t.cmd.doctor.old_env_var_homebrew_keep_info if ENV["HOMEBREW_KEEP_INFO"]
   end
+
+  def all
+    methods.map(&:to_s).grep(/^check_/)
+  end
 end # end class Checks
 
 module Homebrew
@@ -776,18 +778,19 @@ module Homebrew
     checks = Checks.new
 
     if ARGV.include? '--list-checks'
-      puts checks.methods.grep(/^check_/).sort
+      puts checks.all.sort
       exit
     end
 
     inject_dump_stats(checks) if ARGV.switch? 'D'
 
-    methods = if ARGV.named.empty?
-      # put slowest methods last
-      checks.methods.sort << "check_for_linked_keg_only_brews" << "check_for_outdated_homebrew"
+    if ARGV.named.empty?
+      methods = checks.all.sort
+      methods << "check_for_linked_keg_only_brews" << "check_for_outdated_homebrew"
+      methods = methods.reverse.uniq.reverse
     else
-      ARGV.named
-    end.grep(/^check_/).reverse.uniq.reverse
+      methods = ARGV.named
+    end
 
     first_warning = true
     methods.each do |method|

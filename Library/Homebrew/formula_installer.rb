@@ -306,6 +306,7 @@ class FormulaInstaller
   def effective_build_options_for(dependent, inherited_options=[])
     args  = dependent.build.used_options
     args |= dependent == f ? options : inherited_options
+    args |= Tab.for_formula(dependent).used_options
     BuildOptions.new(args, dependent.options)
   end
 
@@ -475,7 +476,7 @@ class FormulaInstaller
   end
 
   def build_argv
-    Options.create(sanitized_ARGV_options) + options
+    sanitized_ARGV_options + options.as_flags
   end
 
   def build
@@ -494,8 +495,8 @@ class FormulaInstaller
       nice #{RUBY_PATH}
       -W0
       -I #{HOMEBREW_LIBRARY_PATH}
-      -rbuild
       --
+      #{HOMEBREW_LIBRARY_PATH}/build.rb
       #{f.path}
     ].concat(build_argv)
 
