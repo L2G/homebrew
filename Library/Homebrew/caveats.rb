@@ -100,12 +100,12 @@ class Caveats
       # For startup plists, we cannot tell whether it's running on launchd,
       # as it requires for `sudo launchctl list` to get real result.
       elsif f.plist_startup
-          s << t.caveats.plist(plist_upgrade)
+          s << t.caveats.plist_upgrade(f.name)
           s << "    sudo launchctl unload #{plist_link}"
           s << "    sudo cp -fv #{f.opt_prefix}/*.plist #{destination}"
           s << "    sudo launchctl load #{plist_link}"
       elsif Kernel.system "/bin/launchctl list #{plist_domain} &>/dev/null"
-          s << t.caveats.plist(plist_upgrade)
+          s << t.caveats.plist_upgrade(f.name)
           s << "    launchctl unload #{plist_link}"
           s << "    launchctl load #{plist_link}"
       else
