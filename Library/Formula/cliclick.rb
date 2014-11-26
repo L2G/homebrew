@@ -2,8 +2,15 @@ require "formula"
 
 class Cliclick < Formula
   homepage "http://www.bluem.net/jump/cliclick/"
-  url "https://github.com/BlueM/cliclick/archive/2.4.tar.gz"
-  sha1 "69dd1bc99d110a18fd4cc087b8180592c798a783"
+  url "https://github.com/BlueM/cliclick/archive/3.0.2.tar.gz"
+  sha1 "7e6dbdf772adf2e36c66dee51bd077a89fe574fa"
+
+  bottle do
+    cellar :any
+    sha1 "a56d6d6c95c5cb7f6641d4f6484e944542aaa6e5" => :mavericks
+    sha1 "b8b97526eb4ff4c38f025a418214e0a166b9758a" => :mountain_lion
+    sha1 "feca3a136c0ff6a464ddfec9e7d4b73f93739a45" => :lion
+  end
 
   def install
     system "make"

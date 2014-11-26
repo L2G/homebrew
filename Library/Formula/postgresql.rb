@@ -16,6 +16,7 @@ class Postgresql < Formula
 
   bottle do
     revision 1
+    sha1 "00d8f44111b8585fc2fa045fb33098cde3bcf230" => :yosemite
     sha1 "d298f4cd7fffa6b8b879ccc2c6d32fc191be41ed" => :mavericks
     sha1 "c5c5d23e95c1950d4b33865b8ebdce28b4e6706f" => :mountain_lion
     sha1 "860395322283401cfc1d0694984c272546f21fa9" => :lion
@@ -65,7 +66,10 @@ class Postgresql < Formula
 
     args << "--with-python" if build.with? 'python'
     args << "--with-perl" unless build.include? 'no-perl'
-    args << "--with-tcl" unless build.include? 'no-tcl'
+    if !build.include? "no-tcl"
+      args << "--with-tcl"
+      args << "--with-tclconfig=#{MacOS.sdk_path}/usr/lib"
+    end
     args << "--enable-dtrace" if build.include? 'enable-dtrace'
 
     if build.with?("ossp-uuid")
@@ -79,8 +83,7 @@ class Postgresql < Formula
     end
 
     if build.build_32_bit?
-      ENV.append 'CFLAGS', "-arch #{MacOS.preferred_arch}"
-      ENV.append 'LDFLAGS', "-arch #{MacOS.preferred_arch}"
+      ENV.append %w{CFLAGS LDFLAGS}, "-arch #{Hardware::CPU.arch_32_bit}"
     end
 
     system "./configure", *args

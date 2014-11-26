@@ -12,16 +12,32 @@ class Qt5HeadDownloadStrategy < GitDownloadStrategy
   end
 end
 
+class OracleHomeVar < Requirement
+  fatal true
+  satisfy ENV["ORACLE_HOME"]
+
+  def message; <<-EOS.undent
+      To use --with-oci you have to set the ORACLE_HOME environment variable.
+      Check Oracle Instant Client documentation for more information.
+    EOS
+  end
+end
+
 class Qt5 < Formula
   homepage "http://qt-project.org/"
-  url "http://download.qt-project.org/official_releases/qt/5.3/5.3.1/single/qt-everywhere-opensource-src-5.3.1.tar.gz"
-  sha1 "3244dd34f5fb695e903eaa49c6bd0838b9bf7a73"
+  url "http://qtmirror.ics.com/pub/qtproject/official_releases/qt/5.3/5.3.2/single/qt-everywhere-opensource-src-5.3.2.tar.gz"
+  mirror "http://download.qt-project.org/official_releases/qt/5.3/5.3.2/single/qt-everywhere-opensource-src-5.3.2.tar.gz"
+  sha1 "502dd2db1e9ce349bb8ac48b4edf7f768df1cafe"
 
   bottle do
-    sha1 "18c4f7758a47894591905831b6e740315ff1ce36" => :mavericks
-    sha1 "104b6d656020e9a615084732f2ecbfec8bb74f28" => :mountain_lion
-    sha1 "fc5fee03fa0ad09c5c96b869022590cdc7b3b1fd" => :lion
+    sha1 "b2a204e963405aade40d9a88383beeec7301c7e2" => :mavericks
+    sha1 "2744a6ee18b87ab1ab791ec136c3f95481713d2c" => :mountain_lion
+    sha1 "6d327353447bdc56176f605e51d910fde032ad8d" => :lion
   end
+
+  # Patch to fix compile errors on Yosemite. Can be removed with 5.4.
+  # https://bugreports.qt-project.org/browse/QTBUG-41136
+  patch :DATA
 
   head "git://gitorious.org/qt/qt5.git", :branch => "stable",
     :using => Qt5HeadDownloadStrategy, :shallow => false
@@ -30,12 +46,18 @@ class Qt5 < Formula
 
   option :universal
   option "with-docs", "Build documentation"
+  option "with-examples", "Build examples"
   option "developer", "Build and link with developer options"
+  option "with-oci", "Build with Oracle OCI plugin"
 
   depends_on "pkg-config" => :build
   depends_on "d-bus" => :optional
-  depends_on "mysql" => :optional
+  depends_on :mysql => :optional
   depends_on :xcode => :build
+
+  depends_on OracleHomeVar if build.with? "oci"
+
+  deprecated_option "qtdbus" => "with-d-bus"
 
   def install
     ENV.universal_binary if build.universal?
@@ -43,9 +65,10 @@ class Qt5 < Formula
             "-system-zlib",
             "-qt-libpng", "-qt-libjpeg",
             "-confirm-license", "-opensource",
-            "-nomake", "examples",
             "-nomake", "tests",
             "-release"]
+
+    args << "-nomake" << "examples" if build.without? "examples"
 
     # https://bugreports.qt-project.org/browse/QTBUG-34382
     args << "-no-xcb"
@@ -67,6 +90,12 @@ class Qt5 < Formula
 
     if !MacOS.prefer_64_bit? or build.universal?
       args << "-arch" << "x86"
+    end
+
+    if build.with? "oci"
+      args << "-I#{ENV['ORACLE_HOME']}/sdk/include"
+      args << "-L{ENV['ORACLE_HOME']}"
+      args << "-plugin-sql-oci"
     end
 
     args << "-developer-build" if build.include? "developer"
@@ -108,3 +137,18 @@ class Qt5 < Formula
     EOS
   end
 end
+
+__END__
+diff --git a/qtmultimedia/src/plugins/avfoundation/mediaplayer/avfmediaplayersession.mm b/qtmultimedia/src/plugins/avfoundation/mediaplayer/avfmediaplayersession.mm
+index a73974c..d3f3eae 100644
+--- a/qtmultimedia/src/plugins/avfoundation/mediaplayer/avfmediaplayersession.mm
++++ b/qtmultimedia/src/plugins/avfoundation/mediaplayer/avfmediaplayersession.mm
+@@ -322,7 +322,7 @@ static void *AVFMediaPlayerSessionObserverCurrentItemObservationContext = &AVFMe
+     //AVPlayerItem "status" property value observer.
+     if (context == AVFMediaPlayerSessionObserverStatusObservationContext)
+     {
+-        AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
++        AVPlayerStatus status = (AVPlayerStatus)[[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+         switch (status)
+         {
+             //Indicates that the status of the player is not yet known because

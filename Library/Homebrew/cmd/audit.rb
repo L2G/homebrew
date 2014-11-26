@@ -22,11 +22,9 @@ module Homebrew
       fa.audit
 
       unless fa.problems.empty?
-        puts "#{f.name}:"
-        fa.problems.each { |p| puts " * #{p}" }
-        puts
         formula_count += 1
         problem_count += fa.problems.size
+        puts "#{f.name}:", fa.problems.map { |p| " * #{p}" }, ""
       end
     end
 
@@ -59,7 +57,7 @@ class FormulaText
   end
 
   def has_DATA?
-    /\bDATA\b/ =~ @text
+    /^[^#]*\bDATA\b/ =~ @text
   end
 
   def has_END?
@@ -116,50 +114,51 @@ class FormulaAuditor
     end
   end
 
+  @@aliases ||= Formula.aliases
+
   def audit_deps
-    # Don't depend_on aliases; use full name
-    @@aliases ||= Formula.aliases
-    f.deps.select { |d| @@aliases.include? d.name }.each do |d|
-      real_name = d.to_formula.name
-      problem t.cmd.audit.alias_should_be(d, real_name)
-    end
-
-    # Check for things we don't like to depend on.
-    # We allow non-Homebrew installs whenever possible.
-    f.deps.each do |dep|
-      begin
-        dep_f = dep.to_formula
-      rescue TapFormulaUnavailableError
-        # Don't complain about missing cross-tap dependencies
-        next
-      rescue FormulaUnavailableError
-        problem t.cmd.audit.cant_find_dependency(dep.name.inspect)
-        next
-      end
-
-      dep.options.reject do |opt|
-        next true if dep_f.option_defined?(opt)
-        dep_f.requirements.detect do |r|
-          if r.recommended?
-            opt.name == "with-#{r.name}"
-          elsif r.optional?
-            opt.name == "without-#{r.name}"
-          end
+    @specs.each do |spec|
+      # Check for things we don't like to depend on.
+      # We allow non-Homebrew installs whenever possible.
+      spec.deps.each do |dep|
+        begin
+          dep_f = dep.to_formula
+        rescue TapFormulaUnavailableError
+          # Don't complain about missing cross-tap dependencies
+          next
+        rescue FormulaUnavailableError
+          problem t.cmd.audit.cant_find_dependency(dep.name.inspect)
+          next
         end
-      end.each do |opt|
-        problem t.cmd.audit.dependency_has_no_option(dep, opt.name.inspect)
-      end
 
-      case dep.name
-      when *BUILD_TIME_DEPS
-        next if dep.build? or dep.run?
-        problem t.cmd.audit.should_be_build_dependency(dep)
-      when "git", "ruby", "mercurial"
-        problem t.cmd.audit.dont_use_dependency(dep)
-      when 'gfortran'
-        problem t.cmd.audit.use_fortran_not_gfortran
-      when 'open-mpi', 'mpich2'
-        problem t.cmd.audit.use_mpi_dependency
+        if @@aliases.include?(dep.name)
+          problem t.cmd.audit.alias_should_be(dep.name, dep.to_formula.name)
+        end
+
+        dep.options.reject do |opt|
+          next true if dep_f.option_defined?(opt)
+          dep_f.requirements.detect do |r|
+            if r.recommended?
+              opt.name == "with-#{r.name}"
+            elsif r.optional?
+              opt.name == "without-#{r.name}"
+            end
+          end
+        end.each do |opt|
+          problem t.cmd.audit.dependency_has_no_option(dep, opt.name.inspect)
+        end
+
+        case dep.name
+        when *BUILD_TIME_DEPS
+          next if dep.build? or dep.run?
+          problem t.cmd.audit.should_be_build_dependency(dep)
+        when "git", "ruby", "mercurial"
+          problem t.cmd.audit.dont_use_dependency(dep)
+        when 'gfortran'
+          problem t.cmd.audit.use_fortran_not_gfortran
+        when 'open-mpi', 'mpich2'
+          problem t.cmd.audit.use_mpi_dependency
+        end
       end
     end
   end
@@ -175,19 +174,21 @@ class FormulaAuditor
   end
 
   def audit_urls
-    unless f.homepage =~ %r[^https?://]
-      problem t.cmd.audit.homepage_should_be_http(f.homepage)
+    homepage = f.homepage
+
+    unless homepage =~ %r[^https?://]
+      problem t.cmd.audit.homepage_should_be_http(homepage)
     end
 
     # Check for http:// GitHub homepage urls, https:// is preferred.
     # Note: only check homepages that are repo pages, not *.github.com hosts
-    if f.homepage =~ %r[^http://github\.com/]
-      problem t.cmd.audit.homepage_github_https(f.homepage)
+    if homepage =~ %r[^http://github\.com/]
+      problem t.cmd.audit.homepage_github_https(homepage)
     end
 
     # Google Code homepages should end in a slash
-    if f.homepage =~ %r[^https?://code\.google\.com/p/[^/]+[^/]$]
-      problem t.cmd.audit.homepage_googlecode_end_slash(f.homepage)
+    if homepage =~ %r[^https?://code\.google\.com/p/[^/]+[^/]$]
+      problem t.cmd.audit.homepage_googlecode_end_slash(homepage)
     end
 
     urls = @specs.map(&:url)
@@ -277,6 +278,14 @@ class FormulaAuditor
       end
 
       spec.patches.select(&:external?).each { |p| audit_patch(p) }
+    end
+
+    if f.stable && f.devel
+      if f.devel.version < f.stable.version
+        problem "devel version #{f.devel.version} is older than stable version #{f.stable.version}"
+      elsif f.devel.version == f.stable.version
+        problem "stable and devel versions are identical"
+      end
     end
   end
 
@@ -467,9 +476,7 @@ class FormulaAuditor
     end
 
     if line =~ /ARGV\.(?!(debug\?|verbose\?|value[\(\s]))/
-      # Python formulae need ARGV for Requirements
-      problem t.cmd.audit.use_build_instead_of_argv,
-              :whitelist => %w{pygobject3 qscintilla2}
+      problem t.cmd.audit.use_build_instead_of_argv
     end
 
     if line =~ /def options/
@@ -534,21 +541,8 @@ class FormulaAuditor
     Symbol === dep ? dep.inspect : "'#{dep}'"
   end
 
-  def audit_check_output warning_and_description
-    return unless warning_and_description
-    warning, description = *warning_and_description
-    problem "#{warning}\n#{description}"
-  end
-
-  def audit_installed
-    audit_check_output(check_manpages)
-    audit_check_output(check_infopages)
-    audit_check_output(check_jars)
-    audit_check_output(check_non_libraries)
-    audit_check_output(check_non_executables(f.bin))
-    audit_check_output(check_generic_executables(f.bin))
-    audit_check_output(check_non_executables(f.sbin))
-    audit_check_output(check_generic_executables(f.sbin))
+  def audit_check_output(output)
+    problem(output) if output
   end
 
   def audit
@@ -565,8 +559,7 @@ class FormulaAuditor
 
   private
 
-  def problem p, options={}
-    return if options[:whitelist].to_a.include? f.name
+  def problem p
     @problems << p
   end
 end
@@ -637,6 +630,12 @@ class ResourceAuditor
 
   def audit_download_strategy
     return unless using
+
+    if using == :ssl3 || using == CurlSSL3DownloadStrategy
+      problem "The SSL3 download strategy is deprecated, please choose a different URL"
+    elsif using == CurlUnsafeDownloadStrategy
+      problem "#{using.name} is deprecated, please choose a different URL"
+    end
 
     url_strategy   = DownloadStrategyDetector.detect(url)
     using_strategy = DownloadStrategyDetector.detect('', using)

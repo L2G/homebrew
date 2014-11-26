@@ -12,6 +12,7 @@ require 'formula_cellar_checks'
 require 'install_renamed'
 require 'cmd/tap'
 require 'hooks/bottles'
+require 'debrew'
 
 class FormulaInstaller
   include FormulaCellarChecks
@@ -60,7 +61,7 @@ class FormulaInstaller
 
     unless f.bottle.compatible_cellar?
       if install_bottle_options[:warn]
-        opoo t.formula_installer.cellar_bottle(f, f.bottle.cellar)
+        opoo t.formula_installer.cellar_bottle(f.name, f.bottle.cellar)
       end
       return false
     end
@@ -102,9 +103,9 @@ class FormulaInstaller
 
     if f.installed?
       if f.linked_keg.symlink? or f.keg_only?
-        msg = t.formula_installer.already_installed(f, f.installed_version)
+        msg = t.formula_installer.already_installed(f.name, f.installed_version)
       else
-        msg = t.formula_installer.already_installed_not_linked(f, f.installed_version)
+        msg = t.formula_installer.already_installed_not_linked(f.name, f.installed_version)
       end
       raise FormulaAlreadyInstalledError, msg
     end
@@ -115,7 +116,7 @@ class FormulaInstaller
       end
       unless unlinked_deps.empty?
         raise CannotInstallFormulaError,
-              t.formula_installer.must_link_deps(unlinked_deps * ' ', f)
+              t.formula_installer.must_link_deps(unlinked_deps * ' ', f.name)
       end
     end
   end
@@ -140,7 +141,7 @@ class FormulaInstaller
       # some other version is already installed *and* linked
       raise CannotInstallFormulaError,
             t.formula_installer.already_installed_unlink(
-              f, f.linked_keg.resolved_path.basename
+              f.name, f.linked_keg.resolved_path.basename
             )
     end
 
@@ -154,29 +155,27 @@ class FormulaInstaller
       raise t.formula_installer.unrecognized_bottle_arch(arch)
     end
 
-    oh1 t.formula_installer.installing("#{Tty.green}#{f}#{Tty.reset}") if show_header?
+    f.active_spec.deprecated_flags.each do |deprecated_option|
+      old_flag = deprecated_option.old_flag
+      new_flag = deprecated_option.current_flag
+      opoo t.formula_installer.deprecated_flag(f.name, old_flag, new_flag)
+    end
+
+    oh1 t.formula_installer.installing("#{Tty.green}#{f.name}#{Tty.reset}") if show_header?
 
     @@attempted << f
 
-    begin
-      if pour_bottle? :warn => true
+    if pour_bottle?(:warn => true)
+      begin
         pour
+      rescue => e
+        raise if ARGV.homebrew_developer?
+        @pour_failed = true
+        onoe e.message
+        opoo t.formula_installer.bottle_install_fail
+      else
         @poured_bottle = true
-
-        CxxStdlib.check_compatibility(
-          f, f.recursive_dependencies,
-          Keg.new(f.prefix), MacOS.default_compiler
-        )
-
-        tab = Tab.for_keg f.prefix
-        tab.poured_from_bottle = true
-        tab.write
       end
-    rescue => e
-      raise e if ARGV.homebrew_developer?
-      @pour_failed = true
-      onoe e.message
-      opoo t.formula_installer.bottle_install_fail
     end
 
     build_bottle_preinstall if build_bottle?
@@ -221,7 +220,7 @@ class FormulaInstaller
     deps = expand_dependencies(req_deps + f.deps)
 
     if deps.empty? and only_deps?
-      puts t.formula_installer.all_deps_satisfied(f)
+      puts t.formula_installer.all_deps_satisfied(f.name)
     else
       install_dependencies(deps)
     end
@@ -237,7 +236,7 @@ class FormulaInstaller
       end
     end
 
-    raise UnsatisfiedRequirements.new(f, fatals) unless fatals.empty?
+    raise UnsatisfiedRequirements.new(fatals) unless fatals.empty?
   end
 
   def install_requirement_default_formula?(req, build)
@@ -259,9 +258,9 @@ class FormulaInstaller
 
         if (req.optional? || req.recommended?) && build.without?(req)
           Requirement.prune
-        elsif req.build? && dependent == f && pour_bottle?
+        elsif req.build? && dependent == self.f && pour_bottle?
           Requirement.prune
-        elsif req.build? && dependent != f && install_bottle_for_dep?(dependent, build)
+        elsif req.build? && dependent != self.f && install_bottle_for_dep?(dependent, build)
           Requirement.prune
         elsif install_requirement_default_formula?(req, build)
           dep = req.to_dependency
@@ -322,7 +321,7 @@ class FormulaInstaller
   def install_dependencies(deps)
     if deps.length > 1
       oh1 t.formula_installer.installing_deps_for(
-            f, "#{Tty.green}#{deps.map(&:first)*', '}#{Tty.reset}"
+            f.name, "#{Tty.green}#{deps.map(&:first)*', '}#{Tty.reset}"
           )
     end
 
@@ -368,7 +367,7 @@ class FormulaInstaller
     fi.debug              = debug?
     fi.prelude
     oh1 t.formula_installer.installing_dep_for(
-          f, "#{Tty.green}#{dep.name}#{Tty.reset}"
+          f.name, "#{Tty.green}#{dep.name}#{Tty.reset}"
         )
     fi.install
     fi.caveats
@@ -386,13 +385,7 @@ class FormulaInstaller
   def caveats
     return if only_deps?
 
-    if ARGV.homebrew_developer? and not f.keg_only?
-      audit_bin
-      audit_sbin
-      audit_lib
-      audit_man
-      audit_info
-    end
+    audit_installed if ARGV.homebrew_developer? and not f.keg_only?
 
     c = Caveats.new(f)
 
@@ -480,7 +473,7 @@ class FormulaInstaller
   end
 
   def build
-    FileUtils.rm Dir["#{HOMEBREW_LOGS}/#{f}/*"]
+    FileUtils.rm Dir["#{HOMEBREW_LOGS}/#{f.name}/*"]
 
     @start_time = Time.now
 
@@ -518,10 +511,9 @@ class FormulaInstaller
 
     ignore_interrupts(:quietly) do # the child will receive the interrupt and marshal it back
       write.close
-      thr = Thread.new { read.read }
-      Process.wait(pid)
-      data = thr.value
+      data = read.read
       read.close
+      Process.wait(pid)
       raise Marshal.load(data) unless data.nil? or data.empty?
       raise Interrupt if $?.exitstatus == 130
       raise t.formula_installer.suspicious_install_fail unless $?.success?
@@ -544,7 +536,7 @@ class FormulaInstaller
         keg.optlink
       rescue Keg::LinkError => e
         onoe t.formula_installer.failed_to_create_1(f.opt_prefix)
-        puts t.formula_installer.failed_to_create_2(f)
+        puts t.formula_installer.failed_to_create_2(f.name)
         puts e
       end
       return
@@ -646,41 +638,28 @@ class FormulaInstaller
       path.cp_path_sub(f.bottle_prefix, HOMEBREW_PREFIX)
     end
     FileUtils.rm_rf f.bottle_prefix
+
+    CxxStdlib.check_compatibility(
+      f, f.recursive_dependencies,
+      Keg.new(f.prefix), MacOS.default_compiler
+    )
+
+    tab = Tab.for_keg(f.prefix)
+    tab.poured_from_bottle = true
+    tab.write
   end
 
-  ## checks
-
-  def print_check_output warning_and_description
-    return unless warning_and_description
-    warning, description = *warning_and_description
-    opoo warning
-    puts description
-    @show_summary_heading = true
+  def audit_check_output(output)
+    if output
+      opoo output
+      @show_summary_heading = true
+    end
   end
 
-  def audit_bin
-    print_check_output(check_PATH(f.bin)) unless f.keg_only?
-    print_check_output(check_non_executables(f.bin))
-    print_check_output(check_generic_executables(f.bin))
-  end
-
-  def audit_sbin
-    print_check_output(check_PATH(f.sbin)) unless f.keg_only?
-    print_check_output(check_non_executables(f.sbin))
-    print_check_output(check_generic_executables(f.sbin))
-  end
-
-  def audit_lib
-    print_check_output(check_jars)
-    print_check_output(check_non_libraries)
-  end
-
-  def audit_man
-    print_check_output(check_manpages)
-  end
-
-  def audit_info
-    print_check_output(check_infopages)
+  def audit_installed
+    audit_check_output(check_PATH(f.bin))
+    audit_check_output(check_PATH(f.sbin))
+    super
   end
 
   private

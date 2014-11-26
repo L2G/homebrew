@@ -2,15 +2,13 @@ require "formula"
 
 class ShadowsocksLibev < Formula
   homepage "https://github.com/madeye/shadowsocks-libev"
-  url "https://github.com/madeye/shadowsocks-libev/archive/v1.4.6.tar.gz"
-  sha1 "cccfd9866fa18d128801e66e621f7bd90e8589d3"
-  revision 1
+  url "https://github.com/madeye/shadowsocks-libev/archive/v1.4.8.tar.gz"
+  sha1 "8261d91dc7184d2edafb9f1f57f70f97fe7d0f2f"
 
   bottle do
-    revision 2
-    sha1 "712c201879cf4bea18cd3e580a452d42efb5ea20" => :mavericks
-    sha1 "3c41f11b94a0efb36f3a5ad2748f88c2347ea306" => :mountain_lion
-    sha1 "09603c2bf58f53494f3ad0f158875e8c54ae1c1f" => :lion
+    sha1 "8b47e5c7d2a1398e8bb6069f5c33bb6a2595574a" => :yosemite
+    sha1 "585d31bf4a6128d490ea51d0199949922056f9e8" => :mavericks
+    sha1 "d78ad3908a3708ddc92151538102cb44b2a05809" => :mountain_lion
   end
 
   head "https://github.com/madeye/shadowsocks-libev.git"

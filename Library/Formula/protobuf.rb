@@ -1,21 +1,56 @@
 require 'formula'
 
+class OldOrNoDateutilUnlessGoogleApputils < Requirement
+  # https://github.com/Homebrew/homebrew/issues/32571
+  # https://code.google.com/p/google-apputils-python/issues/detail?id=6
+  fatal true
+
+  satisfy(:build_env => false) {
+    if can_import("dateutil") && !can_import("google.apputils")
+      dateutil_version < Version.new("2.0")
+    else
+      true
+    end
+  }
+
+  def message; <<-EOS.undent
+    The protobuf Python bindings depend on the google-apputils Python library,
+    which requires a version of python-dateutil less than 2.0.
+
+    You have python-dateutil version #{dateutil_version} installed in:
+      #{Pathname.new(`python -c "import dateutil; print(dateutil.__file__)"`.chomp).dirname}
+
+    Please run:
+      pip uninstall python-dateutil && pip install "python-dateutil<2"
+    EOS
+  end
+
+  def can_import pymodule
+    quiet_system "python", "-c", "import #{pymodule}"
+  end
+
+  def dateutil_version
+    Version.new(`python -c "import dateutil; print(dateutil.__version__)"`.chomp)
+  end
+end
+
 class Protobuf < Formula
   homepage 'http://code.google.com/p/protobuf/'
-  url 'https://protobuf.googlecode.com/files/protobuf-2.5.0.tar.bz2'
-  sha1 '62c10dcdac4b69cc8c6bb19f73db40c264cb2726'
+  url 'https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.tar.bz2', :using => :curl
+  sha1 '6d9dc4c5899232e2397251f9323cbdf176391d1b'
 
   bottle do
     cellar :any
-    sha1 "72e17ffad4e40e1e9b15aa116238110d3a68f753" => :mavericks
-    sha1 "bcc4795d8f01a0682d968e195917f79618711126" => :mountain_lion
-    sha1 "51b7b27f7d5e5ffcf9b8a4d49882c2217653e5e6" => :lion
+    sha1 "15ae01660cd840952b246058ecdd55e2fd01edf0" => :mavericks
+    sha1 "7d7a22de4d560d3569bf6100137165b9c64d551a" => :mountain_lion
+    sha1 "6a660512d05324ddefa5b3f0e633c8e8ef3aa687" => :lion
   end
 
   option :universal
   option :cxx11
 
   depends_on :python => :optional
+  depends_on OldOrNoDateutilUnlessGoogleApputils if build.with? "python"
 
   fails_with :llvm do
     build 2334
@@ -40,11 +75,10 @@ class Protobuf < Formula
 
     if build.with? 'python'
       chdir 'python' do
-        ENV['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'cpp'
         ENV.append_to_cflags "-I#{include}"
         ENV.append_to_cflags "-L#{lib}"
         system 'python', 'setup.py', 'build'
-        system 'python', 'setup.py', 'install', "--prefix=#{prefix}",
+        system 'python', 'setup.py', 'install', '--cpp_implementation', "--prefix=#{prefix}",
                '--single-version-externally-managed', '--record=installed.txt'
       end
     end

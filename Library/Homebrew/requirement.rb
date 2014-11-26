@@ -3,19 +3,21 @@ require 'dependency'
 require 'dependencies'
 require 'build_environment'
 
+# :startdoc:
+
 # A base class for non-formula requirements needed by formulae.
 # A "fatal" requirement is one that will fail the build if it is not present.
 # By default, Requirements are non-fatal.
 class Requirement
   include Dependable
 
-  attr_reader :tags, :name, :option_name
+  attr_reader :tags, :name
+  alias_method :option_name, :name
 
   def initialize(tags=[])
     @tags = tags
     @tags << :build if self.class.build
     @name ||= infer_name
-    @option_name = @name
   end
 
   # The message to show when the requirement is not met.
@@ -103,6 +105,8 @@ class Requirement
   def which(cmd)
     super(cmd, ORIGINAL_PATHS.join(File::PATH_SEPARATOR))
   end
+
+  # :stopdoc:
 
   class << self
     include BuildEnvironmentDSL

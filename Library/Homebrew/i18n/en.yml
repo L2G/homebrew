@@ -31,6 +31,7 @@ blacklist:
     To install Clojure you should install Leiningen:
       brew install leiningen
     and then follow the tutorial:
+
       https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
   distributed_with_os_x: "Apple distributes %1 with OS X, you can find it in %2."
   gfortran: |
@@ -40,6 +41,13 @@ blacklist:
     Installing %1 system-wide is not recommended; it should be vendored
     in your projects that use it.
   gsutil: "Install gsutil with `pip install gsutil`"
+  haskell_platform: |
+    We no longer package haskell-platform. Consider installing ghc
+    and cabal-install instead:
+      brew install ghc cabal-install
+
+    A binary installer is available:
+      https://www.haskell.org/platform/mac.html
   libiconv: |
     Apple distributes %1 with OS X, you can find it in /usr/lib.
     Some build scripts fail to detect it correctly, please check existing
@@ -147,7 +155,7 @@ extend:
         brew install gcc
     gfortran_homebrew: "Using Homebrew-provided fortran compiler."
     gfortran_other: "Using a fortran compiler found at %1."
-    invalid_cc: "Invalid value for --cc: %1"
+    invalid_value: "Invalid value for %1: %2"
     no_fc_flags: |
       No Fortran optimization information was provided.  You may want to consider
       setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
@@ -195,6 +203,7 @@ formula_installer:
   cleaning_not_complete_1: "The cleaning step did not complete successfully"
   cleaning_not_complete_2: "Still, the installation was successful, so we will link it into your prefix"
   dep_message: "%1: %2"
+  deprecated_flag: "%1: %2 was deprecated; using %3 instead!"
   empty_installation: "Empty installation"
   failed_to_create_1: "Failed to create %1"
   failed_to_create_2: "Things that depend on %1 will probably not build."
@@ -252,7 +261,6 @@ utils:
   error_2: ":"
   failed_to_connect: "Failed to connect to: %1"
   failed_to_parse_json: "Failed to parse JSON response"
-  failure_while_executing: "Failure while executing: %1"
   interactive_shell_abort: "Aborting due to non-zero exit status"
   minutes: !!pl
     1: "%1 minute"
@@ -333,8 +341,7 @@ cmd:
     dont_negate_build_with: "Don't negate 'build.with?': use 'build.without?'"
     dont_negate_build_without: "Don't negate 'build.without?': use 'build.with?'"
     dont_use_dependency: |
-      Don't use %1 as a dependency. We allow non-Homebrew
-      %1 installations.
+      Don't use %1 as a dependency. We allow non-Homebrew %1 installations.
     end_without_data: "'__END__' was found, but 'DATA' is not used"
     fileutils_class_dont_need: "Don't need 'FileUtils.' before %1."
     formula_factory: "\"Formula.factory(name)\" is deprecated in favor of \"Formula[name]\""
@@ -346,10 +353,10 @@ cmd:
     github_patch_needs_rev: "GitHub/Gist patches should specify a revision:\n%1"
     github_patch_use_dot_diff: "GitHub appends a git version to patches; use .diff instead."
     head_only: "Head-only (no stable download)"
-    homepage_github_https: "Use https:// URLs for homepages on GitHub (url is %1)."
+    homepage_github_https: "Use https:// URLs for homepages on GitHub (URL is %1)."
     homepage_gnu_ftpmirror: "\"ftpmirror.gnu.org\" is preferred for GNU software (url is %1)."
-    homepage_googlecode_end_slash: "Google Code homepage should end with a slash (url is %1)."
-    homepage_should_be_http: "The homepage should start with http or https (url is %1)."
+    homepage_googlecode_end_slash: "Google Code homepage should end with a slash (URL is %1)."
+    homepage_should_be_http: "The homepage should start with http or https (URL is %1)."
     inreplace_block_var: "\"inreplace <filenames> do |s|\" is preferred over \"|%1|\"."
     md5_checksums_deprecated: "MD5 checksums are deprecated, please use SHA1 or SHA256"
     missing_version: "missing version"
@@ -783,15 +790,24 @@ cmd:
       Xcode is not installed. Most formulae need Xcode to build.
       It can be installed from
         https://developer.apple.com/downloads
-    xcode_outdated_app_store: |
+    xcode_outdated: |
       Your Xcode (%1) is outdated
       Please update to Xcode %2.
+    xcode_outdated_app_store: |
       Xcode can be updated from the App Store.
     xcode_outdated_download: |
       Your Xcode (%1) is outdated
       Please update to Xcode %2.
       Xcode can be updated from
         https://developer.apple.com/downloads
+    xcode_outdated_yosemite_needs_6_1: |
+      Xcode 6.1 is required on Yosemite to compile anything (6.0.1 does not include
+      the 10.10 SDK). Apple have not yet uploaded it to the App Store. Instead it must
+      be downloaded from:
+        https://developer.apple.com/downloads/download.action?path=Developer_Tools/xcode_6.1/xcode_6.1.dmg
+
+      For some software installing the CLT may be enough:
+        xcode-select --install
     xcode_prefix_has_space: |
       Xcode is installed to a directory with a space in the name.
       This will cause some formulae to fail to build.
@@ -837,7 +853,6 @@ cmd:
   update:
     already_up_to_date: "Already up-to-date."
     deleted_formulae: "Deleted Formulae"
-    failure_while_executing: "Failure while executing: %1"
     homebrew_tap_structure_1: "Homebrew changed the structure of Taps like <someuser>/<sometap>. %1"
     homebrew_tap_structure_2: "So you may need to rename %1 manually."
     homebrew_tap_structure_3: "%1 is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."

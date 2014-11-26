@@ -40,5 +40,7 @@ def blacklisted? name
     t.blacklist.gfortran
   when 'play'
     t.blacklist.play
+  when 'haskell-platform'
+    t.blacklist.haskell_platform
   end
 end

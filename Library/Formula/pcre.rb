@@ -8,6 +8,7 @@ class Pcre < Formula
 
   bottle do
     cellar :any
+    sha1 "71073c438d54caa2acc16026c947876c88ce2b80" => :yosemite
     sha1 "be65f007b73eeede8b965c0d7fc1c3d1a4bce087" => :mavericks
     sha1 "a0358dc5793923703258bd6a4fb9e5a5e44a358e" => :mountain_lion
     sha1 "6f7043ff5e9ad854dfe98e0399045d0f62209402" => :lion
@@ -18,6 +19,12 @@ class Pcre < Formula
   fails_with :llvm do
     build 2326
     cause "Bus error in ld on SL 10.6.4"
+  end
+
+  # Upstream patch to fix compilation with GCC 4.9
+  patch do
+    url "http://bugs.exim.org/attachment.cgi?id=741"
+    sha1 "bad236cf67a7b42f0dc8d4ae05ed0260241320d1"
   end
 
   def install

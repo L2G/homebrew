@@ -1,5 +1,6 @@
 /*
 !/.gitignore
+!/.yardopts
 !/Library/
 !/CODEOFCONDUCT.md
 !/CONTRIBUTING.md
@@ -11,6 +12,7 @@
 !/bin/brew
 !/share/man/man1/brew.1
 .DS_Store
+/Library/Homebrew/doc
 /Library/LinkedKegs
 /Library/PinnedKegs
 /Library/Taps

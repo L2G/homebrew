@@ -1,18 +1,19 @@
-require 'formula'
+require "formula"
 
 class Uwsgi < Formula
-  homepage "http://projects.unbit.it/uwsgi/"
-  url "http://projects.unbit.it/downloads/uwsgi-2.0.6.tar.gz"
-  sha1 "5e0fc187ea10366153a1f800c0e7e80940188837"
+  homepage "https://uwsgi-docs.readthedocs.org/en/latest/"
+  url "http://projects.unbit.it/downloads/uwsgi-2.0.7.tar.gz"
+  sha1 "0e9d1f881736674221d60a5dd5dfcbc25051d48b"
+  head "https://github.com/unbit/uwsgi.git"
 
   bottle do
-    revision 1
-    sha1 "b7bd8eab827a33c547016c8a6e381517ce9143c2" => :mavericks
-    sha1 "d41c406d8c772c220a77f7c9b03158ccdd898f96" => :mountain_lion
-    sha1 "e64b429906886bffb38884c3a2d57645d83d68a1" => :lion
+    sha1 "4a195f89dcac74576b8818b39c9dce7c4eee873d" => :mavericks
+    sha1 "f48132c3aa9a4aa82c772358aff335c1993e29f1" => :mountain_lion
+    sha1 "1d538a6627baa5fda1f40ed68c093c079c9dbd80" => :lion
   end
 
   depends_on "pkg-config" => :build
+  depends_on :python if MacOS.version <= :snow_leopard
 
   depends_on "pcre"
   depends_on "yajl" if build.without? "jansson"
@@ -24,7 +25,7 @@ class Uwsgi < Formula
   depends_on "libffi" => :optional
   depends_on "libxslt" => :optional
   depends_on "libyaml" => :optional
-  depends_on "lua" => :optional
+  depends_on "lua51" => :optional
   depends_on "mongodb" => :optional
   depends_on "mongrel2" => :optional
   depends_on "nagios" => :optional
@@ -43,17 +44,10 @@ class Uwsgi < Formula
   option "with-ruby", "Compile with Ruby support"
 
   def install
-    %w{CFLAGS LDFLAGS}.each { |e| ENV.append e, "-arch #{MacOS.preferred_arch}" }
+    ENV.append %w{CFLAGS LDFLAGS}, "-arch #{MacOS.preferred_arch}"
 
-    json = "yajl"
-    if build.with? "jansson"
-      json = "jansson"
-    end
-
-    yaml = "embedded"
-    if build.with? "libyaml"
-      yaml = "libyaml"
-    end
+    json = build.with?("jansson") ? "jansson" : "yajl"
+    yaml = build.with?("libyaml") ? "libyaml" : "embedded"
 
     (buildpath/"buildconf/brew.ini").write <<-EOS.undent
       [uwsgi]
@@ -124,7 +118,7 @@ class Uwsgi < Formula
     bin.install "uwsgi"
   end
 
-  plist_options :manual => 'uwsgi'
+  plist_options :manual => "uwsgi"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>

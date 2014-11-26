@@ -23,7 +23,6 @@ class ExampleFormula < Formula
   #     `:nounzip` (without extracting)
   #     `:post` (download via an HTTP POST)
   #     `S3DownloadStrategy` (download from S3 using signed request)
-  #     `UnsafeSubversionDownloadStrategy` (svn with invalid certs)
   url "https://some.dont.provide.archives.example.com", :using => :git, :tag => "1.2.3"
 
   # version is seldom needed, because it's usually autodetected from the URL/tag.
@@ -345,9 +344,6 @@ class ExampleFormula < Formula
     # Further possibilities with the pathnames:
     # http://www.ruby-doc.org/stdlib-1.8.7/libdoc/pathname/rdoc/Pathname.html
 
-    # Sometime you will see that instead of `+` we build up a path with `/`
-    # because it looks nicer (but you can't nest more than two `/`):
-    (var/"foo").mkpath
     # Copy `./example_code/simple/ones` to share/demos
     (share/"demos").install "example_code/simple/ones"
     # Copy `./example_code/simple/ones` to share/demos/examples

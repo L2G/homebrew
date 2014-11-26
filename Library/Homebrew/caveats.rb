@@ -81,7 +81,7 @@ class Caveats
 
       # we readlink because this path probably doesn't exist since caveats
       # occurs before the link step of installation
-      if (not plist_path.file?) and (not plist_path.symlink?)
+      if !plist_path.file? || !plist_path.symlink?
         if f.plist_startup
           s << t.caveats.plist_startup(f.name)
           s << "    sudo mkdir -p #{destination}" unless destination_path.directory?
