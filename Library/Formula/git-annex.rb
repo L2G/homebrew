@@ -5,14 +5,14 @@ class GitAnnex < Formula
   include Language::Haskell::Cabal
 
   homepage "https://git-annex.branchable.com/"
-  url "http://hackage.haskell.org/package/git-annex-5.20141013/git-annex-5.20141013.tar.gz"
-  sha1 "db93f75db07862ce85bdc14adfdac5aba6104f90"
+  url "https://hackage.haskell.org/package/git-annex-5.20141125/git-annex-5.20141125.tar.gz"
+  sha1 "45445bfef32f380624cbf415813a1a69010ecb13"
 
   bottle do
     cellar :any
-    sha1 "9f353c6f66e8db47bd91a3c0fc65599aca50ad50" => :mavericks
-    sha1 "264534752e8d2c26e49c84a77571f34fba4fac35" => :mountain_lion
-    sha1 "92c21f66c0518b7daf870d230bdf5a6beed80d05" => :lion
+    sha1 "dc9c4df9d7eb9f33cacc1e26e4df4d63f2d3c105" => :yosemite
+    sha1 "18bc46d6db31fc6e55816272d4b9bb392a182ebf" => :mavericks
+    sha1 "e0bba76cda3e7940a3645c68290dd54782e4cef4" => :mountain_lion
   end
 
   depends_on "gcc" => :build
@@ -43,23 +43,6 @@ class GitAnnex < Formula
   test do
     # make sure git can find git-annex
     ENV.prepend_path "PATH", bin
-    # create a first git repository with an annex
-    mkdir "my_annex" do
-      system "git", "init"
-      system "git", "annex", "init", "my_annex"
-      cp bin/"git-annex", "bigfile"
-      system "git", "annex", "add", "bigfile"
-      system "git", "commit", "-am", "big file added"
-      assert File.symlink? "bigfile"
-    end
-    # and propagate its content to another
-    system "git", "clone", "my_annex", "my_annex_clone"
-    Dir.chdir "my_annex_clone" do
-      assert !File.file?("bigfile")
-      system "git", "annex", "get", "bigfile"
-      assert File.file? "bigfile"
-    end
-    # make test files writable so homebrew can drop them
-    chmod_R 0777, testpath
+    system "git", "annex", "test"
   end
 end

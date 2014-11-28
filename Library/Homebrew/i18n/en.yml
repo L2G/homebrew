@@ -31,7 +31,6 @@ blacklist:
     To install Clojure you should install Leiningen:
       brew install leiningen
     and then follow the tutorial:
-
       https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
   distributed_with_os_x: "Apple distributes %1 with OS X, you can find it in %2."
   gfortran: |
@@ -115,13 +114,19 @@ caveats:
   plist_then_load: "Then to load %1 now:"
   plist_tmux_warning: "WARNING: launchctl will fail when run under tmux."
   plist_upgrade: "To reload %1 after an upgrade:"
-  python: |
-    If you need Python to find the installed site-packages:
-      mkdir -p %1
-      echo '%2' > %3
-  python_no_dir: |
-    If you need Python to find the installed site-packages:
-      echo '%1' > %2
+  python_find_keg_bindings: |
+    If you need Python to find bindings for this keg-only formula, run:
+      %1
+  python_modules_installed: |
+    Python modules have been installed and Homebrew's site-packages is not
+    in your Python sys.path, so you will not be able to import the modules
+    this formula installed. If you plan to develop with these modules,
+    please run:
+  python_pth_files_installed: |
+    This formula installed .pth files to Homebrew's site-packages and your
+    Python isn't configured to process them, so you will not be able to
+    import the modules this formula installed. If you plan to develop
+    with these modules, please run:
   zsh_completion: |
     zsh completion has been installed to:
       %1
@@ -184,8 +189,6 @@ extend:
 # formula_installer.rb
 formula_installer:
   all_deps_satisfied: "All dependencies for %1 are satisfied."
-  already_installed: "%1-%2 already installed"
-  already_installed_not_linked: "%1-%2 already installed, it's just not linked"
   already_installed_unlink: |
     %1-%2 already installed
     To install this version, first `brew unlink %1'
@@ -314,7 +317,7 @@ cmd:
     Brewing:
       brew create [URL [--no-fetch]]
       brew edit [FORMULA...]
-      open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
+      open https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
 
     Further help:
       man brew
@@ -790,24 +793,15 @@ cmd:
       Xcode is not installed. Most formulae need Xcode to build.
       It can be installed from
         https://developer.apple.com/downloads
-    xcode_outdated: |
+    xcode_outdated_app_store: |
       Your Xcode (%1) is outdated
       Please update to Xcode %2.
-    xcode_outdated_app_store: |
       Xcode can be updated from the App Store.
     xcode_outdated_download: |
       Your Xcode (%1) is outdated
       Please update to Xcode %2.
       Xcode can be updated from
         https://developer.apple.com/downloads
-    xcode_outdated_yosemite_needs_6_1: |
-      Xcode 6.1 is required on Yosemite to compile anything (6.0.1 does not include
-      the 10.10 SDK). Apple have not yet uploaded it to the App Store. Instead it must
-      be downloaded from:
-        https://developer.apple.com/downloads/download.action?path=Developer_Tools/xcode_6.1/xcode_6.1.dmg
-
-      For some software installing the CLT may be enough:
-        xcode-select --install
     xcode_prefix_has_space: |
       Xcode is installed to a directory with a space in the name.
       This will cause some formulae to fail to build.
@@ -836,6 +830,7 @@ cmd:
     macports_or_fink_installed_2: |
       Software installed with other package managers causes known problems for
       Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again.
+    searching_formulae: "Searching formulae..."
     searching_taps: "Searching taps..."
     unsupported_arch: |
       Sorry, Homebrew does not support your computer's CPU architecture.

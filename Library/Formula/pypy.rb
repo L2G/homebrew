@@ -6,9 +6,10 @@ class Pypy < Formula
   sha1 "e2e0bcf8457c0ae5a24f126a60aa921dabfe60fb"
   bottle do
     cellar :any
-    sha1 "533b3d5b9e566b7162d529c0f0bfaaea06cb19e8" => :mavericks
-    sha1 "bc30d65847cb9b1e1eb85eb3ff36fd003f1f23b5" => :mountain_lion
-    sha1 "3f91bcf68fc5d6954f7032be18f14eb17dfb8d55" => :lion
+    revision 2
+    sha1 "656715fdeed57bd67e36dbe24d4bf3d09e637526" => :yosemite
+    sha1 "961fb2eb85294e1f4b0ae18a94436fe2e497ea3d" => :mavericks
+    sha1 "1bba06631ad00bbd2062e48ed09132577e8f007e" => :mountain_lion
   end
 
   revision 2
@@ -59,6 +60,12 @@ class Pypy < Formula
   end
 
   def post_install
+    # Precompile cffi extensions in lib_pypy
+    # list from create_cffi_import_libraries in pypy/tool/release/package.py
+    %w[_sqlite3 _curses syslog gdbm _tkinter].each do |module_name|
+      quiet_system bin/"pypy", "-c", "import #{module_name}"
+    end
+
     # Post-install, fix up the site-packages and install-scripts folders
     # so that user-installed Python software survives minor updates, such
     # as going from 1.7.0 to 1.7.1.
@@ -103,7 +110,7 @@ class Pypy < Formula
     To update setuptools and pip between pypy releases, run:
         #{scripts_folder}/pip install --upgrade setuptools
 
-    See: https://github.com/Homebrew/homebrew/wiki/Homebrew-and-Python
+    See: https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Homebrew-and-Python.md
     EOS
   end
 

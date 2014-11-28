@@ -32,8 +32,6 @@ def blacklisted? name
     t.blacklist.gsutil
   when 'clojure'
     t.blacklist.clojure
-  when 'rubinius'
-    t.blacklist.rubinius
   when 'osmium'
     t.blacklist.osmium
   when 'gfortran'

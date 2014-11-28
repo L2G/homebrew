@@ -1,15 +1,14 @@
 require "formula"
 
 class Influxdb < Formula
-  homepage "http://influxdb.org"
-  url "http://get.influxdb.org/with_dependencies/influxdb-0.8.3.src.tar.gz"
-  sha1 "2626bc5e8877ab23db3b121b64f4c5f9c8a2b627"
+  homepage "http://influxdb.com"
+  url "https://s3.amazonaws.com/get.influxdb.org/influxdb-0.8.6.src.tar.gz"
+  sha1 "9668d1a457ffe6bac7dc78c5bc0771428e50f119"
 
   bottle do
-    revision 1
-    sha1 "ad6e564cde67cb0518416777e5e18ff5796a5380" => :mavericks
-    sha1 "b18f89ce07b08020099e15918e7d7e1f909305e0" => :mountain_lion
-    sha1 "1d83ccd8902d6fb401b4483c1fe186e8c46e8b45" => :lion
+    sha1 "087a8a843e5ecf423efe556278b716f36a8a067f" => :yosemite
+    sha1 "eeb291a545fc56938b31d366cf184a3120fad6b4" => :mavericks
+    sha1 "9c271c356c66279bd9951ebc9255ade48fa03c32" => :mountain_lion
   end
 
   depends_on "leveldb"
@@ -20,37 +19,32 @@ class Influxdb < Formula
   depends_on "flex" => :build
   depends_on "go" => :build
   depends_on "gawk" => :build
+  depends_on :hg => :build
 
   def install
-    ENV["GOPATH"] = buildpath.parent
-    Dir.chdir File.join(buildpath, "github.com", "influxdb", "influxdb")
+    ENV["GOPATH"] = buildpath
+    Dir.chdir File.join(buildpath, "src", "github.com", "influxdb", "influxdb")
 
     flex = Formula["flex"].bin/"flex"
     bison = Formula["bison"].bin/"bison"
 
-    system "./configure", "--with-flex=#{flex}", "--with-bison=#{bison}"
-
-    system "make", "protobuf"
-    system "make", "parser"
-
-    inreplace "daemon/version.go" do |s|
-      s.gsub! /^(const version).*$/, %Q{\\1 = "0.8.3"}
-      s.gsub! /^(const gitSha).*$/, %Q{\\1 = "fbf9a474055051c64e947f2a071388ee009a08d5"}
+    inreplace "configure" do |s|
+      s.gsub! "echo -n", "$as_echo_n"
     end
 
-    system "go", "build", "-o", "influxdb", "github.com/influxdb/influxdb/daemon"
+    system "./configure", "--with-flex=#{flex}", "--with-bison=#{bison}", "--with-rocksdb"
+    system "make", "parser", "protobuf"
+    system "go", "build", "-tags", "rocksdb", "-o", "influxdb", "github.com/influxdb/influxdb/daemon"
 
     inreplace "config.sample.toml" do |s|
       s.gsub! "/tmp/influxdb/development/db", "#{var}/influxdb/data"
       s.gsub! "/tmp/influxdb/development/raft", "#{var}/influxdb/raft"
       s.gsub! "/tmp/influxdb/development/wal", "#{var}/influxdb/wal"
       s.gsub! "influxdb.log", "#{var}/influxdb/logs/influxdb.log"
-      s.gsub! "./admin", "#{opt_share}/admin"
     end
 
     bin.install "influxdb" => "influxdb"
     etc.install "config.sample.toml" => "influxdb.conf"
-    share.install "admin-ui" => "admin"
 
     (var/"influxdb/data").mkpath
     (var/"influxdb/raft").mkpath

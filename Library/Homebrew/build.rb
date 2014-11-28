@@ -115,7 +115,7 @@ class Build
     end
 
     formula.brew do
-      if ARGV.flag? '--git'
+      if ARGV.git?
         system "git", "init"
         system "git", "add", "-A"
       end
@@ -123,7 +123,7 @@ class Build
         ohai t.build.interactive.entering
         puts t.build.interactive.install_to(formula.prefix)
 
-        if ARGV.flag? '--git'
+        if ARGV.git?
           puts t.build.git
         end
 

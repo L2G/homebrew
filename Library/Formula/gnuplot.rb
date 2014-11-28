@@ -12,9 +12,10 @@ class Gnuplot < Formula
   sha256 '1f19596fd09045f22225afbfec11fa91b9ad1d95b9f48406362f517d4f130274'
 
   bottle do
-    sha1 "57088a95a146104b121d7048b4db854e2b056f26" => :mavericks
-    sha1 "f189e3c8fb8da9a10434f6cf1356f5c76b7305d8" => :mountain_lion
-    sha1 "b9dd1659fa55d27da9f657e9dd60102a589b4881" => :lion
+    revision 1
+    sha1 "c6a2e3f30495c1bd790ea5091f40b7644d695112" => :yosemite
+    sha1 "03d507d87eedd8c4bf3e460931081a10403f379d" => :mavericks
+    sha1 "24618fd48a6d5fa2f69843da8ac2aaa8d631ff48" => :mountain_lion
   end
 
   head do
@@ -27,7 +28,6 @@ class Gnuplot < Formula
 
   option 'pdf',    'Build the PDF terminal using pdflib-lite'
   option 'wx',     'Build the wxWidgets terminal using pango'
-  option 'with-x', 'Build the X11 terminal'
   option 'qt',     'Build the Qt4 terminal'
   option 'cairo',  'Build the Cairo based terminals'
   option 'nolua',  'Build without the lua/TikZ terminal'
@@ -37,6 +37,8 @@ class Gnuplot < Formula
   option 'latex',  'Build with LaTeX support'
   option 'with-aquaterm', 'Build with AquaTerm support'
 
+  deprecated_option "with-x" => "with-x11"
+
   depends_on 'pkg-config' => :build
   depends_on LuaRequirement unless build.include? 'nolua'
   depends_on 'readline'
@@ -45,7 +47,7 @@ class Gnuplot < Formula
   depends_on "libtiff"
   depends_on "fontconfig"
   depends_on 'pango'       if build.include? 'cairo' or build.include? 'wx'
-  depends_on :x11          if build.with? "x"
+  depends_on :x11 => :optional
   depends_on 'pdflib-lite' if build.include? 'pdf'
   depends_on 'gd'          unless build.include? 'nogd'
   depends_on 'wxmac'       if build.include? 'wx'
@@ -94,7 +96,7 @@ class Gnuplot < Formula
     args << '--without-lisp-files'    if build.without? "emacs"
     args << (build.with?('aquaterm') ? '--with-aquaterm' : '--without-aquaterm')
 
-    if build.with? "x"
+    if build.with? "x11"
       args << "--with-x"
     else
       args << "--without-x"
