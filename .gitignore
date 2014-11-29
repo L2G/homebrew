@@ -1,5 +1,6 @@
 /*
 !/.gitignore
+!/.rubocop*
 !/.yardopts
 !/Library/
 !/CODEOFCONDUCT.md

@@ -1,0 +1,5 @@
+---
+AllCops:
+  Exclude:
+    - "Library/Formula/*"
+    - "Library/Homebrew/vendor/**/*"
