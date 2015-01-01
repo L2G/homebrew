@@ -77,7 +77,7 @@ class Caveats
   end
 
   def app_caveats
-    t.caveats.app if keg and keg.app_installed?
+    t.caveats.app(keg.name) if keg and keg.app_installed?
   end
 
   def plist_caveats

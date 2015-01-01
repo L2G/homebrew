@@ -156,7 +156,7 @@ class FormulaInstaller
       raise t.formula_installer.unrecognized_bottle_arch(arch)
     end
 
-    formula.active_spec.deprecated_flags.each do |deprecated_option|
+    formula.deprecated_flags.each do |deprecated_option|
       old_flag = deprecated_option.old_flag
       new_flag = deprecated_option.current_flag
       opoo t.formula_installer.deprecated_flag(formula.name, old_flag, new_flag)
@@ -204,8 +204,8 @@ class FormulaInstaller
     return if ARGV.force?
 
     conflicts = formula.conflicts.select do |c|
-      formula = Formulary.factory(c.name)
-      formula.linked_keg.exist? && formula.opt_prefix.exist?
+      f = Formulary.factory(c.name)
+      f.linked_keg.exist? && f.opt_prefix.exist?
     end
 
     raise FormulaConflictError.new(formula, conflicts) unless conflicts.empty?

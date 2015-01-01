@@ -1,5 +1,3 @@
-require "formula"
-
 class Readline < Formula
   homepage "http://tiswww.case.edu/php/chet/readline/rltop.html"
   url "http://ftpmirror.gnu.org/readline/readline-6.3.tar.gz"
@@ -15,11 +13,11 @@ class Readline < Formula
     sha1 "e84f9cd95503b284651ef24bc8e7da30372687d3" => :lion
   end
 
-  keg_only :shadowed_by_osx, <<-EOS
-OS X provides the BSD libedit library, which shadows libreadline.
-In order to prevent conflicts when programs look for libreadline we are
-defaulting this GNU Readline installation to keg-only.
-EOS
+  keg_only :shadowed_by_osx, <<-EOS.undent
+    OS X provides the BSD libedit library, which shadows libreadline.
+    In order to prevent conflicts when programs look for libreadline we are
+    defaulting this GNU Readline installation to keg-only.
+  EOS
 
   # Vendor the patches.
   # The mirrors are unreliable for getting the patches, and the more patches
@@ -35,10 +33,16 @@ EOS
   def install
     # Always build universal, per https://github.com/Homebrew/homebrew/issues/issue/899
     ENV.universal_binary
-    system "./configure", "--prefix=#{prefix}",
-                          "--mandir=#{man}",
-                          "--infodir=#{info}",
-                          "--enable-multibyte"
-    system "make install"
+    system "./configure", "--prefix=#{prefix}", "--enable-multibyte"
+    system "make", "install"
+
+    # The 6.3 release notes say:
+    #   When creating shared libraries on Mac OS X, the pathname written into the
+    #   library (install_name) no longer includes the minor version number.
+    # Software will link against libreadline.6.dylib instead of libreadline.6.3.dylib.
+    # Therefore we create symlinks to avoid bumping the revisions on dependents.
+    # This should be removed at 6.4.
+    lib.install_symlink "libhistory.6.3.dylib" => "libhistory.6.2.dylib",
+                        "libreadline.6.3.dylib" => "libreadline.6.2.dylib"
   end
 end

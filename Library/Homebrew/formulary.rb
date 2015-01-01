@@ -55,29 +55,26 @@ class Formulary
     def klass
       begin
         have_klass = Formulary.formula_class_defined? class_name
-      rescue NameError
-        raise FormulaUnavailableError.new(name)
+      rescue NameError => e
+        raise unless e.name.to_s == class_name
+        raise FormulaUnavailableError, name, e.backtrace
       end
 
-      unless have_klass
-        STDERR.puts "#{$0} (#{self.class.name}): loading #{path}" if ARGV.debug?
-        begin
-          require path
-        rescue NoMethodError
-          # This is a programming error in an existing formula, and should not
-          # have a "no such formula" message.
-          raise
-        rescue LoadError, NameError
-          raise if ARGV.debug?  # let's see the REAL error
-          raise FormulaUnavailableError.new(name)
-        end
-      end
+      load_file unless have_klass
 
       klass = Formulary.get_formula_class(class_name)
       if klass == Formula || !(klass < Formula)
         raise FormulaUnavailableError.new(name)
       end
       klass
+    end
+
+    private
+
+    def load_file
+      STDERR.puts "#{$0} (#{self.class.name}): loading #{path}" if ARGV.debug?
+      raise FormulaUnavailableError.new(name) unless path.file?
+      require(path)
     end
   end
 
@@ -139,23 +136,10 @@ class Formulary
       super formula, HOMEBREW_CACHE_FORMULA/File.basename(uri.path)
     end
 
-    # Downloads the formula's .rb file
-    def fetch
-      begin
-        have_klass = Formulary.formula_class_defined? class_name
-      rescue NameError
-        raise FormulaUnavailableError.new(name)
-      end
-
-      unless have_klass
-        HOMEBREW_CACHE_FORMULA.mkpath
-        FileUtils.rm path.to_s, :force => true
-        curl url, '-o', path.to_s
-      end
-    end
-
-    def get_formula(spec)
-      fetch
+    def load_file
+      HOMEBREW_CACHE_FORMULA.mkpath
+      FileUtils.rm_f(path)
+      curl url, "-o", path
       super
     end
   end
@@ -183,8 +167,8 @@ class Formulary
 
     def get_formula(spec)
       super
-    rescue FormulaUnavailableError
-      raise TapFormulaUnavailableError.new(tapped_name)
+    rescue FormulaUnavailableError => e
+      raise TapFormulaUnavailableError, tapped_name, e.backtrace
     end
   end
 

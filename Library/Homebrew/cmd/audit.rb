@@ -17,8 +17,10 @@ module Homebrew
       ARGV.formulae
     end
 
+    strict = ARGV.include? "--strict"
+
     ff.each do |f|
-      fa = FormulaAuditor.new f
+      fa = FormulaAuditor.new(f, :strict => strict)
       fa.audit
 
       unless fa.problems.empty?
@@ -78,8 +80,11 @@ class FormulaAuditor
     swig
   ]
 
-  def initialize(formula)
+  FILEUTILS_METHODS = FileUtils.singleton_methods(false).join "|"
+
+  def initialize(formula, options={})
     @formula = formula
+    @strict = !!options[:strict]
     @problems = []
     @text = FormulaText.new(formula.path)
     @specs = %w{stable devel head}.map { |s| formula.send(s) }.compact
@@ -100,6 +105,14 @@ class FormulaAuditor
 
     unless text.has_trailing_newline?
       problem t.cmd.audit.needs_ending_newline
+    end
+  end
+
+  def audit_class
+    if @strict
+      unless formula.test_defined?
+        problem "A `test do` test block should be added"
+      end
     end
   end
 
@@ -158,6 +171,15 @@ class FormulaAuditor
         Formulary.factory(c.name)
       rescue FormulaUnavailableError
         problem t.cmd.audit.cant_find_conflicting(c.name.inspect)
+      end
+    end
+  end
+
+  def audit_options
+    formula.options.each do |o|
+      next unless @strict
+      if o.name !~ /with(out)?-/ && o.name != "c++11" && o.name != "universal" && o.name != "32-bit"
+        problem "Options should begin with with/without. Migrate '--#{o.name}' with `deprecated_option`."
       end
     end
   end
@@ -251,7 +273,7 @@ class FormulaAuditor
   end
 
   def audit_specs
-    if head_only?(formula) && formula.tap != "homebrew/homebrew-headonly"
+    if head_only?(formula) && formula.tap != "homebrew/homebrew-head-only"
       problem t.cmd.audit.head_only
     end
 
@@ -340,7 +362,10 @@ class FormulaAuditor
     if line =~ /# if your formula requires any X11\/XQuartz components/
       problem t.cmd.audit.comment_remove_default
     end
-    if line =~ /# if your formula's build system can't parallelize/
+    if line =~ /# if your formula fails when building in parallel/
+      problem t.cmd.audit.comment_remove_default
+    end
+    if line =~ /# Remove unrecognized options if warned by configure/
       problem t.cmd.audit.comment_remove_default
     end
 
@@ -514,6 +539,24 @@ class FormulaAuditor
     if line =~ /(Dir\[("[^\*{},]+")\])/
       problem t.cmd.audit.unnecessary($1, $2)
     end
+
+    if line =~ /system (["'](#{FILEUTILS_METHODS})["' ])/o
+      system = $1
+      method = $2
+      problem "Use the `#{method}` Ruby method instead of `system #{system}`"
+    end
+
+    if @strict
+      if line =~ /system (["'][^"' ]*\s[^"' ]*["'])/
+        bad_system = $1
+        good_system = bad_system.gsub(" ", "\", \"")
+        problem "Use `system #{good_system}` instead of `system #{bad_system}` "
+      end
+
+      if line =~ /(require ["']formula["'])/
+        problem "`#{$1}` is now unnecessary"
+      end
+    end
   end
 
   def audit_conditional_dep(dep, condition, line)
@@ -538,10 +581,12 @@ class FormulaAuditor
 
   def audit
     audit_file
+    audit_class
     audit_specs
     audit_urls
     audit_deps
     audit_conflicts
+    audit_options
     audit_patches
     audit_text
     text.without_patch.split("\n").each_with_index { |line, lineno| audit_line(line, lineno+1) }
@@ -561,9 +606,10 @@ end
 
 class ResourceAuditor
   attr_reader :problems
-  attr_reader :version, :checksum, :using, :specs, :url
+  attr_reader :version, :checksum, :using, :specs, :url, :name
 
   def initialize(resource)
+    @name     = resource.name
     @version  = resource.version
     @checksum = resource.checksum
     @url      = resource.url
@@ -624,12 +670,34 @@ class ResourceAuditor
   end
 
   def audit_download_strategy
+    if url =~ %r[^(cvs|bzr|hg|fossil)://] || url =~ %r[^(svn)\+http://]
+      problem "Use of the #{$&} scheme is deprecated, pass `:using => :#{$1}` instead"
+    end
+
     return unless using
 
     if using == :ssl3 || using == CurlSSL3DownloadStrategy
       problem "The SSL3 download strategy is deprecated, please choose a different URL"
-    elsif using == CurlUnsafeDownloadStrategy
+    elsif using == CurlUnsafeDownloadStrategy || using == UnsafeSubversionDownloadStrategy
       problem "#{using.name} is deprecated, please choose a different URL"
+    end
+
+    if using == :cvs
+      mod = specs[:module]
+
+      if mod == name
+        problem "Redundant :module value in URL"
+      end
+
+      if url =~ %r[:[^/]+$]
+        mod = url.split(":").last
+
+        if mod == name
+          problem "Redundant CVS module appended to URL"
+        else
+          problem "Specify CVS module as `:module => \"#{mod}\"` instead of appending it to the URL"
+        end
+      end
     end
 
     url_strategy   = DownloadStrategyDetector.detect(url)

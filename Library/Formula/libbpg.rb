@@ -2,33 +2,22 @@ require "formula"
 
 class Libbpg < Formula
   homepage "http://bellard.org/bpg/"
-  url "http://bellard.org/bpg/libbpg-0.9.tar.gz"
-  sha1 "d40209384adf517c773a7a28cec0d4759051bf2c"
+  url "http://bellard.org/bpg/libbpg-0.9.4.tar.gz"
+  sha1 "6c1c950c0ff9a051e4f48bf2ff63f73bc859830d"
 
   bottle do
     cellar :any
-    sha1 "5ce24008a63d1362c54f63765fefbf0fd8fcd2d0" => :yosemite
-    sha1 "458ac4571970643dd81352d3a9591377c5004327" => :mavericks
-    sha1 "8b906bd6b3f1537f6805e3bbd2df84dad93bcf43" => :mountain_lion
+    sha1 "86e6f94e92e03d116d260e8fcf06399b0ad93154" => :yosemite
+    sha1 "b620193447e678cee2397193c52f0f38ba44a3a8" => :mavericks
+    sha1 "297f3aa90675c20e1241da9adcf61e9cfafaf248" => :mountain_lion
   end
 
   depends_on "libpng"
   depends_on "jpeg"
 
   def install
-    # Following changes are necessary for compilation on OS X. These have been
-    # reported to the author and can be removed once incorporated upstream.
-    inreplace "libavutil/mem.c" do |s|
-      s.gsub! "#include <malloc.h>", "#include <malloc/malloc.h>"
-    end
-
-    inreplace "Makefile" do |s|
-      s.gsub! "--gc-sections", "-dead_strip"
-      s.gsub! "LIBS:=-lrt -lm -lpthread", "LIBS:=-lm -lpthread"
-    end
-
     bin.mkpath
-    system "make", "install", "prefix=#{prefix}"
+    system "make", "install", "prefix=#{prefix}", "CONFIG_APPLE=y"
   end
 
   test do

@@ -3,22 +3,22 @@ require "formula"
 class Python < Formula
   homepage "https://www.python.org"
   head "https://hg.python.org/cpython", :using => :hg, :branch => "2.7"
-  url "https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz"
-  sha1 "511960dd78451a06c9df76509635aeec05b2051a"
-  revision 2
+  url "https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz"
+  sha1 "7a191bcccb598ccbf2fa6a0edce24a97df3fc0ad"
 
   bottle do
-    revision 3
-    sha1 "9f8d1d3bf62e78c0918822517a041a845b6703d8" => :yosemite
-    sha1 "307042fc8dd7f736b450ee5fc631197290483cf7" => :mavericks
-    sha1 "f3708ea1d1f736527c428f0026aa42499c489fe2" => :mountain_lion
+    revision 6
+    sha1 "d08397195650b39e2c066df6e69d4e0fac1bbf87" => :yosemite
+    sha1 "e984c0f3410ff12111d52e9d7453e84dc7b2ccfd" => :mavericks
+    sha1 "44b321eac71565a41ebcec91b5558be56d496805" => :mountain_lion
   end
 
+  # Please don't add a wide/ucs4 option as it won't be accepted.
+  # More details in: https://github.com/Homebrew/homebrew/pull/32368
   option :universal
   option "quicktest", "Run `make quicktest` after the build (for devs; may fail)"
   option "with-brewed-tk", "Use Homebrew's Tk (has optional Cocoa and threads support)"
   option "with-poll", "Enable select.poll, which is not fully implemented on OS X (http://bugs.python.org/issue5154)"
-  option "with-dtrace", "Experimental DTrace support (http://bugs.python.org/issue13405)"
 
   depends_on "pkg-config" => :build
   depends_on "readline" => :recommended
@@ -32,8 +32,8 @@ class Python < Formula
   skip_clean "bin/easy_install", "bin/easy_install-2.7"
 
   resource "setuptools" do
-    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-5.4.2.tar.gz"
-    sha1 "a681ba56c30c0eb66528215842d3e3fcb5157614"
+    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-8.2.1.tar.gz"
+    sha1 "ddb4454303142be3446437e4fafb13bbd4570133"
   end
 
   resource "pip" do
@@ -91,7 +91,6 @@ class Python < Formula
            ]
 
     args << "--without-gcc" if ENV.compiler == :clang
-    args << "--with-dtrace" if build.with? "dtrace"
 
     if superenv?
       distutils_fix_superenv(args)

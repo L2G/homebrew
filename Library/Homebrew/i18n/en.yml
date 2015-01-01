@@ -103,7 +103,7 @@ build:
 caveats:
   app: |
     .app bundles were installed.
-    Run `brew linkapps` to symlink these to /Applications.
+    Run `brew linkapps %1` to symlink these to /Applications.
   bash_completion: |
     Bash completion has been installed to:
       %1
@@ -397,7 +397,7 @@ cmd:
           See: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/
     url_sourceforge_no_specific: "Don't use specific dl mirrors in SourceForge urls (url is %1)."
     url_sourceforge_use_https: "Use https:// URLs for downloads from SourceForge (url is %1)."
-    url_using_redundant: "redundant :using specification in URL"
+    url_using_redundant: "Redundant :using value in URL"
     use_build_head: "Use 'build.head?' instead of inspecting 'version'"
     use_build_instead_of_argv: "Use build instead of ARGV to check options"
     use_build_with: "Don't duplicate 'with': Use `build.with? \"%1\"` to check for \"--with-%1\""
