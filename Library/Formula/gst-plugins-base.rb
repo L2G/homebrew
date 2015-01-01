@@ -2,14 +2,14 @@ require "formula"
 
 class GstPluginsBase < Formula
   homepage "http://gstreamer.freedesktop.org/"
-  url "http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.4.4.tar.xz"
-  mirror "http://ftp.osuosl.org/pub/blfs/svn/g/gst-plugins-base-1.4.4.tar.xz"
-  sha256 "49cd9e8f23c416b1607b43837a09833fa03e0106929d81ead2ddfde6c0ade44b"
+  url "http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.4.5.tar.xz"
+  mirror "http://ftp.osuosl.org/pub/blfs/svn/g/gst-plugins-base-1.4.5.tar.xz"
+  sha256 "77bd8199e7a312d3d71de9b7ddf761a3b78560a2c2a80829d0815ca39cbd551d"
 
   bottle do
-    sha1 "bc07df39b0ae799bbff2f22a55278cb6ac16a756" => :yosemite
-    sha1 "068061fdc86d77b9e918b92ad257b0c31b9cf4ba" => :mavericks
-    sha1 "b780ffc1eb74f37dbc7a18806d46cfde945e9c5b" => :mountain_lion
+    sha1 "6a50448b0ef09c2e2af1e24bb4e5304f42559f87" => :yosemite
+    sha1 "9750ea2eac3e1653eb0003404fb3c27d568d9add" => :mavericks
+    sha1 "e5aeb6aac3c04bf0b0f9583ef9f89052c52cc5ba" => :mountain_lion
   end
 
   head do

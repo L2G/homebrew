@@ -102,13 +102,6 @@ class Formulary
     end
   end
 
-  # Loads formulae from Homebrew's provided Library
-  class StandardLoader < FormulaLoader
-    def initialize name, path=Formula.path(name)
-      super
-    end
-  end
-
   class AliasLoader < FormulaLoader
     def initialize alias_path
       path = alias_path.resolved_path
@@ -172,6 +165,16 @@ class Formulary
     end
   end
 
+  class NullLoader < FormulaLoader
+    def initialize(name)
+      @name = name
+    end
+
+    def get_formula(spec)
+      raise FormulaUnavailableError.new(name)
+    end
+  end
+
   # Return a Formula instance for the given reference.
   # `ref` is string containing:
   # * a formula name
@@ -202,7 +205,7 @@ class Formulary
 
     formula_with_that_name = Formula.path(ref)
     if formula_with_that_name.file?
-      return StandardLoader.new(ref, formula_with_that_name)
+      return FormulaLoader.new(ref, formula_with_that_name)
     end
 
     possible_alias = Pathname.new("#{HOMEBREW_LIBRARY}/Aliases/#{ref}")
@@ -212,9 +215,9 @@ class Formulary
 
     possible_cached_formula = Pathname.new("#{HOMEBREW_CACHE_FORMULA}/#{ref}.rb")
     if possible_cached_formula.file?
-      return StandardLoader.new(ref, possible_cached_formula)
+      return FormulaLoader.new(ref, possible_cached_formula)
     end
 
-    return StandardLoader.new(ref)
+    return NullLoader.new(ref)
   end
 end
