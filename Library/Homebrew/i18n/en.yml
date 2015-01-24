@@ -131,6 +131,27 @@ caveats:
     zsh completion has been installed to:
       %1
 #==============================================================================
+# download_strategy.rb
+download_strategy:
+  already_downloaded: "Already downloaded: %1"
+  aws_creds_missing: "AWS credentials missing, trying public URL instead."
+  bad_s3_url: "Bad S3 URL: %1"
+  best_mirror: "Best Mirror %1"
+  checking_out: "Checking out %1 %2"
+  cloning: "Cloning %1"
+  couldnt_determine_mirror: "Couldn't determine mirror, try again later."
+  downloading: "Downloading %1"
+  empty_archive: "Empty archive"
+  install_aws_sdk: "Install the aws-sdk gem into the gem repo used by brew."
+  pouring: "Pouring %1"
+  removing_invalid_repo: "Removing invalid repository from cache"
+  trying_full_download: "Trying a full download"
+  trying_mirror: "Trying a mirror..."
+  unknown_download_strategy: "Unknown download strategy %1 was requested."
+  unknown_download_strategy_spec: "Unknown download strategy specification %1"
+  updating: "Updating %1"
+
+#==============================================================================
 # extend/
 extend:
   #----------------------------------------------------------------------------

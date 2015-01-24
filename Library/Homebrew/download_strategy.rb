@@ -107,13 +107,13 @@ class VCSDownloadStrategy < AbstractDownloadStrategy
   end
 
   def fetch
-    ohai "Cloning #{@url}"
+    ohai t.download_strategy.cloning(@url)
 
     if cached_location.exist? && repo_valid?
-      puts "Updating #{cached_location}"
+      puts t.download_strategy.updating(cached_location)
       update
     elsif cached_location.exist?
-      puts "Removing invalid repository from cache"
+      puts t.download_strategy.removing_invalid_repo
       clear_cache
       clone_repo
     else
@@ -122,7 +122,8 @@ class VCSDownloadStrategy < AbstractDownloadStrategy
   end
 
   def stage
-    ohai "Checking out #{@ref_type} #{@ref}" if @ref_type && @ref
+    # TODO (i18n): This may need multiple variants depending on ref_type
+    ohai t.download_strategy.checking_out(@ref_type, @ref) if @ref_type && @ref
   end
 
   def cached_location
@@ -195,7 +196,7 @@ class AbstractFileDownloadStrategy < AbstractDownloadStrategy
   def chdir
     entries = Dir['*']
     case entries.length
-    when 0 then raise "Empty archive"
+    when 0 then raise t.download_strategy.empty_archive
     when 1 then Dir.chdir entries.first rescue nil
     end
   end
@@ -249,7 +250,7 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
   end
 
   def fetch
-    ohai "Downloading #{@url}"
+    ohai t.download_strategy.downloading(@url)
     unless cached_location.exist?
       had_incomplete_download = temporary_path.exist?
       begin
@@ -258,7 +259,7 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
         # 33 == range not supported
         # try wiping the incomplete download and retrying once
         if $?.exitstatus == 33 && had_incomplete_download
-          ohai "Trying a full download"
+          ohai t.download_strategy.trying_full_download
           temporary_path.unlink
           had_incomplete_download = false
           retry
@@ -268,11 +269,11 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
       end
       ignore_interrupts { temporary_path.rename(cached_location) }
     else
-      puts "Already downloaded: #{cached_location}"
+      puts t.download_strategy.already_downloaded(cached_location)
     end
   rescue CurlDownloadStrategyError
     raise if mirrors.empty?
-    puts "Trying a mirror..."
+    puts t.download_strategy.trying_mirror
     @url = mirrors.shift
     retry
   end
@@ -332,10 +333,10 @@ class CurlApacheMirrorDownloadStrategy < CurlDownloadStrategy
     mirrors = Utils::JSON.load(apache_mirrors)
     @url = mirrors.fetch('preferred') + mirrors.fetch('path_info')
 
-    ohai "Best Mirror #{@url}"
+    ohai t.download_strategy.best_mirror(@url)
     super
   rescue IndexError, Utils::JSON::Error
-    raise CurlDownloadStrategyError, "Couldn't determine mirror, try again later."
+    raise CurlDownloadStrategyError, t.download_strategy.couldnt_determine_mirror
   end
 end
 
@@ -379,7 +380,7 @@ class CurlBottleDownloadStrategy < CurlDownloadStrategy
   end
 
   def stage
-    ohai "Pouring #{cached_location.basename}"
+    ohai t.download_strategy.pouring(cached_location.basename)
     super
   end
 end
@@ -393,7 +394,7 @@ class LocalBottleDownloadStrategy < AbstractFileDownloadStrategy
   end
 
   def stage
-    ohai "Pouring #{cached_location.basename}"
+    ohai t.download_strategy.pouring(cached_location.basename)
     super
   end
 end
@@ -413,12 +414,12 @@ class S3DownloadStrategy < CurlDownloadStrategy
     begin
       require 'aws-sdk'
     rescue LoadError
-      onoe "Install the aws-sdk gem into the gem repo used by brew."
+      onoe t.download_strategy.install_aws_sdk
       raise
     end
 
     if @url !~ %r[^https?://+([^.]+).s3.amazonaws.com/+(.+)$] then
-      raise "Bad S3 URL: " + @url
+      raise t.download_strategy.bad_s3_url(@url)
     end
     (bucket,key) = $1,$2
 
@@ -426,7 +427,7 @@ class S3DownloadStrategy < CurlDownloadStrategy
     begin
       s3url = obj.url_for(:get)
     rescue AWS::Errors::MissingCredentialsError
-      ohai "AWS credentials missing, trying public URL instead."
+      ohai t.download_strategy.aws_creds_missing
       s3url = obj.public_url
     end
 
@@ -813,7 +814,7 @@ class DownloadStrategyDetector
       detect_from_symbol(strategy)
     else
       raise TypeError,
-        "Unknown download strategy specification #{strategy.inspect}"
+        t.download_strategy.unknown_download_strategy_spec(strategy.inspect)
     end
   end
 
@@ -857,7 +858,7 @@ class DownloadStrategyDetector
     when :post    then CurlPostDownloadStrategy
     when :fossil  then FossilDownloadStrategy
     else
-      raise "Unknown download strategy #{strategy} was requested."
+      raise t.download_strategy.unknown_download_strategy(strategy)
     end
   end
 end
