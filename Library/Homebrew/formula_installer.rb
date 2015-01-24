@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require 'cxxstdlib'
 require 'exceptions'
 require 'formula'
@@ -192,14 +190,6 @@ class FormulaInstaller
     opoo t.formula_installer.nothing_installed_to(formula.prefix) unless formula.installed?
   end
 
-  # HACK: If readline is present in the dependency tree, it will clash
-  # with the stdlib's Readline module when the debugger is loaded
-  def perform_readline_hack
-    if (formula.recursive_dependencies.any? { |d| d.name == "readline" } || formula.name == "readline") && debug?
-      ENV['HOMEBREW_NO_READLINE'] = '1'
-    end
-  end
-
   def check_conflicts
     return if ARGV.force?
 
@@ -212,8 +202,6 @@ class FormulaInstaller
   end
 
   def compute_and_install_dependencies
-    perform_readline_hack
-
     req_map, req_deps = expand_requirements
 
     check_requirements(req_map)
@@ -401,7 +389,7 @@ class FormulaInstaller
     link(keg)
     fix_install_names(keg) if OS.mac?
 
-    if build_bottle?
+    if build_bottle? && formula.post_install_defined?
       ohai "Not running post_install as we're building a bottle"
       puts "You can run it manually using `brew postinstall #{formula.name}`"
     else

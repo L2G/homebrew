@@ -69,8 +69,8 @@ blacklist:
       brew install typesafe-activator
 
     You can read more about this change at:
-      http://www.playframework.com/documentation/2.3.x/Migration23
-      http://www.playframework.com/documentation/2.3.x/Highlights23
+      https://www.playframework.com/documentation/2.3.x/Migration23
+      https://www.playframework.com/documentation/2.3.x/Highlights23
   rubinius: |
     Rubinius requires an existing Ruby 2.0 to bootstrap.
     Doing this through Homebrew is error-prone. Instead, consider using
@@ -83,7 +83,7 @@ blacklist:
     Installing TeX from source is weird and gross, requires a lot of patches,
     and only builds 32-bit (and thus can't use Homebrew deps on Snow Leopard.)
 
-    We recommend using a MacTeX distribution: http://www.tug.org/mactex/
+    We recommend using a MacTeX distribution: https://www.tug.org/mactex/
   xcode_app_store: "Xcode can be installed from the App Store."
   xcode_download: "Xcode can be installed from https://developer.apple.com/downloads/"
 #==============================================================================
@@ -626,8 +626,8 @@ cmd:
     pydistutils_cfg_in_home: |
       A .pydistutils.cfg file was found in $HOME, which may cause Python
       builds to fail. See:
-        http://bugs.python.org/issue6138
-        http://bugs.python.org/issue4655
+        https://bugs.python.org/issue6138
+        https://bugs.python.org/issue4655
     python_in_library_frameworks: |
       Python is installed at /Library/Frameworks/Python.framework
 
@@ -713,11 +713,7 @@ cmd:
       on supported Rubies.
     unwritable_access_logs: |
       %1 isn't writable.
-      This can happen if you "sudo make install" software that isn't managed
-      by Homebrew.
-
       Homebrew writes debugging logs to this location.
-
       You should probably `chown` %1
     unwritable_directories: |
       Some directories in %1 aren't writable.
@@ -788,7 +784,7 @@ cmd:
     xcode_license_not_agreed: |
       You have not agreed to the Xcode license.
       Builds will fail! Agree to the license by opening Xcode.app or running:
-          xcodebuild -license
+          sudo xcodebuild -license
     xcode_not_installed: |
       Xcode is not installed. Most formulae need Xcode to build.
       It can be installed from
