@@ -1,5 +1,3 @@
-require "formula"
-
 class Python < Formula
   homepage "https://www.python.org"
   head "https://hg.python.org/cpython", :using => :hg, :branch => "2.7"
@@ -7,10 +5,10 @@ class Python < Formula
   sha1 "7a191bcccb598ccbf2fa6a0edce24a97df3fc0ad"
 
   bottle do
-    revision 8
-    sha1 "c2fee90806151869f150b49183fc563a5c7efd99" => :yosemite
-    sha1 "76390ee6c068b56d3c0c87846a0da35c496e36d4" => :mavericks
-    sha1 "a175b47961b9da49266d3407a0a7cc5fe3bbc032" => :mountain_lion
+    revision 10
+    sha1 "bcce4130bceeadd2d23e4f06441c8dd5d23b14df" => :yosemite
+    sha1 "d2a142d25910f4b30979f799c2920f4bc6a9db31" => :mavericks
+    sha1 "e8f947a2380376d465c5eff71e012d69243e87e6" => :mountain_lion
   end
 
   # Please don't add a wide/ucs4 option as it won't be accepted.
@@ -32,13 +30,13 @@ class Python < Formula
   skip_clean "bin/easy_install", "bin/easy_install-2.7"
 
   resource "setuptools" do
-    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-11.3.1.tar.gz"
-    sha1 "88e43ad9c2c759a33c8c44d742b6d18125ccca16"
+    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-12.0.5.tar.gz"
+    sha1 "cd49661e090a397d77c690f7f2d06852b7086be9"
   end
 
   resource "pip" do
-    url "https://pypi.python.org/packages/source/p/pip/pip-6.0.6.tar.gz"
-    sha1 "7b9eeff2e8f76098f32d32f114ea93c0ce200a3b"
+    url "https://pypi.python.org/packages/source/p/pip/pip-6.0.8.tar.gz"
+    sha1 "bd59a468f21b3882a6c9d3e189d40c7ba1e1b9bd"
   end
 
   # Patch for pyport.h macro issue
@@ -283,7 +281,7 @@ class Python < Formula
   end
 
   def caveats; <<-EOS.undent
-    Setuptools and Pip have been installed. To update them
+    Setuptools and pip have been installed. To update them
       pip install --upgrade setuptools
       pip install --upgrade pip
 

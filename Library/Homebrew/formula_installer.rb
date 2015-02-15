@@ -603,7 +603,7 @@ class FormulaInstaller
   end
 
   def post_install
-    formula.post_install
+    formula.run_post_install
   rescue Exception => e
     opoo t.formula_installer.postinstall_fail_1
     puts t.formula_installer.postinstall_fail_2(formula.name)

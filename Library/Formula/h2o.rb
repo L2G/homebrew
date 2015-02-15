@@ -1,16 +1,16 @@
 class H2o < Formula
   homepage "https://github.com/h2o/h2o/"
-  url "https://github.com/h2o/h2o/archive/v0.9.0.tar.gz"
-  sha1 "37b84750900cdb56c3be574477d6f3327d92a4d7"
+  url "https://github.com/h2o/h2o/archive/v0.9.2.tar.gz"
+  sha1 "001f5aefcd829467ed64b328ff0d35b736593dec"
   head "https://github.com/h2o/h2o.git"
 
   bottle do
-    sha1 "44985fe8eb1e5c32754d7b3b3b4dfc1ccbdd181b" => :yosemite
-    sha1 "05559a33588d48ad7b330f9f98b37ceae2af84dd" => :mavericks
-    sha1 "90e3cdc944871b81620ab76b6e09311da99e516c" => :mountain_lion
+    sha1 "3a661417da4cf981935b3ec39a9e0401ce0cfb30" => :yosemite
+    sha1 "046477212770943f9e039fb73608d393cb5d6c61" => :mavericks
+    sha1 "1e4bf69b5e1f81c0b5c1bca54928643b613f312c" => :mountain_lion
   end
 
-  option "with-libuv", "Build the H2O library as well as the executable."
+  option "with-libuv", "Build the H2O library in addition to the executable."
 
   depends_on "cmake" => :build
   depends_on "libyaml"
@@ -30,7 +30,9 @@ class H2o < Formula
     mkdir_p etc/"h2o"
     mkdir_p var/"h2o"
     (var+"h2o").install "examples/doc_root/index.html"
-    (etc+"h2o/h2o.conf").write conf_example
+    # Write up a basic example conf for testing.
+    (buildpath+"brew/h2o.conf").write conf_example
+    (etc+"h2o").install buildpath/"brew/h2o.conf"
   end
 
   # This is simplified from examples/h2o/h2o.conf upstream.

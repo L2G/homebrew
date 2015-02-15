@@ -20,18 +20,19 @@ end
 
 class Cmake < Formula
   homepage "http://www.cmake.org/"
-  url "http://www.cmake.org/files/v3.1/cmake-3.1.1.tar.gz"
-  sha1 "e96098e402903e09f56d0c4cfef516e591088d78"
+  url "http://www.cmake.org/files/v3.1/cmake-3.1.2.tar.gz"
+  sha1 "66c7b73d460daf2e26dc17da1d7e7dfd14bc48fc"
   head "http://cmake.org/cmake.git"
 
   bottle do
     cellar :any
-    sha1 "07f01687556e245b2315707fb267d4cf110d54a9" => :yosemite
-    sha1 "b2ca8a4a1bf32b71bc48a8415e7ffd2641dcac12" => :mavericks
-    sha1 "a251d4e9dafec01479b6be991ebce25b25cf231c" => :mountain_lion
+    sha1 "78274ae1e05f1509a961609523234cac41fd6074" => :yosemite
+    sha1 "9b363c8694d38348f7ab647abae848850aba4236" => :mavericks
+    sha1 "07d5bfaf361bbc00bb2adb2366ea2f332dc48a74" => :mountain_lion
   end
 
   option "without-docs", "Don't build man pages"
+
   depends_on :python => :build if MacOS.version <= :snow_leopard && build.with?("docs")
   depends_on "xz" # For LZMA
 

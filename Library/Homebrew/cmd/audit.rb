@@ -355,6 +355,10 @@ class FormulaAuditor
       problem t.cmd.audit.head_only
     end
 
+    if devel_only?(formula) && formula.tap != "homebrew/homebrew-devel-only"
+      problem "Devel-only (no stable download)"
+    end
+
     %w[Stable Devel HEAD].each do |name|
       next unless spec = formula.send(name.downcase)
 
@@ -447,8 +451,17 @@ class FormulaAuditor
     if line =~ /# PLEASE REMOVE/
       problem t.cmd.audit.comment_remove_default
     end
+    if line =~ /# Documentation:/
+      problem "Please remove default template comments"
+    end
     if line =~ /# if this fails, try separate make\/make install steps/
       problem t.cmd.audit.comment_remove_default
+    end
+    if line =~ /# The url of the archive/
+      problem "Please remove default template comments"
+    end
+    if line =~ /## Naming --/
+      problem "Please remove default template comments"
     end
     if line =~ /# if your formula requires any X11\/XQuartz components/
       problem t.cmd.audit.comment_remove_default
@@ -650,6 +663,24 @@ class FormulaAuditor
     end
   end
 
+  def audit_prefix_has_contents
+    return unless formula.prefix.directory?
+
+    Pathname.glob("#{formula.prefix}/**/*") do |file|
+      next if file.directory?
+      basename = file.basename.to_s
+      next if Metafiles.copy?(basename)
+      next if %w[.DS_Store INSTALL_RECEIPT.json].include?(basename)
+      return
+    end
+
+    problem <<-EOS.undent
+      The installation seems to be empty. Please ensure the prefix
+      is set correctly and expected files are installed.
+      The prefix configure/make argument may be case-sensitive.
+    EOS
+  end
+
   def audit_conditional_dep(dep, condition, line)
     quoted_dep = quote_dep(dep)
     dep = Regexp.escape(dep.to_s)
@@ -682,6 +713,7 @@ class FormulaAuditor
     audit_text
     text.without_patch.split("\n").each_with_index { |line, lineno| audit_line(line, lineno+1) }
     audit_installed
+    audit_prefix_has_contents
   end
 
   private
@@ -691,7 +723,11 @@ class FormulaAuditor
   end
 
   def head_only?(formula)
-    formula.head && formula.stable.nil?
+    formula.head && formula.devel.nil? && formula.stable.nil?
+  end
+
+  def devel_only?(formula)
+    formula.devel && formula.stable.nil?
   end
 end
 

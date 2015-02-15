@@ -1,5 +1,3 @@
-require "formula"
-
 class Python3 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.4.2/Python-3.4.2.tar.xz"
@@ -7,15 +5,18 @@ class Python3 < Formula
   revision 1
 
   bottle do
-    revision 3
-    sha1 "61018aa7eb9055cf7f5e1b2fadc48ecdb20c02e7" => :yosemite
-    sha1 "2eda82cd5f0420ccf8f58e4c78f561d5d5c1e824" => :mavericks
-    sha1 "6ca6870ef9cab3c1851b02402f12fbaec79bf9c5" => :mountain_lion
+    revision 5
+    sha1 "65ab2f902152ce86f23eecbb56d9a9fd60b3c22e" => :yosemite
+    sha1 "89ed42bd3070f1c2efca049d150b72f7f5cf3fe7" => :mavericks
+    sha1 "f2df5040f65cd509bbd33666fe09eb329d2b81bc" => :mountain_lion
   end
 
-  VER="3.4"  # The <major>.<minor> is used so often.
+  head "https://hg.python.org/cpython", :using => :hg, :branch => "3.5"
 
-  head "https://hg.python.org/cpython", :using => :hg, :branch => VER
+  devel do
+    url "https://www.python.org/ftp/python/3.5.0/Python-3.5.0a1.tgz"
+    sha1 "e9441525f37d65623f5efab0b7ca726ab52b1fb9"
+  end
 
   option :universal
   option "quicktest", "Run `make quicktest` after the build"
@@ -30,28 +31,28 @@ class Python3 < Formula
   depends_on "homebrew/dupes/tcl-tk" if build.with? "brewed-tk"
   depends_on :x11 if build.with? "brewed-tk" and Tab.for_name("tcl-tk").with? "x11"
 
-  skip_clean "bin/pip3", "bin/pip-#{VER}"
-  skip_clean "bin/easy_install3", "bin/easy_install-#{VER}"
+  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5"
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5"
 
   resource "setuptools" do
-    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-11.3.1.tar.gz"
-    sha1 "88e43ad9c2c759a33c8c44d742b6d18125ccca16"
+    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-12.0.5.tar.gz"
+    sha1 "cd49661e090a397d77c690f7f2d06852b7086be9"
   end
 
   resource "pip" do
-    url "https://pypi.python.org/packages/source/p/pip/pip-6.0.6.tar.gz"
-    sha1 "7b9eeff2e8f76098f32d32f114ea93c0ce200a3b"
+    url "https://pypi.python.org/packages/source/p/pip/pip-6.0.8.tar.gz"
+    sha1 "bd59a468f21b3882a6c9d3e189d40c7ba1e1b9bd"
   end
 
   patch :DATA if build.with? "brewed-tk"
 
   def site_packages_cellar
-    prefix/"Frameworks/Python.framework/Versions/#{VER}/lib/python#{VER}/site-packages"
+    prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages"
   end
 
   # The HOMEBREW_PREFIX location of site-packages.
   def site_packages
-    HOMEBREW_PREFIX/"lib/python#{VER}/site-packages"
+    HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
   end
 
   fails_with :llvm do
@@ -148,7 +149,7 @@ class Python3 < Formula
     # Fix up the site-packages so that user-installed Python software survives
     # minor updates, such as going from 3.3.2 to 3.3.3:
 
-    # Create a site-packages in HOMEBREW_PREFIX/lib/python#{VER}/site-packages
+    # Create a site-packages in HOMEBREW_PREFIX/lib/python#{xy}/site-packages
     site_packages.mkpath
 
     # Symlink the prefix site-packages into the cellar.
@@ -177,18 +178,22 @@ class Python3 < Formula
     rm_rf [bin/"pip", bin/"easy_install"]
 
     # post_install happens after link
-    %W[pip3 pip#{VER} easy_install-#{VER}].each do |e|
+    %W[pip3 pip#{xy} easy_install-#{xy}].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
     # And now we write the distutils.cfg
-    cfg = prefix/"Frameworks/Python.framework/Versions/#{VER}/lib/python#{VER}/distutils/distutils.cfg"
+    cfg = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/distutils/distutils.cfg"
     cfg.atomic_write <<-EOF.undent
       [global]
       verbose=1
       [install]
       prefix=#{HOMEBREW_PREFIX}
     EOF
+  end
+
+  def xy
+    version.to_s.slice /(3.\d)/
   end
 
   def distutils_fix_superenv(args)
@@ -236,7 +241,7 @@ class Python3 < Formula
                '     You should `unset PYTHONPATH` to fix this.')
       else:
           # Only do this for a brewed python:
-          opt_executable = '#{opt_bin}/python#{VER}'
+          opt_executable = '#{opt_bin}/python#{xy}'
           if os.path.realpath(sys.executable) == os.path.realpath(opt_executable):
               # Remove /System site-packages, and the Cellar site-packages
               # which we moved to lib/pythonX.Y/site-packages. Further, remove
@@ -253,7 +258,7 @@ class Python3 < Formula
               # Assume Framework style build (default since months in brew)
               try:
                   from _sysconfigdata import build_time_vars
-                  build_time_vars['LINKFORSHARED'] = '-u _PyMac_Error #{opt_prefix}/Frameworks/Python.framework/Versions/#{VER}/Python'
+                  build_time_vars['LINKFORSHARED'] = '-u _PyMac_Error #{opt_prefix}/Frameworks/Python.framework/Versions/#{xy}/Python'
               except:
                   pass  # remember: don't print here. Better to fail silently.
 
@@ -295,9 +300,9 @@ class Python3 < Formula
   test do
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
-    system "#{bin}/python#{VER}", "-c", "import sqlite3"
+    system "#{bin}/python#{xy}", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
-    system "#{bin}/python#{VER}", "-c", "import tkinter; root = tkinter.Tk()"
+    system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
     system bin/"pip3", "list"
   end
 end

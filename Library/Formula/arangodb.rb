@@ -1,16 +1,16 @@
 require 'formula'
 
 class Arangodb < Formula
-  homepage 'http://www.arangodb.org/'
-  url 'https://www.arangodb.com/repositories/Source/ArangoDB-2.4.1.tar.gz'
-  sha1 'b6eee6cc7d7a28fc33d501f2dcf408088f21f9e4'
+  homepage 'http://www.arangodb.com/'
+  url 'https://www.arangodb.com/repositories/Source/ArangoDB-2.4.3.tar.gz'
+  sha1 '5064f7f7045b9d34bd327d398d1bc30a16e97f67'
 
-  head "https://github.com/triAGENS/ArangoDB.git", :branch => 'unstable'
+  head "https://github.com/arangodb/arangodb.git", :branch => 'unstable'
 
   bottle do
-    sha1 "098919cc828d2eff8e0e2dd9ac24ce677c9b8917" => :yosemite
-    sha1 "9e9b69f4c2f8f7358219036311df258ff2d77ca2" => :mavericks
-    sha1 "f8a23f2b83907c20fcb7e7fb689037da7dbbe23d" => :mountain_lion
+    sha1 "59ecb4430461a905f2c0398e159a2d7b8f025b0d" => :yosemite
+    sha1 "938553f79b9e28fb98cff1e3ec4c83ad9ed51268" => :mavericks
+    sha1 "c8708807733fa6c404dba17e28323a665255318d" => :mountain_lion
   end
 
   depends_on 'go' => :build
@@ -28,9 +28,6 @@ class Arangodb < Formula
       --disable-dependency-tracking
       --prefix=#{prefix}
       --disable-relative
-      --enable-all-in-one-icu
-      --enable-all-in-one-libev
-      --enable-all-in-one-v8
       --enable-mruby
       --datadir=#{share}
       --localstatedir=#{var}
