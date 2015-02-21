@@ -104,7 +104,7 @@ module Homebrew
     pid = fork do
       yield if block_given?
       args.collect!{|arg| arg.to_s}
-      exec(cmd, *args) rescue nil
+      exec({'LC_ALL' => 'C'}, cmd, *args) rescue nil # LC_ALL set to quell i18n warnings
       exit! 1 # never gets here unless exec failed
     end
     Process.wait(pid)
