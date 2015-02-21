@@ -396,7 +396,11 @@ cmd:
     replace_with_recommended_dep: "Replace %1 with \"depends_on %1 => :recommended\""
     resource_problem: "%1 resource %2: %3"
     scons_args: "use \"scons *args\" instead of \"system 'scons', *args\""
-    should_be_build_dependency: "%1 dependency should be \"depends_on '%1' => :build\""
+    should_be_build_or_run_dependency: |
+      %1 dependency should be
+        depends_on "%1" => :build
+      Or if it is indeed a runtime denpendency
+        depends_on "%1" => :run
     separate_make_calls: "Use separate make calls"
     skip_clean_all_deprecated: |
       `skip_clean :all` is deprecated; brew no longer strips symbols
@@ -425,6 +429,8 @@ cmd:
     use_build_without: "Don't duplicate 'without': Use `build.without? \"%1\"` to check for \"--without-%1\""
     use_build_with_not_include: "Use build.with%1? \"%2\" instead of build.include? 'with%1-%2'"
     use_depends_on_fortran: "Use `depends_on :fortran` instead of `ENV.fortran`"
+    use_depends_on_git: "Use `depends_on :git` instead of `depends_on 'git'`"
+    use_depends_on_hg: "Use `depends_on :hg` instead of `depends_on 'mercurial'`"
     use_if_build_with: "Use if build.with?%1 instead of unless build.without?%1"
     use_if_build_without: "Use if build.without?%1 instead of unless build.with?%1"
     use_depends_on_x11: "Use \"depends_on :x11\" instead of \"ENV.x11\""
