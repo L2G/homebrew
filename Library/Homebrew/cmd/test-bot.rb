@@ -358,19 +358,25 @@ module Homebrew
     def formula formula_name
       @category = "#{__method__}.#{formula_name}"
 
-      test "brew", "uses", formula_name
-      dependencies = `brew deps #{formula_name}`.split("\n")
-      dependencies -= `brew list`.split("\n")
+      canonical_formula_name = if @tap
+        "#{@tap}/#{formula_name}"
+      else
+        formula_name
+      end
+
+      test "brew", "uses", canonical_formula_name
+      dependencies = Utils.popen_read("brew", "deps", canonical_formula_name).split("\n")
+      dependencies -= Utils.popen_read("brew", "list").split("\n")
       unchanged_dependencies = dependencies - @formulae
       changed_dependences = dependencies - unchanged_dependencies
 
-      dependents = `brew uses --skip-build --skip-optional #{formula_name}`.split("\n")
+      dependents = Utils.popen_read("brew", "uses", "--skip-build", "--skip-optional", canonical_formula_name).split("\n")
       dependents -= @formulae
       dependents = dependents.map {|d| Formulary.factory(d)}
 
       testable_dependents = dependents.select { |d| d.test_defined? && d.bottled? }
 
-      formula = Formulary.factory(formula_name)
+      formula = Formulary.factory(canonical_formula_name)
       installed_gcc = false
 
       deps = []
@@ -406,7 +412,7 @@ module Homebrew
           OS::Mac.clear_version_cache
           retry
         end
-        skip formula_name
+        skip canonical_formula_name
         puts e.message
         return
       end
@@ -422,9 +428,9 @@ module Homebrew
       formula_fetch_options = []
       formula_fetch_options << "--build-bottle" unless ARGV.include? "--no-bottle"
       formula_fetch_options << "--force" if ARGV.include? "--cleanup"
-      formula_fetch_options << formula_name
+      formula_fetch_options << canonical_formula_name
       test "brew", "fetch", "--retry", *formula_fetch_options
-      test "brew", "uninstall", "--force", formula_name if formula.installed?
+      test "brew", "uninstall", "--force", canonical_formula_name if formula.installed?
       install_args = %w[--verbose]
       install_args << "--build-bottle" unless ARGV.include? "--no-bottle"
       install_args << "--HEAD" if ARGV.include? "--HEAD"
@@ -437,26 +443,21 @@ module Homebrew
         install_args << "--HEAD"
       end
 
-      install_args << formula_name
+      install_args << canonical_formula_name
       # Don't care about e.g. bottle failures for dependencies.
       ENV["HOMEBREW_DEVELOPER"] = nil
       test "brew", "install", "--only-dependencies", *install_args unless dependencies.empty?
       ENV["HOMEBREW_DEVELOPER"] = "1"
       test "brew", "install", *install_args
       install_passed = steps.last.passed?
-      audit_args = [formula_name]
+      audit_args = [canonical_formula_name]
       audit_args << "--strict" if @added_formulae.include? formula_name
       test "brew", "audit", *audit_args
       if install_passed
         if formula.stable? && !ARGV.include?('--no-bottle')
-          bottle_args = ["--rb", formula_name]
+          bottle_args = ["--rb", canonical_formula_name]
           if @tap
-            tap_user, tap_repo = @tap.split "/"
-            if ENV["HOMEBREW_SOURCEFORGE_TESTING"]
-              bottle_args << "--root-url=#{BottleSpecification::DEFAULT_ROOT_URL}/#{tap_repo}"
-            else
-              bottle_args << "--root-url=#{BottleSpecification::DEFAULT_DOMAIN}/#{Bintray.repository(@tap)}"
-            end
+            bottle_args << "--root-url=#{BottleSpecification::DEFAULT_DOMAIN}/#{Bintray.repository(@tap)}"
           end
           bottle_args << { :puts_output_on_success => true }
           test "brew", "bottle", *bottle_args
@@ -464,11 +465,11 @@ module Homebrew
           if bottle_step.passed? and bottle_step.has_output?
             bottle_filename =
               bottle_step.output.gsub(/.*(\.\/\S+#{bottle_native_regex}).*/m, '\1')
-            test "brew", "uninstall", "--force", formula_name
+            test "brew", "uninstall", "--force", canonical_formula_name
             test "brew", "install", bottle_filename
           end
         end
-        test "brew", "test", "--verbose", formula_name if formula.test_defined?
+        test "brew", "test", "--verbose", canonical_formula_name if formula.test_defined?
         testable_dependents.each do |dependent|
           unless dependent.installed?
             test "brew", "fetch", "--retry", dependent.name
@@ -484,18 +485,18 @@ module Homebrew
             test "brew", "test", "--verbose", dependent.name
           end
         end
-        test "brew", "uninstall", "--force", formula_name
+        test "brew", "uninstall", "--force", canonical_formula_name
       end
 
       if formula.devel && formula.stable? && !ARGV.include?('--HEAD') \
          && satisfied_requirements?(formula, :devel)
         test "brew", "fetch", "--retry", "--devel", *formula_fetch_options
-        test "brew", "install", "--devel", "--verbose", formula_name
+        test "brew", "install", "--devel", "--verbose", canonical_formula_name
         devel_install_passed = steps.last.passed?
         test "brew", "audit", "--devel", *audit_args
         if devel_install_passed
-          test "brew", "test", "--devel", "--verbose", formula_name if formula.test_defined?
-          test "brew", "uninstall", "--devel", "--force", formula_name
+          test "brew", "test", "--devel", "--verbose", canonical_formula_name if formula.test_defined?
+          test "brew", "uninstall", "--devel", "--force", canonical_formula_name
         end
       end
       test "brew", "uninstall", "--force", *unchanged_dependencies unless unchanged_dependencies.empty?
@@ -504,7 +505,7 @@ module Homebrew
     def homebrew
       @category = __method__
       test "brew", "tests"
-      test "brew", "readall"
+      test "brew", "readall", "--syntax"
     end
 
     def cleanup_before
@@ -517,6 +518,8 @@ module Homebrew
       git "checkout", "-f", "master"
       git "clean", "-fdx"
       git "clean", "-ffdx" unless $?.success?
+      pr_locks = "#{HOMEBREW_REPOSITORY}/.git/refs/remotes/*/pr/*/head.lock"
+      Dir.glob(pr_locks) {|lock| FileUtils.rm_rf lock }
     end
 
     def cleanup_after
@@ -565,11 +568,9 @@ module Homebrew
 
     def formulae
       changed_formulae_dependents = {}
-      dependencies = []
-      non_dependencies = []
 
       @formulae.each do |formula|
-        formula_dependencies = `brew deps #{formula}`.split("\n")
+        formula_dependencies = Utils.popen_read("brew", "deps", formula).split("\n")
         unchanged_dependencies = formula_dependencies - @formulae
         changed_dependences = formula_dependencies - unchanged_dependencies
         changed_dependences.each do |changed_formula|
@@ -616,6 +617,8 @@ module Homebrew
       tap ||= bot_argv.value('tap')
     end
 
+    tap.gsub!(/homebrew\/homebrew-/i, "Homebrew/") if tap
+
     git_url = ENV['UPSTREAM_GIT_URL'] || ENV['GIT_URL']
     if !tap && git_url
       # Also can get tap from Jenkins GIT_URL.
@@ -641,7 +644,7 @@ module Homebrew
     if ARGV.include? '--ci-master' or ARGV.include? '--ci-pr' \
        or ARGV.include? '--ci-testing'
       ARGV << "--cleanup" if ENV["JENKINS_HOME"] || ENV["TRAVIS_COMMIT"]
-      ARGV << "--junit" << "--local"
+      ARGV << "--junit" << "--local" << "--debug"
     end
     if ARGV.include? '--ci-master'
       ARGV << '--no-bottle' << '--email'
@@ -674,7 +677,7 @@ module Homebrew
       if !repository.directory?
         safe_system "brew", "tap", tap
       else
-        safe_system "brew", "tap", "--repair"
+        quiet_system "brew", "tap", "--repair"
       end
     end
 
@@ -690,7 +693,7 @@ module Homebrew
         raise "Missing BINTRAY_USER or BINTRAY_KEY variables!"
       end
 
-      ARGV << '--verbose'
+      ARGV << '--verbose' << '--debug'
 
       bottles = Dir["#{jenkins}/jobs/#{job}/configurations/axis-version/*/builds/#{id}/archive/*.bottle*.*"]
       return if bottles.empty?
@@ -725,13 +728,20 @@ module Homebrew
       existing_bottles = {}
       Dir.glob("*.bottle*.tar.gz") do |filename|
         formula_name = bottle_filename_formula_name filename
-        formula = Formulary.factory formula_name
+        canonical_formula_name = if tap
+          "#{tap}/#{formula_name}"
+        else
+          formula_name
+        end
+        formula = Formulary.factory canonical_formula_name
         existing_bottles[formula_name] = !!formula.bottle
       end
 
       ENV["GIT_AUTHOR_NAME"] = ENV["GIT_COMMITTER_NAME"]
       ENV["GIT_AUTHOR_EMAIL"] = ENV["GIT_COMMITTER_EMAIL"]
-      safe_system "brew", "bottle", "--merge", "--write", *Dir["*.bottle.rb"]
+      bottle_args = ["--merge", "--write", *Dir["*.bottle.rb"]]
+      bottle_args << "--tap=#{tap}" if tap
+      safe_system "brew", "bottle", *bottle_args
 
       remote_repo = tap ? tap.gsub("/", "-") : "homebrew"
 
@@ -739,7 +749,6 @@ module Homebrew
       tag = pr ? "pr-#{pr}" : "testing-#{number}"
       safe_system "git", "push", "--force", remote, "master:master", ":refs/tags/#{tag}"
 
-      # Bintray upload (will take over soon)
       bintray_repo = Bintray.repository(tap)
       bintray_repo_url = "https://api.bintray.com/packages/homebrew/#{bintray_repo}"
       formula_packaged = {}
@@ -768,19 +777,6 @@ module Homebrew
         puts
       end
 
-      # SourceForge upload (will be removed soon)
-      path = "/home/frs/project/m/ma/machomebrew/Bottles/"
-      if tap
-        tap_user, tap_repo = tap.split "/"
-        path += "#{tap_repo}/"
-      end
-      url = "BrewTestBot,machomebrew@frs.sourceforge.net:#{path}"
-
-      rsync_args = %w[--partial --progress --human-readable --compress]
-      rsync_args += Dir["*.bottle*.tar.gz"] + [url]
-
-      safe_system "rsync", *rsync_args
-
       safe_system "git", "tag", "--force", tag
       safe_system "git", "push", "--force", remote, "refs/tags/#{tag}"
       return
@@ -790,9 +786,9 @@ module Homebrew
     any_errors = false
     if ARGV.named.empty?
       # With no arguments just build the most recent commit.
-      test = Test.new('HEAD', tap)
-      any_errors = !test.run
-      tests << test
+      head_test = Test.new('HEAD', tap)
+      any_errors = !head_test.run
+      tests << head_test
     else
       ARGV.named.each do |argument|
         test_error = false

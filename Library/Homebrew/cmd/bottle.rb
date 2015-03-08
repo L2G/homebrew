@@ -33,25 +33,25 @@ BOTTLE_ERB = <<-EOS
 EOS
 
 module Homebrew
-  def print_filename string, filename
-    unless @put_string_exists_header
-      opoo "String '#{string}' still exists in these files:"
-      @put_string_exists_header = true
-    end
-
-    @put_filenames ||= []
-    unless @put_filenames.include? filename
-      puts "#{Tty.red}#{filename}#{Tty.reset}"
-      @put_filenames << filename
-    end
-  end
-
   def keg_contains string, keg, ignores
+    @put_string_exists_header, @put_filenames = nil
+
+    def print_filename string, filename
+      unless @put_string_exists_header
+        opoo "String '#{string}' still exists in these files:"
+        @put_string_exists_header = true
+      end
+
+      @put_filenames ||= []
+      unless @put_filenames.include? filename
+        puts "#{Tty.red}#{filename}#{Tty.reset}"
+        @put_filenames << filename
+      end
+    end
+
     result = false
 
     keg.each_unique_file_matching(string) do |file|
-      put_filename = false
-
       # Check dynamic library linkage. Importantly, do not run otool on static
       # libraries, which will falsely report "linkage" to themselves.
       if file.mach_o_executable? or file.dylib? or file.mach_o_bundle?
@@ -200,7 +200,7 @@ module Homebrew
     bottle.prefix prefix
     bottle.cellar relocatable ? :any : cellar
     bottle.revision bottle_revision
-    bottle.sha1 bottle_path.sha1 => bottle_tag
+    bottle.sha256 bottle_path.sha256 => bottle_tag
 
     output = bottle_output bottle
 
@@ -237,7 +237,13 @@ module Homebrew
       puts output
 
       if ARGV.include? '--write'
-        f = Formulary.factory(formula_name)
+        tap = ARGV.value('tap')
+        canonical_formula_name = if tap
+          "#{tap}/#{formula_name}"
+        else
+          formula_name
+        end
+        f = Formulary.factory(canonical_formula_name)
         update_or_add = nil
 
         Utils::Inreplace.inreplace(f.path) do |s|
@@ -247,7 +253,12 @@ module Homebrew
             odie 'Bottle block update failed!' unless string
           else
             update_or_add = 'add'
-            string = s.sub!(/(  (url|sha1|sha256|head|version|mirror|revision) ['"][\S ]+['"]\n+)+/m, '\0' + output + "\n")
+            if s.include? 'stable do'
+              indent = s.slice(/^ +stable do/).length - "stable do".length
+              string = s.sub!(/^ {#{indent}}stable do(.|\n)+?^ {#{indent}}end\n/m, '\0' + output + "\n")
+            else
+              string = s.sub!(/(  ((url|sha1|sha256|head|version|mirror) ['"][\S ]+['"]|revision \d+)\n+)+/m, '\0' + output + "\n")
+            end
             odie 'Bottle block addition failed!' unless string
           end
         end

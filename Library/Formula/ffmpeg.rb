@@ -1,14 +1,14 @@
 class Ffmpeg < Formula
   homepage "https://ffmpeg.org/"
-  url "https://www.ffmpeg.org/releases/ffmpeg-2.5.4.tar.bz2"
-  sha1 "e7d0bab14e82876762531a883c6b48918631d48c"
+  url "https://www.ffmpeg.org/releases/ffmpeg-2.6.tar.bz2"
+  sha256 "23c38ecc0dd6cae5e9a3c5c2c967b10480dc4f7159d094ade13b0775d1fd4791"
 
   head "git://git.videolan.org/ffmpeg.git"
 
   bottle do
-    sha1 "1d2f2630e86a06519f36263914ab79dc2f2fef72" => :yosemite
-    sha1 "d2dcb0fd8c650ad8b106ab3ab4fcd0b5512eb6aa" => :mavericks
-    sha1 "cddc9c78521770bc529e85f80f842dff678bc1e6" => :mountain_lion
+    sha256 "190f4e0a9bb70ba279cec79502c374e2ac64f35cdf705745149c2913f77eff36" => :yosemite
+    sha256 "1163b8823d0b7da4ee2f19213efd5d7e7721770adc9b85c2ab84808dcdd25465" => :mavericks
+    sha256 "7d3557042eb8a6486a8d66114b28f8009b008efe44857d5c62a61f776ff7b7c7" => :mountain_lion
   end
 
   option "without-x264", "Disable H.264 encoder"
@@ -159,15 +159,17 @@ class Ffmpeg < Formula
 
   def caveats
     if build.without? "faac" then <<-EOS.undent
-      FFmpeg has been built without libfaac for licensing reasons.
+      FFmpeg has been built without libfaac for licensing reasons;
+      libvo-aacenc is used by default.
       To install with libfaac, you can:
         brew reinstall ffmpeg --with-faac
 
-      You can also use the libvo-aacenc or experimental FFmpeg encoder to
-      encode AAC audio:
-        -c:a libvo_aacenc
+      You can also use the experimental FFmpeg encoder, libfdk-aac, or
+      libvo_aacenc to encode AAC audio:
+        ffmpeg -i input.wav -c:a aac -strict experimental output.m4a
       Or:
-        -c:a aac -strict -2
+        brew reinstall ffmpeg --with-fdk-aac
+        ffmpeg -i input.wav -c:a libfdk_aac output.m4a
       EOS
     end
   end

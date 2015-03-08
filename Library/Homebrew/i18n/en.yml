@@ -361,6 +361,7 @@ cmd:
     define_method_in_class_body: "Define method %1 in the class body, not at the top-level"
     dependency_has_no_option: "Dependency %1 does not define option %2"
     depends_on_takes_classes: "`depends_on` can take requirement classes instead of instances"
+    devel_only: "Devel-only (no stable download)"
     dont_need_to_interpolate: "Don't need to interpolate \"%2\" with %1"
     dont_negate_build_with: "Don't negate 'build.with?': use 'build.without?'"
     dont_negate_build_without: "Don't negate 'build.without?': use 'build.with?'"
@@ -382,7 +383,7 @@ cmd:
     homepage_googlecode_end_slash: "Google Code homepage should end with a slash (URL is %1)."
     homepage_should_be_http: "The homepage should start with http or https (URL is %1)."
     inreplace_block_var: "\"inreplace <filenames> do |s|\" is preferred over \"|%1|\"."
-    md5_checksums_deprecated: "MD5 checksums are deprecated, please use SHA1 or SHA256"
+    md5_checksums_deprecated: "MD5 checksums are deprecated, please use SHA256"
     missing_version: "missing version"
     needs_ending_newline: "File should end with a newline"
     no_dashes: "Reference '%1' without dashes"
@@ -402,6 +403,7 @@ cmd:
       Or if it is indeed a runtime denpendency
         depends_on "%1" => :run
     separate_make_calls: "Use separate make calls"
+    sha1_checksums_deprecated: "SHA1 checksums are deprecated, please use SHA256"
     skip_clean_all_deprecated: |
       `skip_clean :all` is deprecated; brew no longer strips symbols
               Pass explicit paths to prevent Homebrew from removing empty folders.
@@ -774,12 +776,12 @@ cmd:
     user_path_has_no_homebrew_bin: |
       Homebrew's bin was not found in your PATH.
       Consider setting the PATH for example like so
-          echo export PATH='%1:$PATH' >> ~/.bash_profile
+          echo 'export PATH="%1:$PATH"' >> ~/.bash_profile
     user_path_has_no_homebrew_sbin: |
       Homebrew's sbin was not found in your PATH but you have installed
       formulae that put executables in %1.
       Consider setting the PATH for example like so
-          echo export PATH='%1:$PATH' >> ~/.bash_profile
+          echo 'export PATH="%1:$PATH"' >> ~/.bash_profile
     user_path_out_of_order: |
       /usr/bin occurs before %1
       This means that system-provided programs will be used instead of those
@@ -789,7 +791,7 @@ cmd:
 
       Consider setting your PATH so that %1
       occurs before /usr/bin. Here is a one-liner:
-          echo export PATH='%1:$PATH' >> ~/.bash_profile
+          echo 'export PATH="%1:$PATH"' >> ~/.bash_profile
     xcode_clt_install_from_cli: |
       Run `xcode-select --install` to install them.
     xcode_clt_install_from_web: |
