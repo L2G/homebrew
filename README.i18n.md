@@ -21,8 +21,8 @@ the following two styles:
    as the key.
  * For multi-line strings, put a pipe (`|`) on the same line as the key, then
    put each line below it. Indent the lines two spaces farther than the key. The
-   lines will be stripped automatically (just like using Homebrew's `undent`
-   utility method).
+   lines will be stripped automatically, obviating the need for Homebrew's
+   `undent` utility method.
 
 ----
 [r18n-core]:     https://rubygems.org/gems/r18n-core
