@@ -31,7 +31,6 @@ class Readline < Formula
   end
 
   def install
-    # Always build universal, per https://github.com/Homebrew/homebrew/issues/issue/899
     ENV.universal_binary
     system "./configure", "--prefix=#{prefix}", "--enable-multibyte"
     system "make", "install"
