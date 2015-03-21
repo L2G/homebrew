@@ -193,7 +193,6 @@ extend:
   #----------------------------------------------------------------------------
   # extend/fileutils.rb
   fileutils:
-    sandbox_failed: "Failed to create sandbox"
   #----------------------------------------------------------------------------
   # extend/pathname.rb
   pathname:
@@ -367,6 +366,7 @@ cmd:
     dont_negate_build_without: "Don't negate 'build.without?': use 'build.with?'"
     dont_use_dependency: |
       Don't use %1 as a dependency. We allow non-Homebrew %1 installations.
+    dont_use_dependency_git: "Don't use git as a dependency"
     end_without_data: "'__END__' was found, but 'DATA' is not used"
     fileutils_class_dont_need: "Don't need 'FileUtils.' before %1."
     formula_factory: "\"Formula.factory(name)\" is deprecated in favor of \"Formula[name]\""
@@ -379,7 +379,7 @@ cmd:
     github_patch_use_dot_diff: "GitHub appends a git version to patches; use .diff instead."
     head_only: "Head-only (no stable download)"
     homepage_github_https: "Use https:// URLs for homepages on GitHub (URL is %1)."
-    homepage_gnu_ftpmirror: "\"ftpmirror.gnu.org\" is preferred for GNU software (url is %1)."
+    homepage_gnu_ftpmirror: "\"http://ftpmirror.gnu.org\" is preferred for GNU software (url is %1)."
     homepage_googlecode_end_slash: "Google Code homepage should end with a slash (URL is %1)."
     homepage_should_be_http: "The homepage should start with http or https (URL is %1)."
     inreplace_block_var: "\"inreplace <filenames> do |s|\" is preferred over \"|%1|\"."
@@ -431,7 +431,6 @@ cmd:
     use_build_without: "Don't duplicate 'without': Use `build.without? \"%1\"` to check for \"--without-%1\""
     use_build_with_not_include: "Use build.with%1? \"%2\" instead of build.include? 'with%1-%2'"
     use_depends_on_fortran: "Use `depends_on :fortran` instead of `ENV.fortran`"
-    use_depends_on_git: "Use `depends_on :git` instead of `depends_on 'git'`"
     use_depends_on_hg: "Use `depends_on :hg` instead of `depends_on 'mercurial'`"
     use_if_build_with: "Use if build.with?%1 instead of unless build.without?%1"
     use_if_build_without: "Use if build.without?%1 instead of unless build.with?%1"
@@ -849,7 +848,6 @@ cmd:
       Could not create %1
       Check you have permission to write to %2
     cannot_write_dir: "Cannot write to %1"
-    formula_blacklisted: "No available formula for %1\n%2"
     head_uppercase: "Specify `--HEAD` in uppercase to build from trunk."
     macports_or_fink_installed_1: "It appears you have MacPorts or Fink installed."
     macports_or_fink_installed_2: |

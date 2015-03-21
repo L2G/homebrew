@@ -1,11 +1,14 @@
 class Syncthing < Formula
   homepage "http://syncthing.net"
-  url "https://github.com/syncthing/syncthing.git", :tag => "v0.10.25"
+  url "https://github.com/syncthing/syncthing.git",
+    :tag => "v0.10.27", :revision => "19e82e93b15ff0d9b95d2e8d2144d7c1d7be3c55"
+
+  head "https://github.com/syncthing/syncthing.git"
 
   bottle do
-    sha256 "41e77b56738159536e55a9cbacfd4a9e170f9fc236947ea7f7b9907df0e95ac2" => :yosemite
-    sha256 "0fbb7328362a659ff0031ef00a643b8e0b53c673d306daaad9f9fdad3402b278" => :mavericks
-    sha256 "64965ffa1e76f5a5ff309b3d9a906ddd6fe5553d4f4dfcac50d0543c21b3479d" => :mountain_lion
+    sha256 "10f502d51e4c475cb33807fd70301906c0b3589acb8dbfe2cc1e00b48793499f" => :yosemite
+    sha256 "473bfddaaa4ff8f79de9ff0ee874cc749e793257f2a865021f912bb5e0363544" => :mavericks
+    sha256 "f1ab377ff0cf3aa347a3ac70827906460000dc878da40e354ea59a1a1aa6c3eb" => :mountain_lion
   end
 
   depends_on "go" => :build
@@ -17,7 +20,7 @@ class Syncthing < Formula
 
     # FIXTHIS: do this without mutating the cache!
     hack_dir = cached_download/".gopath/src/github.com/syncthing"
-    rm_rf  hack_dir
+    rm_rf hack_dir
     mkdir_p hack_dir
     ln_s cached_download, "#{hack_dir}/syncthing"
 
@@ -44,6 +47,10 @@ class Syncthing < Formula
         <true/>
         <key>ProcessType</key>
         <string>Background</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/syncthing.log</string>
+        <key>StandardOutPath</key>
+        <string>#{var}/log/syncthing.log</string>
       </dict>
     </plist>
     EOS

@@ -419,7 +419,7 @@ class S3DownloadStrategy < CurlDownloadStrategy
     # a dependency of S3 users, not all Homebrew users
     require 'rubygems'
     begin
-      require 'aws-sdk'
+      require 'aws-sdk-v1'
     rescue LoadError
       onoe t.download_strategy.install_aws_sdk
       raise
@@ -822,7 +822,7 @@ class DownloadStrategyDetector
     case url
     when %r[^https?://.+\.git$], %r[^git://]
       GitDownloadStrategy
-    when %r[^http://www\.apache\.org/dyn/closer\.cgi]
+    when %r[^https?://www\.apache\.org/dyn/closer\.cgi]
       CurlApacheMirrorDownloadStrategy
     when %r[^https?://(.+?\.)?googlecode\.com/svn], %r[^https?://svn\.], %r[^svn://], %r[^https?://(.+?\.)?sourceforge\.net/svnroot/]
       SubversionDownloadStrategy
