@@ -33,13 +33,15 @@ module Homebrew
       unless fa.problems.empty?
         unless output_header
           puts
-          ohai "audit problems"
+          ohai t.cmd.audit.audit_problems
           output_header = true
         end
 
         formula_count += 1
         problem_count += fa.problems.size
-        puts "#{f.name}:", fa.problems.map { |p| " * #{p}" }, ""
+        puts t.cmd.audit.audit_problems_formula(f.name),
+          fa.problems.map { |p| t.cmd.audit.audit_problems_list_item(p) },
+          ""
       end
     end
 
@@ -128,20 +130,20 @@ class FormulaAuditor
   def audit_class
     if @strict
       unless formula.test_defined?
-        problem "A `test do` test block should be added"
+        problem t.cmd.audit.add_test_do
       end
     end
 
     if formula.class < GithubGistFormula
-      problem "GithubGistFormula is deprecated, use Formula instead"
+      problem t.cmd.audit.formula_subclass_deprecated('GithubGistFormula')
     end
 
     if formula.class < ScriptFileFormula
-      problem "ScriptFileFormula is deprecated, use Formula instead"
+      problem t.cmd.audit.formula_subclass_deprecated('ScriptFileFormula')
     end
 
     if formula.class < AmazonWebServicesFormula
-      problem "AmazonWebServicesFormula is deprecated, use Formula instead"
+      problem t.cmd.audit.formula_subclass_deprecated('AmazonWebServicesFormula')
     end
   end
 
@@ -200,7 +202,7 @@ class FormulaAuditor
 
   def audit_java_home
     if text =~ /JAVA_HOME/i && !formula.requirements.map(&:class).include?(JavaDependency)
-      problem "Use `depends_on :java` to set JAVA_HOME"
+      problem t.cmd.audit.use_depends_on_java_to_set_java_home
     end
   end
 
@@ -218,7 +220,7 @@ class FormulaAuditor
     formula.options.each do |o|
       next unless @strict
       if o.name !~ /with(out)?-/ && o.name != "c++11" && o.name != "universal" && o.name != "32-bit"
-        problem "Options should begin with with/without. Migrate '--#{o.name}' with `deprecated_option`."
+        problem t.cmd.audit.migrate_deprecated_option(o.name)
       end
     end
   end
@@ -243,26 +245,26 @@ class FormulaAuditor
 
     # Automatic redirect exists, but this is another hugely common error.
     if homepage =~ %r[^http://code\.google\.com/]
-      problem "Google Code homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_googlecode_https(homepage)
     end
 
     # GNU has full SSL/TLS support but no auto-redirect.
     if homepage =~ %r[^http://www\.gnu\.org/]
-      problem "GNU homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_gnu_https(homepage)
     end
 
     # Savannah has full SSL/TLS support but no auto-redirect.
     # Doesn't apply to the download links (boo), only the homepage.
     if homepage =~ %r[^http://savannah\.nongnu\.org/]
-      problem "Savannah homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_savannah_https(homepage)
     end
 
     if homepage =~ %r[^http://((?:trac|tools|www)\.)?ietf\.org]
-      problem "ietf homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_ietf_https(homepage)
     end
 
     if homepage =~ %r[^http://((?:www)\.)?gnupg.org/]
-      problem "GnuPG homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_gnupg_https(homepage)
     end
 
     # Freedesktop is complicated to handle - It has SSL/TLS, but only on certain subdomains.
@@ -271,36 +273,36 @@ class FormulaAuditor
     # "Software" is redirected to https://wiki.freedesktop.org/www/Software/project_name
     if homepage =~ %r[^http://((?:www|nice|libopenraw|liboil|telepathy|xorg)\.)?freedesktop\.org/(?:wiki/)?]
       if homepage =~ /Software/
-        problem "The url should be styled `https://wiki.freedesktop.org/www/Software/project_name`, not #{homepage})."
+        problem t.cmd.audit.homepage_freedesktop_https_software_project(homepage)
       else
-        problem "The url should be styled `https://wiki.freedesktop.org/project_name`, not #{homepage})."
+        problem t.cmd.audit.homepage_freedesktop_https_project(homepage)
       end
     end
 
     if homepage =~ %r[^http://wiki\.freedesktop\.org/]
-      problem "Freedesktop's Wiki subdomain should be https:// (URL is #{homepage})."
+      problem t.cmd.audit.homepage_freedesktop_https_wiki(homepage)
     end
 
     # There's an auto-redirect here, but this mistake is incredibly common too.
     if homepage =~ %r[^http://packages\.debian\.org]
-      problem "Debian homepage should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_debian_https(homepage)
     end
 
     # People will run into mixed content sometimes, but we should enforce and then add
     # exemptions as they are discovered. Treat mixed content on homepages as a bug.
     # Justify each exemptions with a code comment so we can keep track here.
     if homepage =~ %r[^http://[^/]*github\.io/]
-      problem "Github Pages links should be https:// (URL is #{homepage})."
+      problem t.cmd.audit.homepage_github_io_https(homepage)
     end
 
     if homepage =~ %r[^http://[^/]*\.apache\.org]
-      problem "Apache homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_apache_https(homepage)
     end
 
     # There's an auto-redirect here, but this mistake is incredibly common too.
     # Only applies to the homepage and subdomains for now, not the FTP links.
     if homepage =~ %r[^http://((?:build|cloud|developer|download|extensions|git|glade|help|library|live|nagios|news|people|projects|rt|static|wiki|www)\.)?gnome\.org]
-      problem "Gnome homepages should be https:// links (URL is #{homepage})."
+      problem t.cmd.audit.homepage_gnome_https(homepage)
     end
 
     urls = @specs.map(&:url)
@@ -321,17 +323,17 @@ class FormulaAuditor
 
       case p
       when %r[^http://ftp\.gnu\.org/]
-        problem "ftp.gnu.org urls should be https://, not http:// (url is #{p})."
+        problem t.cmd.audit.url_ftp_gnu_org_https(p)
       when %r[^http://[^/]*\.apache\.org/]
-        problem "Apache urls should be https://, not http (url is #{p})."
+        problem t.cmd.audit.url_apache_https(p)
       when %r[^http://code\.google\.com/]
-        problem "code.google.com urls should be https://, not http (url is #{p})."
+        problem t.cmd.audit.url_code_google_com_https(p)
       when %r[^http://fossies\.org/]
-        problem "Fossies urls should be https://, not http (url is #{p})."
+        problem t.cmd.audit.url_fossies_https(p)
       when %r[^http://mirrors\.kernel\.org/]
-        problem "mirrors.kernel urls should be https://, not http (url is #{p})."
+        problem t.cmd.audit.url_mirrors_kernel_org_https(p)
       when %r[^http://tools\.ietf\.org/]
-        problem "ietf urls should be https://, not http (url is #{p})."
+        problem t.cmd.audit.url_tools_ietf_org_https(p)
       end
     end
 
@@ -376,7 +378,7 @@ class FormulaAuditor
 
     # Check for new-url Google Code download urls, https:// is preferred
     urls.grep(%r[^http://code\.google\.com/]) do |u|
-      problem "Use https:// URLs for downloads from code.google (url is #{u})."
+      problem t.cmd.audit.url_code_google_com_https_2(u)
     end
 
     # Check for git:// GitHub repo urls, https:// is preferred.
@@ -386,7 +388,7 @@ class FormulaAuditor
 
     # Check for git:// Gitorious repo urls, https:// is preferred.
     urls.grep(%r[^git://[^/]*gitorious\.org/]) do |u|
-      problem "Use https:// URLs for accessing Gitorious repositories (url is #{u})."
+      problem t.cmd.audit.url_gitorious_use_https(u)
     end
 
     # Check for http:// GitHub repo urls, https:// is preferred.
@@ -418,7 +420,9 @@ class FormulaAuditor
       next unless spec = formula.send(name.downcase)
 
       ra = ResourceAuditor.new(spec).audit
-      problems.concat ra.problems.map { |problem| "#{name}: #{problem}" }
+      problems.concat ra.problems.map do |problem|
+        t.cmd.audit.name_problem(name, problem)
+      end
 
       spec.resources.each_value do |resource|
         ra = ResourceAuditor.new(resource).audit
@@ -432,9 +436,11 @@ class FormulaAuditor
 
     if formula.stable && formula.devel
       if formula.devel.version < formula.stable.version
-        problem "devel version #{formula.devel.version} is older than stable version #{formula.stable.version}"
+        problem t.cmd.audit.devel_older_than_stable(
+          formula.devel.version, formula.stable.version
+        )
       elsif formula.devel.version == formula.stable.version
-        problem "stable and devel versions are identical"
+        problem t.cmd.audit.stable_and_devel_identical
       end
     end
 
@@ -443,7 +449,7 @@ class FormulaAuditor
       minor_version = stable.version.to_s[/\d\.(\d+)/, 1].to_i
 
       if minor_version.odd?
-        problem "#{stable.version} is a development release"
+        problem t.cmd.audit.version_is_devel(stable.version)
       end
     end
   end
@@ -466,9 +472,9 @@ class FormulaAuditor
     when %r[macports/trunk]
       problem t.cmd.audit.github_patch_macports(patch.url)
     when %r[^http://trac\.macports\.org]
-      problem "Patches from MacPorts Trac should be https://, not http:\n#{patch.url}"
+      problem t.cmd.audit.macports_patch_use_https(patch.url)
     when %r[^http://bugs\.debian\.org]
-      problem "Patches from Debian should be https://, not http:\n#{patch.url}"
+      problem t.cmd.audit.debian_patch_use_https(patch.url)
     when %r[^https?://github\.com/.*commit.*\.patch$]
       problem t.cmd.audit.github_patch_use_dot_diff
     end
@@ -507,16 +513,16 @@ class FormulaAuditor
       problem t.cmd.audit.comment_remove_default
     end
     if line =~ /# Documentation:/
-      problem "Please remove default template comments"
+      problem t.cmd.audit.comment_remove_default
     end
     if line =~ /# if this fails, try separate make\/make install steps/
       problem t.cmd.audit.comment_remove_default
     end
     if line =~ /# The url of the archive/
-      problem "Please remove default template comments"
+      problem t.cmd.audit.comment_remove_default
     end
     if line =~ /## Naming --/
-      problem "Please remove default template comments"
+      problem t.cmd.audit.comment_remove_default
     end
     if line =~ /# if your formula requires any X11\/XQuartz components/
       problem t.cmd.audit.comment_remove_default
@@ -702,7 +708,7 @@ class FormulaAuditor
     if line =~ /system (["'](#{FILEUTILS_METHODS})["' ])/o
       system = $1
       method = $2
-      problem "Use the `#{method}` Ruby method instead of `system #{system}`"
+      problem t.cmd.audit.use_ruby_method_instead_of_system(method, system)
     end
 
     if @strict
@@ -710,12 +716,12 @@ class FormulaAuditor
         bad_system = $1
         unless %w[| < > & ;].any? { |c| bad_system.include? c }
           good_system = bad_system.gsub(" ", "\", \"")
-          problem "Use `system #{good_system}` instead of `system #{bad_system}` "
+          problem t.cmd.audit.use_system_alternative(good_system, bad_system)
         end
       end
 
       if line =~ /(require ["']formula["'])/
-        problem "`#{$1}` is now unnecessary"
+        problem t.cmd.audit.is_now_unnecessary($1)
       end
     end
   end
@@ -724,7 +730,7 @@ class FormulaAuditor
     caveats = formula.caveats
 
     if caveats =~ /setuid/
-      problem "Don't recommend setuid in the caveats, suggest sudo instead."
+      problem t.cmd.audit.caveats_no_setuid
     end
   end
 
@@ -871,39 +877,39 @@ class ResourceAuditor
 
   def audit_download_strategy
     if url =~ %r[^(cvs|bzr|hg|fossil)://] || url =~ %r[^(svn)\+http://]
-      problem "Use of the #{$&} scheme is deprecated, pass `:using => :#{$1}` instead"
+      problem t.cmd.audit.scheme_deprecated($&, $1)
     end
 
     url_strategy = DownloadStrategyDetector.detect(url)
 
     if using == :git || url_strategy == GitDownloadStrategy
       if specs[:tag] && !specs[:revision]
-        problem "Git should specify :revision when a :tag is specified."
+        problem t.cmd.audit.git_specify_revision_with_tag
       end
     end
 
     return unless using
 
     if using == :ssl3 || using == CurlSSL3DownloadStrategy
-      problem "The SSL3 download strategy is deprecated, please choose a different URL"
+      problem t.cmd.audit.ssl3_deprecated
     elsif using == CurlUnsafeDownloadStrategy || using == UnsafeSubversionDownloadStrategy
-      problem "#{using.name} is deprecated, please choose a different URL"
+      problem t.cmd.audit.strategy_deprecated(using.name)
     end
 
     if using == :cvs
       mod = specs[:module]
 
       if mod == name
-        problem "Redundant :module value in URL"
+        problem t.cmd.audit.redundant_module_value
       end
 
       if url =~ %r[:[^/]+$]
         mod = url.split(":").last
 
         if mod == name
-          problem "Redundant CVS module appended to URL"
+          problem t.cmd.audit.redundant_cvs_module
         else
-          problem "Specify CVS module as `:module => \"#{mod}\"` instead of appending it to the URL"
+          problem t.cmd.audit.specify_cvs_module(mod)
         end
       end
     end
