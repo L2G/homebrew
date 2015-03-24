@@ -439,7 +439,8 @@ def check_user_path_1
 
         if conflicts.size > 0
           out = t.cmd.doctor.user_path_out_of_order("#{HOMEBREW_PREFIX}/bin",
-                                                    conflicts * "\n                ")
+                                                    conflicts * "\n                ",
+                                                    shell_profile)
         end
       end
     when "#{HOMEBREW_PREFIX}/bin"
@@ -453,7 +454,8 @@ end
 
 def check_user_path_2
   unless $seen_prefix_bin
-    t.cmd.doctor.user_path_has_no_homebrew_bin("#{HOMEBREW_PREFIX}/bin")
+    t.cmd.doctor.user_path_has_no_homebrew_bin("#{HOMEBREW_PREFIX}/bin",
+                                               shell_profile)
   end
 end
 
@@ -462,7 +464,8 @@ def check_user_path_3
   sbin = (HOMEBREW_PREFIX+'sbin')
   if sbin.directory? and sbin.children.length > 0
     unless $seen_prefix_sbin
-      t.cmd.doctor.user_path_has_no_homebrew_sbin("#{HOMEBREW_PREFIX}/sbin")
+      t.cmd.doctor.user_path_has_no_homebrew_sbin("#{HOMEBREW_PREFIX}/sbin",
+                                                  shell_profile)
     end
   end
 end

@@ -819,12 +819,12 @@ cmd:
     user_path_has_no_homebrew_bin: |
       Homebrew's bin was not found in your PATH.
       Consider setting the PATH for example like so
-          echo 'export PATH="%1:$PATH"' >> ~/.bash_profile
+          echo 'export PATH="%1:$PATH"' >> %2
     user_path_has_no_homebrew_sbin: |
       Homebrew's sbin was not found in your PATH but you have installed
       formulae that put executables in %1.
       Consider setting the PATH for example like so
-          echo 'export PATH="%1:$PATH"' >> ~/.bash_profile
+          echo 'export PATH="%1:$PATH"' >> %2
     user_path_out_of_order: |
       /usr/bin occurs before %1
       This means that system-provided programs will be used instead of those
@@ -834,7 +834,7 @@ cmd:
 
       Consider setting your PATH so that %1
       occurs before /usr/bin. Here is a one-liner:
-          echo 'export PATH="%1:$PATH"' >> ~/.bash_profile
+          echo 'export PATH="%1:$PATH"' >> %3
     xcode_clt_install_from_cli: |
       Run `xcode-select --install` to install them.
     xcode_clt_install_from_web: |
