@@ -925,4 +925,19 @@ cmd:
     update_tap_failed: "Failed to update tap: %1/%2"
     updated_formulae: "Updated Formulae"
     updated_homebrew: "Updated Homebrew from %1 to %2"
+  #------------------------------------------------------------------------------
+  # `upgrade` command
+  upgrade:
+    formula_name_and_version: "%1 %2"
+    formula_not_installed: "%1 not installed"
+    formula_version_already_installed: "%1 %2 already installed"
+    list_join: ", "
+    no_pkgs_to_upgrade: "No packages to upgrade"
+    not_upgrading_pinned_pkg: !!pl
+      1: "Not upgrading %1 pinned package:"
+      n: "Not upgrading %1 pinned packages:"
+    upgrading_formula: "Upgrading %1"
+    upgrading_outdated_pkg: !!pl
+      1: "Upgrading %1 outdated package, with result:"
+      n: "Upgrading %1 outdated packages, with result:"
 #==============================================================================
