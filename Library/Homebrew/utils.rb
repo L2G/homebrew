@@ -44,13 +44,13 @@ end
 
 def ohai title, *sput
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts "#{Tty.blue}==>#{Tty.white} #{title}#{Tty.reset}"
+  puts "#{Tty.blue}#{t.utils.arrow}#{Tty.white} #{title}#{Tty.reset}"
   puts sput
 end
 
 def oh1 title
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts "#{Tty.green}==>#{Tty.white} #{title}#{Tty.reset}"
+  puts "#{Tty.green}#{t.utils.arrow}#{Tty.white} #{title}#{Tty.reset}"
 end
 
 def opoo warning
@@ -77,6 +77,7 @@ def pretty_duration s
 end
 
 def plural n, s="s"
+  opoo t.utils.plural_called
   (n == 1) ? "" : s
 end
 
@@ -129,10 +130,7 @@ module Homebrew
     end
 
     unless which executable
-      odie <<-EOS.undent
-        The '#{gem}' gem is installed but couldn't find '#{executable}' in the PATH:
-        #{ENV["PATH"]}
-      EOS
+      odie t.utils.gem_installed_but_exec_not_in_path(gem, executable, ENV["PATH"])
     end
   end
 end
@@ -180,7 +178,9 @@ def puts_columns items, star_items=[]
   return if items.empty?
 
   if star_items && star_items.any?
-    items = items.map{|item| star_items.include?(item) ? "#{item}*" : item}
+    items = items.map do |item|
+      star_items.include?(item) ? t.utils.item_with_star(item) : item
+    end
   end
 
   if $stdout.tty?
@@ -218,11 +218,7 @@ def which_editor
   # Default to standard vim
   editor ||= "/usr/bin/vim"
 
-  opoo <<-EOS.undent
-    Using #{editor} because no editor was set in the environment.
-    This may change in the future, so we recommend setting EDITOR, VISUAL,
-    or HOMEBREW_EDITOR to your preferred text editor.
-  EOS
+  opoo t.utils.using_editor_as_fallback(editor)
 
   editor
 end

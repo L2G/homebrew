@@ -273,6 +273,7 @@ software_spec:
 #==============================================================================
 # utils.rb
 utils:
+  arrow: "==>"
   authentication_failed: |
     GitHub %1
     HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
@@ -284,13 +285,18 @@ utils:
   error_2: ":"
   failed_to_connect: "Failed to connect to: %1"
   failed_to_parse_json: "Failed to parse JSON response"
+  gem_installed_but_exec_not_in_path: |
+    The '%1' gem is installed but couldn't find '%2' in the PATH:
+    %3
   interactive_shell_abort: "Aborting due to non-zero exit status"
+  item_with_star: "%1*"
   minutes: !!pl
     1: "%1 minute"
     n: "%1 minutes"
   not_executable: "%1 is not executable"
   open_pull_requests: "Open pull requests:"
   path_component_invalid: "The following PATH component is invalid: %1"
+  plural_called: "plural() was called; Y U NO I18N ;-)"
   # Used to print pull request titles together with their URLs
   pull_request_with_url: "%1 (%2)"
   rate_limit_exceeded: |
@@ -304,6 +310,10 @@ utils:
   seconds: !!pl
     1: "1 second"
     n: "%1 seconds"
+  using_editor_as_fallback: |
+    Using %1 because no editor was set in the environment.
+    This may change in the future, so we recommend setting EDITOR, VISUAL,
+    or HOMEBREW_EDITOR to your preferred text editor.
   # Indicates warnings that are logged on-screen
   warning: "Warning"
 #==============================================================================
