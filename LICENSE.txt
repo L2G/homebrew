@@ -1,3 +1,9 @@
+The following applies to the Homebrew code base in general.  Additional license
+terms apply to Ruby code that is "vendored" under the Library/Homebrew/vendor
+subdirectory.
+
+----
+
 Copyright 2009-2015 Homebrew contributors.
 
 Redistribution and use in source and binary forms, with or without
