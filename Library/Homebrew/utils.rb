@@ -44,21 +44,21 @@ end
 
 def ohai title, *sput
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts "#{Tty.blue}#{t.utils.arrow}#{Tty.white} #{title}#{Tty.reset}"
+  puts "#{Tty.blue}#{t('utils.arrow')}#{Tty.white} #{title}#{Tty.reset}"
   puts sput
 end
 
 def oh1 title
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts "#{Tty.green}#{t.utils.arrow}#{Tty.white} #{title}#{Tty.reset}"
+  puts "#{Tty.green}#{t('utils.arrow')}#{Tty.white} #{title}#{Tty.reset}"
 end
 
 def opoo warning
-  $stderr.puts "#{Tty.red}#{t.utils.warning}#{Tty.reset}: #{warning}"
+  $stderr.puts "#{Tty.red}#{t('utils.warning')}#{Tty.reset}: #{warning}"
 end
 
 def onoe error
-  $stderr.puts "#{Tty.red}#{t.utils.error_1}#{Tty.reset}#{t.utils.error_2} #{error}"
+  $stderr.puts "#{Tty.red}#{t('utils.error_1')}#{Tty.reset}#{t.utils.error_2} #{error}"
 end
 
 def ofail error

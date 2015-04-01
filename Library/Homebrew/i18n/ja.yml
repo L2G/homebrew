@@ -1,21 +1,22 @@
 ---
-# These Japanese translations were done on a whim by a non-Japanese speaker
-# using online tools only. They are here just to demonstrate the look of
-# Japanese translations in Homebrew, and they probably need to be corrected.
-#==============================================================================
-# extend/
-extend:
-  #----------------------------------------------------------------------------
-  # extend/pathname.rb
-  pathname:
-    # "files" is used only if there is more than one file
-    files: !!pl
-      n: "%1ファイル、"
-#==============================================================================
-# formula_installer.rb
-formula_installer:
-  caveats: "注意"
-  install_badge: 🍶
-  summary: "%1：%2"
-  summary_title: "結語"
-#==============================================================================
+ja:
+  # These Japanese translations were done on a whim by a non-Japanese speaker
+  # using online tools only. They are here just to demonstrate the look of
+  # Japanese translations in Homebrew, and they probably need to be corrected.
+  #==============================================================================
+  # extend/
+  extend:
+    #----------------------------------------------------------------------------
+    # extend/pathname.rb
+    pathname:
+      # "files" is used only if there is more than one file
+      files: !!pl
+        n: "%1ファイル、"
+  #==============================================================================
+  # formula_installer.rb
+  formula_installer:
+    caveats: "注意"
+    install_badge: 🍶
+    summary: "%1：%2"
+    summary_title: "結語"
+  #==============================================================================

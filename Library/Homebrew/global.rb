@@ -1,3 +1,4 @@
+require 'i18n-wrapper'
 require 'extend/module'
 require 'extend/fileutils'
 require 'extend/pathname'
@@ -10,7 +11,6 @@ require 'utils'
 require 'exceptions'
 require 'set'
 require 'rbconfig'
-require 'i18n'
 
 ARGV.extend(HomebrewArgvExtension)
 

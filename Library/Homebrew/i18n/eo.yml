@@ -1,112 +1,113 @@
 ---
-#==============================================================================
-# `brew` command
-brew:
-  bad_sudo: "Malkuraĝe rifuzas plenumi `sudo brew %1`"
-  homebrew_version: "Homebrew %1"
-  invalid_usage: "Nevalida uzado"
-  no_working_dir: "La kuranta dosierujo ne existas. Ne povas procedi."
-#==============================================================================
-# extend/
-extend:
-  #----------------------------------------------------------------------------
-  # extend/pathname.rb
-  pathname:
-    does_not_exist: "ne ekzistas %1"
-    # "files" is used only if there is more than one file
-    files: !!pl
-      n: "%1 dosieroj, "
-#==============================================================================
-# formula_installer.rb
-formula_installer:
-  already_installed: "%1-%2 jam estas instalita"
-  already_installed_not_linked: "%1-%2 jam estas instalita, sed ne ligita"
-  already_installed_unlink: |
-    %1-%2 jam estas instalita
-    Por instali ĉi tiun eldonon, unue rulu `brew unlink %1'
-  brew_link_not_complete: "La paŝo `brew link` ne estas sukcese kompletita"
-  summary: "%1: %2"
-  summary_with_build_time: "%1: %2, konstruita dum %3"
-#==============================================================================
-# utils.rb
-utils:
-  cleaning_up: "Unu sekundo, nun purigas"
-  # Indicates errors that are logged on-screen
-  error_1: "Eraro"
-  error_2: ":"
-  failure_while_executing: "Misfino dum plenumago: %1"
-  minutes: !!pl
-    1: "%1 minuto"
-    n: "%1 minutoj"
-  not_executable: "%1 ne estas plenumebla"
-  seconds: !!pl
-    1: "1 sekundo"
-    n: "%1 sekundoj"
-  # Indicates warnings that are logged on-screen
-  warning: "Averto"
-#==============================================================================
-# Sub-commands of `brew`
-cmd:
-  #------------------------------------------------------------------------------
-  # `help` command
-  #
-  # NOTE Keep the lenth of vanilla --help less than 25 lines!
-  # This is because the default Terminal height is 25 lines. Scrolling sucks
-  # and concision is important. If more help is needed we should start
-  # specialising help like the gem command does.
-  # NOTE Keep lines less than 80 characters! Wrapping is just not cricket.
-  # <----------------------------------------------------------------------------->
-  help: |
-    Ekzemploj de la uzado:
-      brew [info | home | options ] [FORMULA...]
-      brew install FORMULA...
-      brew uninstall FORMULA...
-      brew search [foo]
-      brew list [FORMULA...]
-      brew update
-      brew upgrade [FORMULA...]
-      brew pin/unpin [FORMULA...]
+eo:
+  #==============================================================================
+  # `brew` command
+  brew:
+    bad_sudo: "Malkuraĝe rifuzas plenumi `sudo brew %1`"
+    homebrew_version: "Homebrew %1"
+    invalid_usage: "Nevalida uzado"
+    no_working_dir: "La kuranta dosierujo ne existas. Ne povas procedi."
+  #==============================================================================
+  # extend/
+  extend:
+    #----------------------------------------------------------------------------
+    # extend/pathname.rb
+    pathname:
+      does_not_exist: "ne ekzistas %1"
+      # "files" is used only if there is more than one file
+      files: !!pl
+        n: "%1 dosieroj, "
+  #==============================================================================
+  # formula_installer.rb
+  formula_installer:
+    already_installed: "%1-%2 jam estas instalita"
+    already_installed_not_linked: "%1-%2 jam estas instalita, sed ne ligita"
+    already_installed_unlink: |
+      %1-%2 jam estas instalita
+      Por instali ĉi tiun eldonon, unue rulu `brew unlink %1'
+    brew_link_not_complete: "La paŝo `brew link` ne estas sukcese kompletita"
+    summary: "%1: %2"
+    summary_with_build_time: "%1: %2, konstruita dum %3"
+  #==============================================================================
+  # utils.rb
+  utils:
+    cleaning_up: "Unu sekundo, nun purigas"
+    # Indicates errors that are logged on-screen
+    error_1: "Eraro"
+    error_2: ":"
+    failure_while_executing: "Misfino dum plenumago: %1"
+    minutes: !!pl
+      1: "%1 minuto"
+      n: "%1 minutoj"
+    not_executable: "%1 ne estas plenumebla"
+    seconds: !!pl
+      1: "1 sekundo"
+      n: "%1 sekundoj"
+    # Indicates warnings that are logged on-screen
+    warning: "Averto"
+  #==============================================================================
+  # Sub-commands of `brew`
+  cmd:
+    #------------------------------------------------------------------------------
+    # `help` command
+    #
+    # NOTE Keep the lenth of vanilla --help less than 25 lines!
+    # This is because the default Terminal height is 25 lines. Scrolling sucks
+    # and concision is important. If more help is needed we should start
+    # specialising help like the gem command does.
+    # NOTE Keep lines less than 80 characters! Wrapping is just not cricket.
+    # <----------------------------------------------------------------------------->
+    help: |
+      Ekzemploj de la uzado:
+        brew [info | home | options ] [FORMULA...]
+        brew install FORMULA...
+        brew uninstall FORMULA...
+        brew search [foo]
+        brew list [FORMULA...]
+        brew update
+        brew upgrade [FORMULA...]
+        brew pin/unpin [FORMULA...]
 
-    Diagnozi ĝenaĵojn:
-      brew doctor
-      brew install -vd FORMULA
-      brew [--env | config]
+      Diagnozi ĝenaĵojn:
+        brew doctor
+        brew install -vd FORMULA
+        brew [--env | config]
 
-    Fermenti:
-      brew create [URL [--no-fetch]]
-      brew edit [FORMULA...]
-      open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
+      Fermenti:
+        brew create [URL [--no-fetch]]
+        brew edit [FORMULA...]
+        open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
 
-    Pluaj helpoj:
-      man brew
-      brew home
-  #------------------------------------------------------------------------------
-  # `doctor` command
-  doctor:
-    broken_symlinks: |
-      Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
-        %1
-    filesystem_case_sensitive: |
-      La dosiersistemo ĉe %1 aspektas usklecodistinga.
-      La dosiersistemo de OS X kutime estas ne-usklecodistinga.
-      Bonvolu raporti iujn ajn ŝajnajn zorgojn.
-  #------------------------------------------------------------------------------
-  # `list` command
-  list:
-    files: !!pl
-      n: "%2/ (%1 dosieroj)"
-    other_files: !!pl
-      n: "%2/ (%1 kromaj dosieroj)"
-    symlink: "%1 → %2"
-  #------------------------------------------------------------------------------
-  # `update` command
-  update:
-    deleted_formulae: "Forprenitaj Formuloj"
-    install_git: "Bonvolu unue plenumi `brew install git'."
-    new_formulae: "Novaj Formuloj"
-    no_formula_names: |
-      Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
-      nomojn.  Uzu `brew upgrade <formula>`.
-    updated_formulae: "Ĝisdatigitaj Formuloj"
-    updated_homebrew: "Ĝisdatigis Homebrew-on de %1 ĝis %2"
-#==============================================================================
+      Pluaj helpoj:
+        man brew
+        brew home
+    #------------------------------------------------------------------------------
+    # `doctor` command
+    doctor:
+      broken_symlinks: |
+        Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
+          %1
+      filesystem_case_sensitive: |
+        La dosiersistemo ĉe %1 aspektas usklecodistinga.
+        La dosiersistemo de OS X kutime estas ne-usklecodistinga.
+        Bonvolu raporti iujn ajn ŝajnajn zorgojn.
+    #------------------------------------------------------------------------------
+    # `list` command
+    list:
+      files: !!pl
+        n: "%2/ (%1 dosieroj)"
+      other_files: !!pl
+        n: "%2/ (%1 kromaj dosieroj)"
+      symlink: "%1 → %2"
+    #------------------------------------------------------------------------------
+    # `update` command
+    update:
+      deleted_formulae: "Forprenitaj Formuloj"
+      install_git: "Bonvolu unue plenumi `brew install git'."
+      new_formulae: "Novaj Formuloj"
+      no_formula_names: |
+        Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
+        nomojn.  Uzu `brew upgrade <formula>`.
+      updated_formulae: "Ĝisdatigitaj Formuloj"
+      updated_homebrew: "Ĝisdatigis Homebrew-on de %1 ĝis %2"
+  #==============================================================================
