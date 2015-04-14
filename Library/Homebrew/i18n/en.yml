@@ -945,7 +945,6 @@ en:
     upgrade:
       formula_already_installed: "%{name} already installed"
       formula_name_and_version: "%{name} %{version}"
-      formula_not_installed: "%1 not installed"
       formula_version_already_installed: "%{name} %{version} already installed"
       list_join: ", "
       no_pkgs_to_upgrade: "No packages to upgrade"
