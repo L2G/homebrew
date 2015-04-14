@@ -11,7 +11,7 @@ ja:
     pathname:
       # "files" is used only if there is more than one file
       files:
-        many: "%{count}ファイル、"
+        other: "%{count}ファイル、"
   #==============================================================================
   # formula_installer.rb
   formula_installer:

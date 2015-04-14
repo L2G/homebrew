@@ -16,7 +16,7 @@ eo:
       does_not_exist: "ne ekzistas %{path}"
       # "files" is used only if there is more than one file
       files:
-        many: "%{count} dosieroj, "
+        other: "%{count} dosieroj, "
   #==============================================================================
   # formula_installer.rb
   formula_installer:
@@ -35,11 +35,11 @@ eo:
     error_2: ":"
     minutes:
       one: "%{count} minuto"
-      many: "%{count} minutoj"
+      other: "%{count} minutoj"
     not_executable: "%{path} ne estas plenumebla"
     seconds:
       one: "%{count} sekundo"
-      many: "%{count} sekundoj"
+      other: "%{count} sekundoj"
     # Indicates warnings that are logged on-screen
     warning: "Averto"
   #==============================================================================
@@ -92,9 +92,9 @@ eo:
     # `list` command
     list:
       files:
-        many: "%{path}/ (%{count} dosieroj)"
+        other: "%{path}/ (%{count} dosieroj)"
       other_files:
-        many: "%{path}/ (%{count} kromaj dosieroj)"
+        other: "%{path}/ (%{count} kromaj dosieroj)"
       symlink: "%{symlink} → %{target}"
     #------------------------------------------------------------------------------
     # `update` command

@@ -200,7 +200,7 @@ en:
       does_not_exist: "%{path} does not exist"
       # "files" is used only if there is more than one file
       files:
-        many: "%{count} files, "
+        other: "%{count} files, "
       exec_scripts_empty_targets: "tried to write exec scripts to %{path} for an empty list of targets"
       same_file: "%{path} is the same file as %{other}"
       tried_to_install_empty_array_to: "tried to install empty array to %{path}"
@@ -297,7 +297,7 @@ en:
     item_with_star: "%{item}*"
     minutes:
       one: "%{count} minute"
-      many: "%{count} minutes"
+      other: "%{count} minutes"
     not_executable: "%{path} is not executable"
     open_pull_requests: "Open pull requests:"
     path_component_invalid: "The following PATH component is invalid: %{path}"
@@ -314,7 +314,7 @@ en:
     searching_pull_requests: "Searching pull requests..."
     seconds:
       one: "%{count} second"
-      many: "%{count} seconds"
+      other: "%{count} seconds"
     using_editor_as_fallback: |
       Using %{editor} because no editor was set in the environment.
       This may change in the future, so we recommend setting EDITOR, VISUAL,
@@ -372,7 +372,7 @@ en:
       checksum_invalid_chars: "%{checksum_type} contains invalid characters"
       checksum_should_be_lowercase: "%{checksum_type} should be lowercase"
       checksum_should_be_n_chars:
-        many: "%{checksum_type} should be %{count} characters"
+        other: "%{checksum_type} should be %{count} characters"
       class_inheritance_space: "Use a space in class inheritance: class Foo < %{superclass}"
       comment_cmake_found: "Commented cmake call found"
       comment_remove_default: "Please remove default template comments"
@@ -396,7 +396,7 @@ en:
       formula_subclass_deprecated: "%{subclass} is deprecated, use Formula instead"
       formulae:
         one: "%{count} formula"
-        many: "%{count} formulae"
+        other: "%{count} formulae"
       git_specify_revision_with_tag: "Git should specify :revision when a :tag is specified."
       github_patch_macports: "MacPorts patches should specify a revision instead of trunk:\n%{url}"
       github_patch_needs_rev: "GitHub/Gist patches should specify a revision:\n%{url}"
@@ -432,7 +432,7 @@ en:
       permissions_644: "Incorrect file permissions: chmod 644 %{path}"
       problems_in:
         one: "%{count} problem in %{n_formulae}"
-        many: "%{count} problems in %{n_formulae}"
+        other: "%{count} problems in %{n_formulae}"
       redundant_cvs_module: "Redundant CVS module appended to URL"
       redundant_module_value: "Redundant :module value in URL"
       replace_with_optional_dep: "Replace %{line} with \"depends_on %{dep} => :optional\""
@@ -922,9 +922,9 @@ en:
     # `list` command
     list:
       files:
-        many: "%{path}/ (%{count} files)"
+        other: "%{path}/ (%{count} files)"
       other_files:
-        many: "%{path}/ (%{count} other files)"
+        other: "%{path}/ (%{count} other files)"
       symlink: "%{symlink} -> %{target}"
     #------------------------------------------------------------------------------
     # `update` command
@@ -951,9 +951,9 @@ en:
       no_pkgs_to_upgrade: "No packages to upgrade"
       not_upgrading_pinned_pkg:
         one: "Not upgrading %{count} pinned package:"
-        many: "Not upgrading %{count} pinned packages:"
+        other: "Not upgrading %{count} pinned packages:"
       upgrading_formula: "Upgrading %{name}"
       upgrading_outdated_pkg:
         one: "Upgrading %{count} outdated package, with result:"
-        many: "Upgrading %{count} outdated packages, with result:"
+        other: "Upgrading %{count} outdated packages, with result:"
   #==============================================================================
