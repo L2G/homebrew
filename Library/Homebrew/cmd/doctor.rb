@@ -76,7 +76,7 @@ class Checks
 def check_path_for_trailing_slashes
   bad_paths = ENV['PATH'].split(File::PATH_SEPARATOR).select { |p| p[-1..-1] == '/' }
   return if bad_paths.empty?
-  s = t.cmd.doctor.trailing_slashes
+  s = t('cmd.doctor.trailing_slashes')
   bad_paths.each{|p| s << "    #{p}"}
   s
 end
@@ -93,7 +93,7 @@ def check_for_macgpg2
   }
 
   if suspects.any? { |f| File.exist? f }
-    t.cmd.doctor.macgpg2
+    t('cmd.doctor.macgpg2')
   end
 end
 
@@ -120,7 +120,7 @@ def check_for_stray_dylibs
     "libTrAPI.dylib", # TrAPI / Endpoint Security VPN
   ]
 
-  __check_stray_files "/usr/local/lib", "*.dylib", white_list, t.cmd.doctor.stray_dylibs
+  __check_stray_files "/usr/local/lib", "*.dylib", white_list, t('cmd.doctor.stray_dylibs')
 end
 
 def check_for_stray_static_libs
@@ -131,7 +131,7 @@ def check_for_stray_static_libs
     "libsecurity_agent_server.a", # OS X 10.8.2 Supplemental Update
   ]
 
-  __check_stray_files "/usr/local/lib", "*.a", white_list, t.cmd.doctor.stray_static_libs
+  __check_stray_files "/usr/local/lib", "*.a", white_list, t('cmd.doctor.stray_static_libs')
 end
 
 def check_for_stray_pcs
@@ -143,7 +143,7 @@ def check_for_stray_pcs
     "osxfuse.pc", # OSXFuse
   ]
 
-  __check_stray_files "/usr/local/lib/pkgconfig", "*.pc", white_list, t.cmd.doctor.stray_pcs
+  __check_stray_files "/usr/local/lib/pkgconfig", "*.pc", white_list, t('cmd.doctor.stray_pcs')
 end
 
 def check_for_stray_las
@@ -154,7 +154,7 @@ def check_for_stray_las
     "libosxfuse_i64.la", # OSXFuse
   ]
 
-  __check_stray_files "/usr/local/lib", "*.la", white_list, t.cmd.doctor.stray_las
+  __check_stray_files "/usr/local/lib", "*.la", white_list, t('cmd.doctor.stray_las')
 end
 
 def check_for_stray_headers
@@ -177,7 +177,7 @@ end
 def check_for_other_package_managers
   ponk = MacOS.macports_or_fink
   unless ponk.empty?
-    t.cmd.doctor.macports_or_fink(ponk.join(", "))
+    t('cmd.doctor.macports_or_fink', :macports_or_fink => ponk.join(", "))
   end
 end
 
@@ -192,60 +192,63 @@ def check_for_broken_symlinks
     end
   end
   unless broken_symlinks.empty?
-    t.cmd.doctor.broken_symlinks(broken_symlinks * "\n      ")
+    t('cmd.doctor.broken_symlinks',
+      :broken_symlinks => broken_symlinks * "\n      ")
   end
 end
 
 if MacOS.version >= "10.9"
   def check_for_installed_developer_tools
     unless MacOS::Xcode.installed? || MacOS::CLT.installed?
-      t.cmd.doctor.install_clt
+      t('cmd.doctor.install_clt')
     end
   end
 
   def check_xcode_up_to_date
     if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
-      t.cmd.doctor.xcode_outdated_app_store(
-        MacOS::Xcode.version, MacOS::Xcode.latest_version
-      )
+      t('cmd.doctor.xcode_outdated_app_store',
+        :outdated_xcode => MacOS::Xcode.version,
+        :latest_xcode => MacOS::Xcode.latest_version)
     end
   end
 
   def check_clt_up_to_date
     if MacOS::CLT.installed? && MacOS::CLT.outdated?
-      t.cmd.doctor.xcode_clt_update_from_app_store
+      t('cmd.doctor.xcode_clt_update_from_app_store')
     end
   end
 elsif MacOS.version == "10.8" || MacOS.version == "10.7"
   def check_for_installed_developer_tools
     unless MacOS::Xcode.installed? || MacOS::CLT.installed?
-      t.cmd.doctor.xcode_clt_install_from_web
+      t('cmd.doctor.xcode_clt_install_from_web')
     end
   end
 
   def check_xcode_up_to_date
     if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
-      t.cmd.doctor.xcode_outdated_download(MacOS::Xcode.version,
-                                           MacOS::Xcode.latest_version)
+      t('cmd.doctor.xcode_outdated_download',
+        :outdated_xcode => MacOS::Xcode.version,
+        :latest_xcode => MacOS::Xcode.latest_version)
     end
   end
 
   def check_clt_up_to_date
     if MacOS::CLT.installed? && MacOS::CLT.outdated?
-      t.cmd.doctor.xcode_clt_update_from_web
+      t('cmd.doctor.xcode_clt_update_from_web')
     end
   end
 else
   def check_for_installed_developer_tools
     unless MacOS::Xcode.installed?
-      t.cmd.doctor.xcode_not_installed
+      t('cmd.doctor.xcode_not_installed')
     end
   end
 
   def check_xcode_up_to_date
     if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
-      t.cmd.doctor.xcode_outdated_download(MacOS::Xcode.version,
-                                           MacOS::Xcode.latest_version)
+      t('cmd.doctor.xcode_outdated_download',
+        :outdated_xcode => MacOS::Xcode.version,
+        :latest_xcode => MacOS::Xcode.latest_version)
     end
   end
 end
@@ -253,13 +256,15 @@ end
 def check_for_osx_gcc_installer
   if (MacOS.version < "10.7" || MacOS::Xcode.version > "4.1") && \
       MacOS.clang_version == "2.1"
-    message = t.cmd.doctor.osx_gcc_installer
+    message = t('cmd.doctor.osx_gcc_installer')
     if MacOS.version >= :mavericks
-      message += t.cmd.doctor.osx_gcc_installer_advice.mavericks
+      message += t('cmd.doctor.osx_gcc_installer_advice.mavericks')
     elsif MacOS.version >= :lion
-      message += t.cmd.doctor.osx_gcc_installer_advice.lion(MacOS::Xcode.latest_version)
+      message += t('cmd.doctor.osx_gcc_installer_advice.lion',
+                   :latest_xcode => MacOS::Xcode.latest_version)
     else
-      message += t.cmd.doctor.osx_gcc_installer_advice.other(MacOS::Xcode.latest_version)
+      message += t('cmd.doctor.osx_gcc_installer_advice.other',
+                   :latest_xcode => MacOS::Xcode.latest_version)
     end
   end
 end
@@ -269,7 +274,7 @@ def check_for_stray_developer_directory
   # any troublesome leftover Xcode files
   uninstaller = Pathname.new("/Developer/Library/uninstall-developer-folder")
   if MacOS::Xcode.version >= "4.3" && uninstaller.exist?
-    t.cmd.doctor.stray_dev_dir(uninstaller)
+    t('cmd.doctor.stray_dev_dir', :uninstall_cmd => uninstaller)
   end
 end
 
@@ -304,7 +309,7 @@ def __check_subdir_access base
 
   cant_read.sort!
   if cant_read.length > 0 then
-    s = t.cmd.doctor.unwritable_directories(target)
+    s = t('cmd.doctor.unwritable_directories', :path => target)
     cant_read.each{ |f| s << "    #{f}\n" }
     s
   end
@@ -322,7 +327,7 @@ def check_access_usr_local
   return unless HOMEBREW_PREFIX.to_s == '/usr/local'
 
   unless File.writable_real?("/usr/local")
-    t.cmd.doctor.unwritable_usr_local
+    t('cmd.doctor.unwritable_usr_local')
   end
 end
 
@@ -330,7 +335,7 @@ end
   define_method("check_access_#{d.sub("/", "_")}") do
     dir = HOMEBREW_PREFIX.join(d)
     if dir.exist? && !dir.writable_real?
-      t.cmd.doctor.unwritable_directory(dir)
+      t('cmd.doctor.unwritable_directory', :path => dir)
     end
   end
 end
@@ -350,7 +355,7 @@ end
 
 def check_access_logs
   if HOMEBREW_LOGS.exist? and not HOMEBREW_LOGS.writable_real?
-    t.cmd.doctor.unwritable_access_logs(HOMEBREW_LOGS)
+    t('cmd.doctor.unwritable_access_logs', :path => HOMEBREW_LOGS)
   end
 end
 
@@ -387,13 +392,16 @@ end
 def check_ruby_version
   ruby_version = MacOS.version >= "10.9" ? "2.0" : "1.8"
   if RUBY_VERSION[/\d\.\d/] != ruby_version
-    t.cmd.doctor.unsupported_ruby(RUBY_VERSION, MacOS.version, ruby_version)
+    t('cmd.doctor.unsupported_ruby',
+      :unsupported_ruby => RUBY_VERSION,
+      :macos_version => MacOS.version,
+      :supported_ruby => ruby_version)
   end
 end
 
 def check_homebrew_prefix
   unless HOMEBREW_PREFIX.to_s == '/usr/local'
-    t.cmd.doctor.homebrew_not_in_usr_local
+    t('cmd.doctor.homebrew_not_in_usr_local')
   end
 end
 
@@ -401,7 +409,7 @@ def check_xcode_prefix
   prefix = MacOS::Xcode.prefix
   return if prefix.nil?
   if prefix.to_s.match(' ')
-    t.cmd.doctor.xcode_prefix_has_space
+    t('cmd.doctor.xcode_prefix_has_space')
   end
 end
 
@@ -409,7 +417,7 @@ def check_xcode_prefix_exists
   prefix = MacOS::Xcode.prefix
   return if prefix.nil?
   unless prefix.exist?
-    t.cmd.doctor.xcode_prefix_nonexistent(prefix)
+    t('cmd.doctor.xcode_prefix_nonexistent', :path => prefix)
   end
 end
 
@@ -417,7 +425,7 @@ def check_xcode_select_path
   if not MacOS::CLT.installed? and not File.file? "#{MacOS.active_developer_dir}/usr/bin/xcodebuild"
     path = MacOS::Xcode.bundle_path
     path = '/Developer' if path.nil? or not path.directory?
-    t.cmd.doctor.xcode_select_path_invalid(path)
+    t('cmd.doctor.xcode_select_path_invalid', :path => path)
   end
 end
 
@@ -438,9 +446,10 @@ def check_user_path_1
             select{ |bn| File.exist? "/usr/bin/#{bn}" }
 
         if conflicts.size > 0
-          out = t.cmd.doctor.user_path_out_of_order("#{HOMEBREW_PREFIX}/bin",
-                                                    conflicts * "\n                ",
-                                                    shell_profile)
+          out = t('cmd.doctor.user_path_out_of_order',
+                  :path => "#{HOMEBREW_PREFIX}/bin",
+                  :conflicts => conflicts * "\n                ",
+                  :shell_profile => shell_profile)
         end
       end
     when "#{HOMEBREW_PREFIX}/bin"
@@ -454,8 +463,9 @@ end
 
 def check_user_path_2
   unless $seen_prefix_bin
-    t.cmd.doctor.user_path_has_no_homebrew_bin("#{HOMEBREW_PREFIX}/bin",
-                                               shell_profile)
+    t('cmd.doctor.user_path_has_no_homebrew_bin',
+      :path => "#{HOMEBREW_PREFIX}/bin",
+      :shell_profile => shell_profile)
   end
 end
 
@@ -464,15 +474,16 @@ def check_user_path_3
   sbin = (HOMEBREW_PREFIX+'sbin')
   if sbin.directory? and sbin.children.length > 0
     unless $seen_prefix_sbin
-      t.cmd.doctor.user_path_has_no_homebrew_sbin("#{HOMEBREW_PREFIX}/sbin",
-                                                  shell_profile)
+      t('cmd.doctor.user_path_has_no_homebrew_sbin',
+        :path => "#{HOMEBREW_PREFIX}/sbin",
+        :shell_profile => shell_profile)
     end
   end
 end
 
 def check_user_curlrc
   if %w[CURL_HOME HOME].any?{|key| ENV[key] and File.exist? "#{ENV[key]}/.curlrc" }
-    t.cmd.doctor.user_curlrc_exists
+    t('cmd.doctor.user_curlrc_exists')
   end
 end
 
@@ -482,9 +493,9 @@ def check_which_pkg_config
 
   mono_config = Pathname.new("/usr/bin/pkg-config")
   if mono_config.exist? && mono_config.realpath.to_s.include?("Mono.framework")
-    t.cmd.doctor.non_homebrew_pkgconfig_mono(mono_config.realpath)
+    t('cmd.doctor.non_homebrew_pkgconfig_mono', :path => mono_config.realpath)
   elsif binary.to_s != "#{HOMEBREW_PREFIX}/bin/pkg-config"
-    t.cmd.doctor.non_homebrew_pkgconfig(binary)
+    t('cmd.doctor.non_homebrew_pkgconfig', :path => binary)
   end
 end
 
@@ -501,7 +512,7 @@ def check_for_gettext
     Pathname.new(path).realpath.to_s.start_with? "#{HOMEBREW_CELLAR}/gettext"
   end
 
-  s = t.cmd.doctor.non_homebrew_gettext
+  s = t('cmd.doctor.non_homebrew_gettext')
   inject_file_list(@found, s)
 end
 
@@ -509,12 +520,12 @@ def check_for_iconv
   unless find_relative_paths("lib/libiconv.dylib", "include/iconv.h").empty?
     if (f = Formulary.factory("libiconv") rescue nil) and f.linked_keg.directory?
       if not f.keg_only?
-        t.cmd.doctor.libiconv_formula_linked
+        t('cmd.doctor.libiconv_formula_linked')
       else
         # NOOP because: check_for_linked_keg_only_brews
       end
     else
-      s = t.cmd.doctor.libiconv_not_in_usr
+      s = t('cmd.doctor.libiconv_not_in_usr')
       inject_file_list(@found, s)
     end
   end
@@ -544,7 +555,7 @@ def check_for_config_scripts
   end
 
   unless scripts.empty?
-    s = t.cmd.doctor.stray_config_scripts
+    s = t('cmd.doctor.stray_config_scripts')
     s << scripts.map { |f| "  #{f}" }.join("\n")
   end
 end
@@ -552,10 +563,12 @@ end
 def check_DYLD_vars
   found = ENV.keys.grep(/^DYLD_/)
   unless found.empty?
-    s = t.cmd.doctor.dyld_vars_are_set
-    s << found.map { |e| t.cmd.doctor.dyld_vars_are_set_2(e, ENV.fetch(e)) }.join
+    s = t('cmd.doctor.dyld_vars_are_set')
+    s << found.map do |e|
+      t('cmd.doctor.dyld_vars_are_set_2', :var => e, :value => ENV.fetch(e))
+    end.join
     if found.include? 'DYLD_INSERT_LIBRARIES'
-      s += t.cmd.doctor.dyld_vars_have_go_conflict
+      s += t('cmd.doctor.dyld_vars_have_go_conflict')
     end
     s
   end
@@ -564,7 +577,9 @@ end
 def check_for_symlinked_cellar
   return unless HOMEBREW_CELLAR.exist?
   if HOMEBREW_CELLAR.symlink?
-    t.cmd.doctor.symlinked_cellar_found(HOMEBREW_CELLAR, HOMEBREW_CELLAR.realpath)
+    t('cmd.doctor.symlinked_cellar_found',
+      :symlink => HOMEBREW_CELLAR,
+      :real_path => HOMEBREW_CELLAR.realpath)
   end
 end
 
@@ -584,7 +599,7 @@ def check_for_multiple_volumes
   Dir.delete tmp
 
   unless where_cellar == where_temp
-    t.cmd.doctor.cellar_and_temp_not_same_vol
+    t('cmd.doctor.cellar_and_temp_not_same_vol')
   end
 end
 
@@ -603,7 +618,8 @@ def check_filesystem_case_sensitive
     dir.exist? && !(upcased.exist? && downcased.exist?)
   end.map { |case_sensitive_dir| volumes.get_mounts(case_sensitive_dir) }.uniq
   return if case_sensitive_vols.empty?
-  t.cmd.doctor.filesystem_case_sensitive(case_sensitive_vols.join(","))
+  t('cmd.doctor.filesystem_case_sensitive',
+    :paths => case_sensitive_vols.join(","))
 end
 
 def __check_git_version
@@ -611,7 +627,7 @@ def __check_git_version
   `git --version`.chomp =~ /git version ((?:\d+\.?)+)/
 
   if $1 and Version.new($1) < Version.new("1.7.10")
-    t.cmd.doctor.git_outdated
+    t('cmd.doctor.git_outdated')
   end
 end
 
@@ -619,7 +635,7 @@ def check_for_git
   if git?
     __check_git_version
   else
-    t.cmd.doctor.git_not_found
+    t('cmd.doctor.git_not_found')
   end
 end
 
@@ -629,7 +645,7 @@ def check_git_newline_settings
   autocrlf = `git config --get core.autocrlf`.chomp
 
   if autocrlf == 'true'
-    t.cmd.doctor.git_autocrlf_settings(autocrlf)
+    t('cmd.doctor.git_autocrlf_settings', :value => autocrlf)
   end
 end
 
@@ -640,9 +656,9 @@ def check_git_origin
     origin = `git config --get remote.origin.url`.strip
 
     if origin.empty?
-      t.cmd.doctor.git_remote_no_origin(HOMEBREW_REPOSITORY)
+      t('cmd.doctor.git_remote_no_origin', :path => HOMEBREW_REPOSITORY)
     elsif origin !~ /(mxcl|Homebrew)\/homebrew(\.git)?$/
-      t.cmd.doctor.git_remote_origin_suspect(origin)
+      t('cmd.doctor.git_remote_origin_suspect', :origin => origin)
     end
   end
 end
@@ -653,7 +669,7 @@ def check_for_autoconf
   autoconf = which('autoconf')
   safe_autoconfs = %w[/usr/bin/autoconf /Developer/usr/bin/autoconf]
   unless autoconf.nil? or safe_autoconfs.include? autoconf.to_s
-    t.cmd.doctor.autoconf_xcode(autoconf)
+    t('cmd.doctor.autoconf_xcode', :path => autoconf)
   end
 end
 
@@ -690,7 +706,7 @@ def check_for_linked_keg_only_brews
   end
 
   unless warnings.empty?
-    s = t.cmd.doctor.keg_only_formula_linked
+    s = t('cmd.doctor.keg_only_formula_linked')
     warnings.each_key { |f| s << "    #{f}\n" }
     s
   end
@@ -701,12 +717,14 @@ def check_for_other_frameworks
   %w{expat.framework libexpat.framework libcurl.framework}.
     map{ |frmwrk| "/Library/Frameworks/#{frmwrk}" }.
     select{ |frmwrk| File.exist? frmwrk }.
-    map { |frmwrk| t.cmd.doctor.other_framework_detected(frmwrk) }.join
+    map { |frmwrk| t('cmd.doctor.other_framework_detected', :framework => frmwrk) }.join
 end
 
 def check_tmpdir
   tmpdir = ENV['TMPDIR']
-  t.cmd.doctor.tmpdir_doesnt_exist(tmpdir.inspect) unless tmpdir.nil? or File.directory? tmpdir
+  unless tmpdir.nil? or File.directory? tmpdir
+    t('cmd.doctor.tmpdir_doesnt_exist', :path => tmpdir.inspect)
+  end
 end
 
 def check_missing_deps
@@ -717,7 +735,7 @@ def check_missing_deps
   end
 
   if missing.any?
-    t.cmd.doctor.missing_deps(missing.sort_by(&:name) * " ")
+    t('cmd.doctor.missing_deps', :deps => missing.sort_by(&:name) * " ")
   end
 end
 
@@ -725,26 +743,26 @@ def check_git_status
   return unless git?
   HOMEBREW_REPOSITORY.cd do
     unless `git status --untracked-files=all --porcelain -- Library/Homebrew/ 2>/dev/null`.chomp.empty?
-      t.cmd.doctor.uncommitted_mods(HOMEBREW_LIBRARY)
+      t('cmd.doctor.uncommitted_mods', :path => HOMEBREW_LIBRARY)
     end
   end
 end
 
 def check_git_ssl_verify
   if MacOS.version <= :leopard && !ENV['GIT_SSL_NO_VERIFY']
-    t.cmd.doctor.osx_libcurl_outdated(MacOS.version)
+    t('cmd.doctor.osx_libcurl_outdated', :macos_version => MacOS.version)
   end
 end
 
 def check_for_enthought_python
   if which "enpkg"
-    t.cmd.doctor.enthought_python_in_path
+    t('cmd.doctor.enthought_python_in_path')
   end
 end
 
 def check_for_library_python
   if File.exist?("/Library/Frameworks/Python.framework")
-    t.cmd.doctor.python_in_library_frameworks
+    t('cmd.doctor.python_in_library_frameworks')
   end
 end
 
@@ -752,11 +770,14 @@ def check_for_old_homebrew_share_python_in_path
   s = ''
   ['', '3'].map do |suffix|
     if paths.include?((HOMEBREW_PREFIX/"share/python#{suffix}").to_s)
-      s += t.cmd.doctor.old_share_python_in_path(HOMEBREW_PREFIX, suffix)
+      s += t('cmd.doctor.old_share_python_in_path',
+             :path_prefix => HOMEBREW_PREFIX,
+             :python_suffix => suffix)
     end
   end
   unless s.empty?
-    s += t.cmd.doctor.old_share_python_in_path_more(HOMEBREW_PREFIX)
+    s += t('cmd.doctor.old_share_python_in_path_more',
+           :path_prefix => HOMEBREW_PREFIX)
   end
 end
 
@@ -766,25 +787,25 @@ def check_for_bad_python_symlink
   # This won't be the right warning if we matched nothing at all
   return if $1.nil?
   unless $1 == "2"
-    t.cmd.doctor.python_bad_symlink("python#$1")
+    t('cmd.doctor.python_bad_symlink', :python_bin => "python#$1")
   end
 end
 
 def check_for_non_prefixed_coreutils
   gnubin = "#{Formulary.factory('coreutils').prefix}/libexec/gnubin"
   if paths.include? gnubin
-    t.cmd.doctor.non_prefixed_coreutils if paths.include? gnubin
+    t('cmd.doctor.non_prefixed_coreutils') if paths.include? gnubin
   end
 end
 
 def check_for_non_prefixed_findutils
   default_names = Tab.for_name('findutils').with? "default-names"
-  t.cmd.doctor.non_prefixed_findutils if default_names
+  t('cmd.doctor.non_prefixed_findutils') if default_names
 end
 
 def check_for_pydistutils_cfg_in_home
   if File.exist? "#{ENV['HOME']}/.pydistutils.cfg"
-    t.cmd.doctor.pydistutils_cfg_in_home
+    t('cmd.doctor.pydistutils_cfg_in_home')
   end
 end
 
@@ -805,7 +826,7 @@ def check_for_outdated_homebrew
       HOMEBREW_LIBRARY.mtime.to_i
     end
 
-    t.cmd.doctor.homebrew_is_outdated if Time.now.to_i - timestamp > 60 * 60 * 24
+    t('cmd.doctor.homebrew_is_outdated') if Time.now.to_i - timestamp > 60 * 60 * 24
   end
 end
 
@@ -826,7 +847,7 @@ def check_for_unlinked_but_not_keg_only
   end.map{ |pn| pn.basename }
 
   if not unlinked.empty?
-    t.cmd.doctor.unlinked_kegs_in_cellar(unlinked * "\n        ")
+    t('cmd.doctor.unlinked_kegs_in_cellar', :kegs => unlinked * "\n        ")
   end
 end
 
@@ -834,7 +855,7 @@ end
     # If the user installs Xcode-only, they have to approve the
     # license or no "xc*" tool will work.
     if `/usr/bin/xcrun clang 2>&1` =~ /license/ and not $?.success?
-      t.cmd.doctor.xcode_license_not_agreed
+      t('cmd.doctor.xcode_license_not_agreed')
     end
   end
 
@@ -847,11 +868,13 @@ end
 
     return if installed_version >= latest_version
 
-    t.cmd.doctor.xquartz_is_outdated(installed_version, latest_version)
+    t('cmd.doctor.xquartz_is_outdated',
+      :installed_version => installed_version,
+      :latest_version => latest_version)
   end
 
   def check_for_old_env_vars
-    t.cmd.doctor.old_env_var_homebrew_keep_info if ENV["HOMEBREW_KEEP_INFO"]
+    t('cmd.doctor.old_env_var_homebrew_keep_info') if ENV["HOMEBREW_KEEP_INFO"]
   end
 
   def check_for_pth_support

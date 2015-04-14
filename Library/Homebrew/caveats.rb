@@ -32,13 +32,13 @@ class Caveats
 
   def bash_completion_caveats
     if keg and keg.completion_installed? :bash
-      t.caveats.bash_completion("#{HOMEBREW_PREFIX}/etc/bash_completion.d")
+      t('caveats.bash_completion', :path => "#{HOMEBREW_PREFIX}/etc/bash_completion.d")
     end
   end
 
   def zsh_completion_caveats
     if keg and keg.completion_installed? :zsh
-      t.caveats.zsh_completion("#{HOMEBREW_PREFIX}/share/zsh/site-functions")
+      t('caveats.zsh_completion', :path => "#{HOMEBREW_PREFIX}/share/zsh/site-functions")
     end
   end
 
@@ -58,8 +58,8 @@ class Caveats
     if f.keg_only?
       keg_site_packages = f.opt_prefix/"lib/python2.7/site-packages"
       unless Language::Python.in_sys_path?("python", keg_site_packages)
-        s = t.caveats.python_find_keg_bindings(
-              "echo #{keg_site_packages} >> #{homebrew_site_packages/f.name}.pth"
+        s = t('caveats.python_find_keg_bindings',
+              :cmd => "echo #{keg_site_packages} >> #{homebrew_site_packages/f.name}.pth"
             )
         s += instructions unless Language::Python.reads_brewed_pth_files?("python")
       end
@@ -69,15 +69,15 @@ class Caveats
     return if Language::Python.reads_brewed_pth_files?("python")
 
     if !Language::Python.in_sys_path?("python", homebrew_site_packages)
-      s = t.caveats.python_modules_installed + instructions
+      s = t('caveats.python_modules_installed') + instructions
     elsif keg.python_pth_files_installed?
-      s = t.caveats.python_pth_files_installed + instructions
+      s = t('caveats.python_pth_files_installed') + instructions
     end
     s
   end
 
   def app_caveats
-    t.caveats.app(keg.name) if keg and keg.app_installed?
+    t('caveats.app', :name => keg.name) if keg and keg.app_installed?
   end
 
   def plist_caveats
@@ -102,16 +102,16 @@ class Caveats
       # https://github.com/Homebrew/homebrew/issues/33815
       if !plist_path.file? || !plist_path.symlink?
         if f.plist_startup
-          s << t.caveats.plist_startup(f.name)
+          s << t('caveats.plist_startup', :name => f.name)
           s << "    sudo mkdir -p #{destination}" unless destination_path.directory?
           s << "    sudo cp -fv #{f.opt_prefix}/*.plist #{destination}"
           s << "    sudo chown root #{plist_link}"
         else
-          s << t.caveats.plist_login(f.name)
+          s << t('caveats.plist_login', :name => f.name)
           s << "    mkdir -p #{destination}" unless destination_path.directory?
           s << "    ln -sfv #{f.opt_prefix}/*.plist #{destination}"
         end
-        s << t.caveats.plist_then_load(f.name)
+        s << t('caveats.plist_then_load', :name => f.name)
         if f.plist_startup
           s << "    sudo launchctl load #{plist_link}"
         else
@@ -120,26 +120,26 @@ class Caveats
       # For startup plists, we cannot tell whether it's running on launchd,
       # as it requires for `sudo launchctl list` to get real result.
       elsif f.plist_startup
-          s << t.caveats.plist_upgrade(f.name)
+          s << t('caveats.plist_upgrade', :name => f.name)
           s << "    sudo launchctl unload #{plist_link}"
           s << "    sudo cp -fv #{f.opt_prefix}/*.plist #{destination}"
           s << "    sudo chown root #{plist_link}"
           s << "    sudo launchctl load #{plist_link}"
       elsif Kernel.system "/bin/launchctl list #{plist_domain} &>/dev/null"
-          s << t.caveats.plist_upgrade(f.name)
+          s << t('caveats.plist_upgrade', :name => f.name)
           s << "    launchctl unload #{plist_link}"
           s << "    launchctl load #{plist_link}"
       else
-          s << t.caveats.plist_load(f.name)
+          s << t('caveats.plist_load', :name => f.name)
           s << "    launchctl load #{plist_link}"
       end
 
       if f.plist_manual
-        s << t.caveats.plist_manual
+        s << t('caveats.plist_manual')
         s << "    #{f.plist_manual}"
       end
 
-      s << "" << t.caveats.plist_tmux_warning if ENV['TMUX']
+      s << "" << t('caveats.plist_tmux_warning') if ENV['TMUX']
     end
     s.join("\n") unless s.empty?
   end

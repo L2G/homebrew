@@ -68,7 +68,9 @@ class FormulaInstaller
 
     unless bottle.compatible_cellar?
       if install_bottle_options[:warn]
-        opoo t.formula_installer.cellar_bottle(formula.name, bottle.cellar)
+        opoo t('formula_installer.cellar_bottle',
+               :name => formula.name,
+               :cellar => bottle.cellar)
       end
       return false
     end
@@ -115,7 +117,9 @@ class FormulaInstaller
       end
       unless unlinked_deps.empty?
         raise CannotInstallFormulaError,
-              t.formula_installer.must_link_deps(unlinked_deps * ' ', formula.name)
+              t('formula_installer.must_link_deps',
+                :deps => unlinked_deps * ' ',
+                :name => formula.name)
       end
     end
   end
@@ -139,8 +143,9 @@ class FormulaInstaller
     if formula.linked_keg.directory?
       # some other version is already installed *and* linked
       raise CannotInstallFormulaError,
-            t.formula_installer.already_installed_unlink(
-              formula.name, formula.linked_keg.resolved_path.basename
+            t('formula_installer.already_installed_unlink',
+              :name => formula.name,
+              :linked_name => formula.linked_keg.resolved_path.basename
             )
     end
 
@@ -151,16 +156,22 @@ class FormulaInstaller
     return if only_deps?
 
     if build_bottle? && (arch = ARGV.bottle_arch) && !Hardware::CPU.optimization_flags.include?(arch)
-      raise t.formula_installer.unrecognized_bottle_arch(arch)
+      raise t('formula_installer.unrecognized_bottle_arch', :arch => arch)
     end
 
     formula.deprecated_flags.each do |deprecated_option|
       old_flag = deprecated_option.old_flag
       new_flag = deprecated_option.current_flag
-      opoo t.formula_installer.deprecated_flag(formula.name, old_flag, new_flag)
+      opoo t('formula_installer.deprecated_flag',
+             :name => formula.name,
+             :old_flag => old_flag,
+             :new_flag => new_flag)
     end
 
-    oh1 t.formula_installer.installing("#{Tty.green}#{formula.name}#{Tty.reset}") if show_header?
+    if show_header?
+      oh1 t('formula_installer.installing',
+            :name_in_green => "#{Tty.green}#{formula.name}#{Tty.reset}")
+    end
 
     @@attempted << formula
 
@@ -171,7 +182,7 @@ class FormulaInstaller
         raise if ARGV.homebrew_developer?
         @pour_failed = true
         onoe e.message
-        opoo t.formula_installer.bottle_install_fail
+        opoo t('formula_installer.bottle_install_fail')
       else
         @poured_bottle = true
       end
@@ -187,7 +198,9 @@ class FormulaInstaller
 
     build_bottle_postinstall if build_bottle?
 
-    opoo t.formula_installer.nothing_installed_to(formula.prefix) unless formula.installed?
+    unless formula.installed?
+      opoo t('formula_installer.nothing_installed_to', :path => formula.prefix)
+    end
   end
 
   def check_conflicts
@@ -216,7 +229,7 @@ class FormulaInstaller
     deps = expand_dependencies(req_deps + formula.deps)
 
     if deps.empty? and only_deps?
-      puts t.formula_installer.all_deps_satisfied(formula.name)
+      puts t('formula_installer.all_deps_satisfied', :name => formula.name)
     else
       install_dependencies(deps)
     end
@@ -227,7 +240,9 @@ class FormulaInstaller
 
     req_map.each_pair do |dependent, reqs|
       reqs.each do |req|
-        puts t.formula_installer.dep_message(dependent, req.message)
+        puts t('formula_installer.dep_message',
+               :dep => dependent,
+               :message => req.message)
         fatals << req if req.fatal?
       end
     end
@@ -310,8 +325,9 @@ class FormulaInstaller
 
   def install_dependencies(deps)
     if deps.length > 1
-      oh1 t.formula_installer.installing_deps_for(
-            formula.name, "#{Tty.green}#{deps.map(&:first)*', '}#{Tty.reset}"
+      oh1 t('formula_installer.installing_deps_for',
+            :name => formula.name,
+            :deps_in_green => "#{Tty.green}#{deps.map(&:first)*', '}#{Tty.reset}"
           )
     end
 
@@ -356,8 +372,9 @@ class FormulaInstaller
     fi.verbose            = verbose? && !quieter?
     fi.debug              = debug?
     fi.prelude
-    oh1 t.formula_installer.installing_dep_for(
-          formula.name, "#{Tty.green}#{dep.name}#{Tty.reset}"
+    oh1 t('formula_installer.installing_dep_for',
+          :name => formula.name,
+          :dep_in_green => "#{Tty.green}#{dep.name}#{Tty.reset}"
         )
     fi.install
     fi.caveats
@@ -381,14 +398,14 @@ class FormulaInstaller
 
     unless c.empty?
       @show_summary_heading = true
-      ohai t.formula_installer.caveats, c.caveats
+      ohai t('formula_installer.caveats'), c.caveats
     end
   end
 
   def finish
     return if only_deps?
 
-    ohai t.formula_installer.finishing_up if verbose?
+    ohai t('formula_installer.finishing_up') if verbose?
 
     install_plist
 
@@ -403,25 +420,28 @@ class FormulaInstaller
       post_install
     end
 
-    ohai t.formula_installer.summary_title if verbose? or show_summary_heading?
+    ohai t('formula_installer.summary_title') if verbose? or show_summary_heading?
     puts summary
   ensure
     unlock if hold_locks?
   end
 
   def emoji
-    ENV['HOMEBREW_INSTALL_BADGE'] || t.formula_installer.install_badge
+    ENV['HOMEBREW_INSTALL_BADGE'] || t('formula_installer.install_badge')
   end
 
   def summary
     s = ""
     s << "#{emoji}  " if MacOS.version >= :lion and not ENV['HOMEBREW_NO_EMOJI']
     if build_time
-      s << t.formula_installer.summary_with_build_time(formula.prefix,
-                                                       formula.prefix.abv,
-                                                       pretty_duration(build_time))
+      s << t('formula_installer.summary_with_build_time',
+             :path => formula.prefix,
+             :path_info => formula.prefix.abv,
+             :build_time => pretty_duration(build_time))
     else
-      s << t.formula_installer.summary(formula.prefix, formula.prefix.abv)
+      s << t('formula_installer.summary',
+             :path => formula.prefix,
+             :path_info => formula.prefix.abv)
     end
     s
   end
@@ -509,10 +529,10 @@ class FormulaInstaller
       Process.wait(pid)
       raise Marshal.load(data) unless data.nil? or data.empty?
       raise Interrupt if $?.exitstatus == 130
-      raise t.formula_installer.suspicious_install_fail unless $?.success?
+      raise t('formula_installer.suspicious_install_fail') unless $?.success?
     end
 
-    raise t.formula_installer.empty_installation if Dir["#{formula.prefix}/*"].empty?
+    raise t('formula_installer.empty_installation') if Dir["#{formula.prefix}/*"].empty?
 
   rescue Exception
     ignore_interrupts do
@@ -528,8 +548,9 @@ class FormulaInstaller
       begin
         keg.optlink
       rescue Keg::LinkError => e
-        onoe t.formula_installer.failed_to_create_1(formula.opt_prefix)
-        puts t.formula_installer.failed_to_create_2(formula.name)
+        onoe t('formula_installer.failed_to_create_1',
+               :path => formula.opt_prefix)
+        puts t('formula_installer.failed_to_create_2', :name => formula.name)
         puts e
         Homebrew.failed = true
       end
@@ -537,33 +558,34 @@ class FormulaInstaller
     end
 
     if keg.linked?
-      opoo t.formula_installer.keg_already_linked
+      opoo t('formula_installer.keg_already_linked')
       keg.remove_linked_keg_record
     end
 
     begin
       keg.link
     rescue Keg::ConflictError => e
-      onoe t.formula_installer.brew_link_not_complete
-      puts t.formula_installer.brew_link_error_2(HOMEBREW_PREFIX)
+      onoe t('formula_installer.brew_link_not_complete')
+      puts t('formula_installer.brew_link_error_2', :path => HOMEBREW_PREFIX)
       puts e
       puts
-      puts t.formula_installer.brew_link_possible_conflict
+      puts t('formula_installer.brew_link_possible_conflict')
       mode = OpenStruct.new(:dry_run => true, :overwrite => true)
       keg.link(mode)
       @show_summary_heading = true
       Homebrew.failed = true
     rescue Keg::LinkError => e
-      onoe t.formula_installer.brew_link_not_complete
-      puts t.formula_installer.brew_link_error_2(HOMEBREW_PREFIX)
+      onoe t('formula_installer.brew_link_not_complete')
+      puts t('formula_installer.brew_link_error_2', :path => HOMEBREW_PREFIX)
       puts e
       puts
-      puts t.formula_installer.brew_link_try_again_with(formula.name)
+      puts t('formula_installer.brew_link_try_again_with',
+             :name => formula.name)
       @show_summary_heading = true
       Homebrew.failed = true
     rescue Exception => e
-      onoe t.formula_installer.brew_link_error_1
-      puts t.formula_installer.brew_link_error_2(HOMEBREW_PREFIX)
+      onoe t('formula_installer.brew_link_error_1')
+      puts t('formula_installer.brew_link_error_2', :path => HOMEBREW_PREFIX)
       puts e
       puts e.backtrace if debug?
       @show_summary_heading = true
@@ -580,7 +602,7 @@ class FormulaInstaller
     log = formula.var/"log"
     log.mkpath if formula.plist.include? log.to_s
   rescue Exception => e
-    onoe t.formula_installer.install_plist_failed
+    onoe t('formula_installer.install_plist_failed')
     ohai e, e.backtrace if debug?
     Homebrew.failed = true
   end
@@ -593,19 +615,19 @@ class FormulaInstaller
         Keg::CELLAR_PLACEHOLDER, HOMEBREW_CELLAR.to_s, :keg_only => formula.keg_only?
     end
   rescue Exception => e
-    onoe t.formula_installer.fix_install_names_fail_1
-    puts t.formula_installer.fix_install_names_fail_2
+    onoe t('formula_installer.fix_install_names_fail_1')
+    puts t('formula_installer.fix_install_names_fail_2')
     ohai e, e.backtrace if debug?
     Homebrew.failed = true
     @show_summary_heading = true
   end
 
   def clean
-    ohai t.formula_installer.cleaning if verbose?
+    ohai t('formula_installer.cleaning') if verbose?
     Cleaner.new(formula).clean
   rescue Exception => e
-    opoo t.formula_installer.cleaning_not_complete_1
-    puts t.formula_installer.cleaning_not_complete_2
+    opoo t('formula_installer.cleaning_not_complete_1')
+    puts t('formula_installer.cleaning_not_complete_2')
     ohai e, e.backtrace if debug?
     Homebrew.failed = true
     @show_summary_heading = true
@@ -614,8 +636,8 @@ class FormulaInstaller
   def post_install
     formula.run_post_install
   rescue Exception => e
-    opoo t.formula_installer.postinstall_fail_1
-    puts t.formula_installer.postinstall_fail_2(formula.name)
+    opoo t('formula_installer.postinstall_fail_1')
+    puts t('formula_installer.postinstall_fail_2', :name => formula.name)
     ohai e, e.backtrace if debug?
     Homebrew.failed = true
     @show_summary_heading = true
@@ -695,12 +717,16 @@ end
 
 class Formula
   def keg_only_text
-    s = t.formula_installer.keg_only_1(HOMEBREW_PREFIX)
+    s = t('formula_installer.keg_only_1', :path => HOMEBREW_PREFIX)
     s << "\n\n#{keg_only_reason.to_s}"
     if lib.directory? or include.directory?
-      s << t.formula_installer.keg_only_2
-      s << t.formula_installer.keg_only_ldflags(opt_lib) if lib.directory?
-      s << t.formula_installer.keg_only_cppflags(opt_include) if include.directory?
+      s << t('formula_installer.keg_only_2')
+      if lib.directory?
+        s << t('formula_installer.keg_only_ldflags', :path => opt_lib)
+      end
+      if include.directory?
+        s << t('formula_installer.keg_only_cppflags', :path => opt_include)
+      end
     end
     s << "\n"
   end

@@ -108,13 +108,13 @@ class VCSDownloadStrategy < AbstractDownloadStrategy
   end
 
   def fetch
-    ohai t.download_strategy.cloning(@url)
+    ohai t('download_strategy.cloning', :url => @url)
 
     if cached_location.exist? && repo_valid?
-      puts t.download_strategy.updating(cached_location)
+      puts t('download_strategy.updating', :path => cached_location)
       update
     elsif cached_location.exist?
-      puts t.download_strategy.removing_invalid_repo
+      puts t('download_strategy.removing_invalid_repo')
       clear_cache
       clone_repo
     else
@@ -133,7 +133,11 @@ class VCSDownloadStrategy < AbstractDownloadStrategy
 
   def stage
     # TODO (i18n): This may need multiple variants depending on ref_type
-    ohai t.download_strategy.checking_out(@ref_type, @ref) if @ref_type && @ref
+    if @ref_type && @ref
+      ohai t('download_strategy.checking_out',
+             :ref_type => @ref_type,
+             :ref => @ref)
+    end
   end
 
   def cached_location
@@ -209,7 +213,7 @@ class AbstractFileDownloadStrategy < AbstractDownloadStrategy
   def chdir
     entries = Dir['*']
     case entries.length
-    when 0 then raise t.download_strategy.empty_archive
+    when 0 then raise t('download_strategy.empty_archive')
     when 1 then Dir.chdir entries.first rescue nil
     end
   end
@@ -263,7 +267,7 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
   end
 
   def fetch
-    ohai t.download_strategy.downloading(@url)
+    ohai t('download_strategy.downloading', :url => @url)
     unless cached_location.exist?
       had_incomplete_download = temporary_path.exist?
       begin
@@ -272,7 +276,7 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
         # 33 == range not supported
         # try wiping the incomplete download and retrying once
         if $?.exitstatus == 33 && had_incomplete_download
-          ohai t.download_strategy.trying_full_download
+          ohai t('download_strategy.trying_full_download')
           temporary_path.unlink
           had_incomplete_download = false
           retry
@@ -282,11 +286,11 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
       end
       ignore_interrupts { temporary_path.rename(cached_location) }
     else
-      puts t.download_strategy.already_downloaded(cached_location)
+      puts t('download_strategy.already_downloaded', :path => cached_location)
     end
   rescue CurlDownloadStrategyError
     raise if mirrors.empty?
-    puts t.download_strategy.trying_mirror
+    puts t('download_strategy.trying_mirror')
     @url = mirrors.shift
     retry
   end
@@ -346,10 +350,10 @@ class CurlApacheMirrorDownloadStrategy < CurlDownloadStrategy
     mirrors = Utils::JSON.load(apache_mirrors)
     @url = mirrors.fetch('preferred') + mirrors.fetch('path_info')
 
-    ohai t.download_strategy.best_mirror(@url)
+    ohai t('download_strategy.best_mirror', :url => @url)
     super
   rescue IndexError, Utils::JSON::Error
-    raise CurlDownloadStrategyError, t.download_strategy.couldnt_determine_mirror
+    raise CurlDownloadStrategyError, t('download_strategy.couldnt_determine_mirror')
   end
 end
 
@@ -387,7 +391,7 @@ end
 # This strategy extracts our binary packages.
 class CurlBottleDownloadStrategy < CurlDownloadStrategy
   def stage
-    ohai t.download_strategy.pouring(cached_location.basename)
+    ohai t('download_strategy.pouring', :name => cached_location.basename)
     super
   end
 end
@@ -401,7 +405,7 @@ class LocalBottleDownloadStrategy < AbstractFileDownloadStrategy
   end
 
   def stage
-    ohai t.download_strategy.pouring(cached_location.basename)
+    ohai t('download_strategy.pouring', :name => cached_location.basename)
     super
   end
 end
@@ -421,12 +425,12 @@ class S3DownloadStrategy < CurlDownloadStrategy
     begin
       require 'aws-sdk-v1'
     rescue LoadError
-      onoe t.download_strategy.install_aws_sdk
+      onoe t('download_strategy.install_aws_sdk')
       raise
     end
 
     if @url !~ %r[^https?://+([^.]+).s3.amazonaws.com/+(.+)$] then
-      raise t.download_strategy.bad_s3_url(@url)
+      raise t('download_strategy.bad_s3_url', :url => @url)
     end
     (bucket,key) = $1,$2
 
@@ -434,7 +438,7 @@ class S3DownloadStrategy < CurlDownloadStrategy
     begin
       s3url = obj.url_for(:get)
     rescue AWS::Errors::MissingCredentialsError
-      ohai t.download_strategy.aws_creds_missing
+      ohai t('download_strategy.aws_creds_missing')
       s3url = obj.public_url
     end
 
@@ -814,7 +818,8 @@ class DownloadStrategyDetector
       detect_from_symbol(strategy)
     else
       raise TypeError,
-        t.download_strategy.unknown_download_strategy_spec(strategy.inspect)
+        t('download_strategy.unknown_download_strategy_spec',
+          :name => strategy.inspect)
     end
   end
 
@@ -858,7 +863,7 @@ class DownloadStrategyDetector
     when :post    then CurlPostDownloadStrategy
     when :fossil  then FossilDownloadStrategy
     else
-      raise t.download_strategy.unknown_download_strategy(strategy)
+      raise t('download_strategy.unknown_download_strategy', :name => strategy)
     end
   end
 end

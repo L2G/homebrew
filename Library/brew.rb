@@ -18,7 +18,7 @@ if ARGV.first == '--version'
   puts HOMEBREW_VERSION
   exit 0
 elsif ARGV.first == '-v'
-  puts t.brew.homebrew_version(HOMEBREW_VERSION)
+  puts t('brew.homebrew_version', :version => HOMEBREW_VERSION)
   # Shift the -v to the end of the parameter list
   ARGV << ARGV.shift
   # If no other arguments, just quit here.
@@ -29,20 +29,20 @@ end
 # many other things will hang
 # Note that this bug was fixed in 10.9
 if OS.mac? && MacOS.version < :mavericks && MacOS.active_developer_dir == "/"
-  odie t.brew.bad_xcode_path
+  odie t('brew.bad_xcode_path')
 end
 
 case HOMEBREW_PREFIX.to_s when '/', '/usr'
   # it may work, but I only see pain this route and don't want to support it
-  abort t.brew.refuse_root_or_usr(HOMEBREW_PREFIX)
+  abort t('brew.refuse_root_or_usr', :path => HOMEBREW_PREFIX)
 end
 if OS.mac? and MacOS.version < "10.5"
-  abort t.brew.no_tiger_support
+  abort t('brew.no_tiger_support')
 end
 
 # Many Pathname operations use getwd when they shouldn't, and then throw
 # odd exceptions. Reduce our support burden by showing a user-friendly error.
-Dir.getwd rescue abort t.brew.no_working_dir
+Dir.getwd rescue abort t('brew.no_working_dir')
 
 def require? path
   require path
@@ -92,7 +92,7 @@ begin
 
   if sudo_check.include? cmd
     if Process.uid.zero? and not File.stat(HOMEBREW_BREW_FILE).uid.zero?
-      raise t.brew.bad_sudo(cmd) + "\n" + SUDO_BAD_ERRMSG
+      raise t('brew.bad_sudo', :cmd => cmd) + "\n" + SUDO_BAD_ERRMSG
     end
   end
 
@@ -131,16 +131,16 @@ begin
   elsif (path = which("brew-#{cmd}.rb")) && require?(path)
     exit Homebrew.failed? ? 1 : 0
   else
-    onoe t.brew.unknown_command(cmd)
+    onoe t('brew.unknown_command', :cmd => cmd)
     exit 1
   end
 
 rescue FormulaUnspecifiedError
-  abort t.brew.formula_unspecified
+  abort t('brew.formula_unspecified')
 rescue KegUnspecifiedError
-  abort t.brew.keg_unspecified
+  abort t('brew.keg_unspecified')
 rescue UsageError
-  onoe t.brew.invalid_usage
+  onoe t('brew.invalid_usage')
   abort ARGV.usage
 rescue SystemExit
   puts "Kernel.exit" if ARGV.verbose?
@@ -158,7 +158,7 @@ rescue RuntimeError, SystemCallError => e
   exit 1
 rescue Exception => e
   onoe e
-  puts Tty.white + t.brew.please_report_bug
+  puts Tty.white + t('brew.please_report_bug')
   puts "    #{Tty.em}#{OS::ISSUES_URL}#{Tty.reset}"
   puts e.backtrace
   exit 1

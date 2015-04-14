@@ -58,7 +58,7 @@ def opoo warning
 end
 
 def onoe error
-  $stderr.puts "#{Tty.red}#{t('utils.error_1')}#{Tty.reset}#{t.utils.error_2} #{error}"
+  $stderr.puts "#{Tty.red}#{t('utils.error_1')}#{Tty.reset}#{t('utils.error_2')} #{error}"
 end
 
 def ofail error
@@ -72,12 +72,12 @@ def odie error
 end
 
 def pretty_duration s
-  return t.utils.seconds(s.to_i) if s < 120
-  return t.utils.minutes((s/6).to_i/10.0)
+  return t('utils.seconds', :count => s.to_i) if s < 120
+  return t('utils.minutes', :count => (s/6).to_i/10.0)
 end
 
 def plural n, s="s"
-  opoo t.utils.plural_called
+  opoo t('utils.plural_called')
   (n == 1) ? "" : s
 end
 
@@ -92,7 +92,7 @@ def interactive_shell f=nil
   if $?.success?
     return
   elsif $?.exited?
-    puts t.utils.interactive_shell_abort
+    puts t('utils.interactive_shell_abort')
     exit $?.exitstatus
   else
     raise $?.inspect
@@ -130,7 +130,10 @@ module Homebrew
     end
 
     unless which executable
-      odie t.utils.gem_installed_but_exec_not_in_path(gem, executable, ENV["PATH"])
+      odie t('utils.gem_installed_but_exec_not_in_path',
+             :gem => gem,
+             :executable => executable,
+             :path => ENV["PATH"])
     end
   end
 end
@@ -160,7 +163,9 @@ end
 
 def curl *args
   curl = Pathname.new '/usr/bin/curl'
-  raise t.utils.not_executable(curl) unless curl.exist? and curl.executable?
+  unless curl.exist? and curl.executable?
+    raise t('utils.not_executable', :path => curl)
+  end
 
   flags = HOMEBREW_CURL_ARGS
   flags = flags.delete("#") if ARGV.verbose?
@@ -179,7 +184,7 @@ def puts_columns items, star_items=[]
 
   if star_items && star_items.any?
     items = items.map do |item|
-      star_items.include?(item) ? t.utils.item_with_star(item) : item
+      star_items.include?(item) ? t('utils.item_with_star', :item => item) : item
     end
   end
 
@@ -218,7 +223,7 @@ def which_editor
   # Default to standard vim
   editor ||= "/usr/bin/vim"
 
-  opoo t.utils.using_editor_as_fallback(editor)
+  opoo t('utils.using_editor_as_fallback', :editor => editor)
 
   editor
 end
@@ -254,7 +259,7 @@ end
 
 def ignore_interrupts(opt = nil)
   std_trap = trap("INT") do
-    puts t.utils.cleaning_up unless opt == :quietly
+    puts t('utils.cleaning_up') unless opt == :quietly
   end
   yield
 ensure
@@ -281,7 +286,7 @@ def paths
     begin
       File.expand_path(p).chomp('/')
     rescue ArgumentError
-      onoe t.utils.path_component_invalid(p)
+      onoe t('utils.path_component_invalid', :path => p)
     end
   end.uniq.compact
 end
@@ -304,21 +309,25 @@ module GitHub extend self
 
   class RateLimitExceededError < Error
     def initialize(reset, error)
-      super t.utils.rate_limit_exceeded(error, pretty_ratelimit_reset(reset))
+      super t('utils.rate_limit_exceeded',
+              :error => error,
+              :duration => pretty_ratelimit_reset(reset))
     end
 
     def pretty_ratelimit_reset(reset)
       if (seconds = Time.at(reset) - Time.now) > 60
-        t.utils.rate_limit_time_m_s(t.utils.minutes(seconds / 60), t.utils.seconds(seconds % 60))
+        t('utils.rate_limit_time_m_s',
+          :n_minutes => t('utils.minutes', :count => seconds / 60),
+          :n_seconds => t('utils.seconds', :count => seconds % 60))
       else
-        t.utils.seconds(seconds)
+        t('utils.seconds', :count => seconds)
       end
     end
   end
 
   class AuthenticationFailedError < Error
     def initialize(error)
-      super t.utils.authentication_failed(error)
+      super t('utils.authentication_failed', :error => error)
     end
   end
 
@@ -340,9 +349,13 @@ module GitHub extend self
     rescue OpenURI::HTTPError => e
       handle_api_error(e)
     rescue EOFError, SocketError, OpenSSL::SSL::SSLError => e
-      raise Error, "#{t.utils.failed_to_connect(url)}\n#{e.message}", e.backtrace
+      raise Error,
+            t('utils.failed_to_connect', :url => url, :message => e.message),
+            e.backtrace
     rescue Utils::JSON::Error => e
-      raise Error, "#{t.utils.failed_to_parse_json}\n#{e.message}", e.backtrace
+      raise Error,
+            t('utils.failed_to_parse_json', :message => e.message),
+            e.backtrace
     end
   end
 
@@ -399,22 +412,26 @@ module GitHub extend self
 
   def print_pull_requests_matching(query)
     return [] if ENV['HOMEBREW_NO_GITHUB_API']
-    puts t.utils.searching_pull_requests
+    puts t('utils.searching_pull_requests')
 
     open_or_closed_prs = issues_matching(query, :type => "pr")
 
     open_prs = open_or_closed_prs.select {|i| i["state"] == "open" }
     if open_prs.any?
-      puts t.utils.open_pull_requests
+      puts t('utils.open_pull_requests')
       prs = open_prs
     elsif open_or_closed_prs.any?
-      puts t.utils.closed_pull_requests
+      puts t('utils.closed_pull_requests')
       prs = open_or_closed_prs
     else
       return
     end
 
-    prs.each { |i| puts t.utils.pull_request_with_url(i["title"], i["html_url"]) }
+    prs.each do |i|
+      puts t('utils.pull_request_with_url',
+             :title => i["title"],
+             :html_url => i["html_url"])
+    end
   end
 
   def private_repo?(user, repo)

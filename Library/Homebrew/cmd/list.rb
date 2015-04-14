@@ -100,7 +100,7 @@ class PrettyListing
       else
         if pn.directory?
           if pn.symlink?
-            puts t.cmd.list.symlink(pn, pn.readlink)
+            puts t('cmd.list.symlink', :symlink => pn, :target => pn.readlink)
           else
             print_dir pn
           end
@@ -144,9 +144,9 @@ class PrettyListing
       puts files
     else
       if other
-        puts t.cmd.list.other_files(files.length, root)
+        puts t('cmd.list.other_files', :count => files.length, :path => root)
       else
-        puts t.cmd.list.files(files.length, root)
+        puts t('cmd.list.files', :count => files.length, :path => root)
       end
     end
   end

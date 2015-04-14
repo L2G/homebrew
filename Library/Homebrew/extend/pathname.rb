@@ -18,13 +18,15 @@ class Pathname
         src.resource.stage { install(*src.files) }
       when Array
         if src.empty?
-          opoo t[:extend].pathname.tried_to_install_empty_array_to(self)
+          opoo t('extend.pathname.tried_to_install_empty_array_to',
+                 :path => self)
           return
         end
         src.each { |s| install_p(s, File.basename(s)) }
       when Hash
         if src.empty?
-          opoo t[:extend].pathname.tried_to_install_empty_hash_to(self)
+          opoo t('extend.pathname.tried_to_install_empty_hash_to',
+                 :path => self)
           return
         end
         src.each { |s, new_basename| install_p(s, new_basename) }
@@ -80,7 +82,7 @@ class Pathname
   # we assume this pathname object is a file obviously
   alias_method :old_write, :write if method_defined?(:write)
   def write(content, *open_args)
-    raise t[:extend].pathname.will_not_overwrite(to_s) if exist?
+    raise t('extend.pathname.will_not_overwrite', :path => to_s) if exist?
     dirname.mkpath
     open("w", *open_args) { |f| f.write(content) }
   end
@@ -142,11 +144,13 @@ class Pathname
   end
 
   def cp_path_sub pattern, replacement
-    raise t[:extend].pathname.does_not_exist(self) unless self.exist?
+    raise t('extend.pathname.does_not_exist', :path => self) unless self.exist?
 
     dst = sub(pattern, replacement)
 
-    raise t[:extend].pathname.same_file(self, dst) if self == dst
+    if self == dst
+      raise t('extend.pathname.same_file', :path => self, :other => dst)
+    end
 
     if directory?
       dst.mkpath
@@ -340,7 +344,7 @@ class Pathname
   def write_exec_script *targets
     targets.flatten!
     if targets.empty?
-      opoo t[:extend].pathname.exec_scripts_empty_targets(self)
+      opoo t('extend.pathname.exec_scripts_empty_targets', :path => self)
       return
     end
     mkpath
@@ -401,7 +405,7 @@ class Pathname
   def abv
     out = ""
     n = Utils.popen_read("find", expand_path.to_s, "-type", "f", "!", "-name", ".DS_Store").split("\n").size
-    out << t[:extend].pathname.files(n) if n > 1
+    out << t('extend.pathname.files', :count => n) if n > 1
     out << Utils.popen_read("/usr/bin/du", "-hs", expand_path.to_s).split("\t")[0]
     out
   end

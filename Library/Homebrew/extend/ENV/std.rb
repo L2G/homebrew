@@ -264,7 +264,7 @@ module Stdenv
     elsif compiler =~ /gcc-4\.(8|9)/
       append 'CXX', '-std=c++11'
     else
-      raise t[:extend].env.cxx11_not_supported(compiler)
+      raise t('extend.env.cxx11_not_supported', :name => compiler)
     end
   end
 

@@ -4,7 +4,7 @@ require 'cmd/untap'
 module Homebrew
   def update
     unless ARGV.named.empty?
-      abort t.cmd.update.no_formula_names
+      abort t('cmd.update.no_formula_names')
     end
 
     # ensure GIT_CONFIG is unset as we need to operate on .git/config
@@ -40,8 +40,9 @@ module Homebrew
         begin
           updater.pull!
         rescue
-          onoe t.cmd.update.update_tap_failed(user.basename,
-                                              repo.basename.sub("homebrew-", ""))
+          onoe t('cmd.update.update_tap_failed',
+                 :github_user => user.basename,
+                 :repo_name => repo.basename.sub("homebrew-", ""))
         else
           report.update(updater.report) do |key, oldval, newval|
             oldval.concat(newval)
@@ -64,10 +65,11 @@ module Homebrew
     end if load_tap_migrations
 
     if report.empty?
-      puts t.cmd.update.already_up_to_date
+      puts t('cmd.update.already_up_to_date')
     else
-      puts t.cmd.update.updated_homebrew(master_updater.initial_revision[0,8],
-                                         master_updater.current_revision[0,8])
+      puts t('cmd.update.updated_homebrew',
+             :initial_revision => master_updater.initial_revision[0,8],
+             :current_revision => master_updater.current_revision[0,8])
       report.dump
     end
   end
@@ -109,16 +111,17 @@ module Homebrew
             need_repair_taps = true
 
             if tapd_basename.count("-") >= 2
-              opoo t.cmd.update.homebrew_tap_structure_1(
-                t.cmd.update.homebrew_tap_structure_2(
-                  "#{HOMEBREW_LIBRARY}/Taps/#{user.downcase}/"\
-                  "homebrew-#{repo.downcase}"
-                )
+              opoo t('cmd.update.homebrew_tap_structure_1',
+                     :cont => t('cmd.update.homebrew_tap_structure_2',
+                                :tap_path => "#{HOMEBREW_LIBRARY}/Taps/" + 
+                                             user.downcase +
+                                             "/homebrew-#{repo.downcase}")
               )
             end
           else
-            opoo t.cmd.update.homebrew_tap_structure_1(
-              t.cmd.update.homebrew_tap_structure_3(tapd)
+            opoo t('cmd.update.homebrew_tap_structure_1',
+              :cont => t('cmd.update.homebrew_tap_structure_3',
+                         :tap_name => tapd)
             )
           end
         end
@@ -254,9 +257,9 @@ class Report
   def dump
     # Key Legend: Added (A), Copied (C), Deleted (D), Modified (M), Renamed (R)
 
-    dump_formula_report :A, t.cmd.update.new_formulae
-    dump_formula_report :M, t.cmd.update.updated_formulae
-    dump_formula_report :D, t.cmd.update.deleted_formulae
+    dump_formula_report :A, t('cmd.update.new_formulae')
+    dump_formula_report :M, t('cmd.update.updated_formulae')
+    dump_formula_report :D, t('cmd.update.deleted_formulae')
   end
 
   def tapped_formula_for key

@@ -119,11 +119,11 @@ class Build
         system "git", "add", "-A"
       end
       if ARGV.interactive?
-        ohai t.build.interactive.entering
-        puts t.build.interactive.install_to(formula.prefix)
+        ohai t('build.interactive.entering')
+        puts t('build.interactive.install_to', :prefix => formula.prefix)
 
         if ARGV.git?
-          puts t.build.git
+          puts t('build.git')
         end
 
         interactive_shell(formula)
