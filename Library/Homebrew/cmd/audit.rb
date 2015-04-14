@@ -332,6 +332,8 @@ class FormulaAuditor
         problem t.cmd.audit.url_fossies_https(p)
       when %r[^http://mirrors\.kernel\.org/]
         problem t.cmd.audit.url_mirrors_kernel_org_https(p)
+      when %r[^http://([^/]*\.|)bintray\.com/]
+        problem t.cmd.audit.url_bintray_https(p)
       when %r[^http://tools\.ietf\.org/]
         problem t.cmd.audit.url_tools_ietf_org_https(p)
       end
@@ -714,7 +716,7 @@ class FormulaAuditor
     if @strict
       if line =~ /system (["'][^"' ]*(?:\s[^"' ]*)+["'])/
         bad_system = $1
-        unless %w[| < > & ;].any? { |c| bad_system.include? c }
+        unless %w[| < > & ; *].any? { |c| bad_system.include? c }
           good_system = bad_system.gsub(" ", "\", \"")
           problem t.cmd.audit.use_system_alternative(good_system, bad_system)
         end

@@ -455,6 +455,7 @@ cmd:
     trailing_whitespace: "%1: Trailing whitespace was found"
     unnecessary: "%1 is unnecessary; just use %2"
     url_apache_https: "Apache urls should be https://, not http (url is %1)."
+    url_bintray_https: "Bintray urls should be https://, not http (url is %1)."
     url_code_google_com_https: "code.google.com urls should be https://, not http (url is %1)."
     url_code_google_com_https_2: "Use https:// URLs for downloads from code.google (url is %1)."
     url_fossies_https: "Fossies urls should be https://, not http (url is %1)."
