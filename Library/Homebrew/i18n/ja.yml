@@ -10,13 +10,13 @@ ja:
     # extend/pathname.rb
     pathname:
       # "files" is used only if there is more than one file
-      files: !!pl
-        n: "%1ファイル、"
+      files:
+        many: "%{count}ファイル、"
   #==============================================================================
   # formula_installer.rb
   formula_installer:
     caveats: "注意"
     install_badge: 🍶
-    summary: "%1：%2"
+    summary: "%{path}：%{path_info}"
     summary_title: "結語"
   #==============================================================================
