@@ -7,7 +7,7 @@ require 'metafiles'
 class Pathname
   include MachO
 
-  BOTTLE_EXTNAME_RX = /(\.[a-z_]+(32)?\.bottle\.(\d+\.)?tar\.gz)$/
+  BOTTLE_EXTNAME_RX = /(\.[a-z0-9_]+\.bottle\.(\d+\.)?tar\.gz)$/
 
   def install *sources
     sources.each do |src|
@@ -406,7 +406,7 @@ class Pathname
     out = ""
     n = Utils.popen_read("find", expand_path.to_s, "-type", "f", "!", "-name", ".DS_Store").split("\n").size
     out << t('extend.pathname.files', :count => n) if n > 1
-    out << Utils.popen_read("/usr/bin/du", "-hs", expand_path.to_s).split("\t")[0]
+    out << Utils.popen_read("/usr/bin/du", "-hs", expand_path.to_s).split("\t")[0].strip
     out
   end
 

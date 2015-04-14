@@ -176,14 +176,18 @@ module Homebrew
               "-u#{bintray_user}:#{bintray_key}", "-X", "POST",
               "https://api.bintray.com/content/homebrew/#{repo}/#{package}/#{version}/publish"
             puts
+            sleep 2
+            safe_system "brew", "fetch", "--force-bottle", f.name
           end
         else
-          opoo "Set BINTRAY_USER and BINTRAY_KEY to add new formula bottles on Bintray!"
+          opoo "You must set BINTRAY_USER and BINTRAY_KEY to add or update bottles on Bintray!"
         end
       end
 
       ohai 'Patch changed:'
       safe_system "git", "diff-tree", "-r", "--stat", revision, "HEAD"
+
+      safe_system "brew", "tap", "--repair" if tap_name
 
       if ARGV.include? '--install'
         changed_formulae.each do |f|

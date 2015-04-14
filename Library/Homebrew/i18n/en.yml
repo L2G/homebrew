@@ -460,6 +460,7 @@ en:
       trailing_whitespace: "%{line_num}: Trailing whitespace was found"
       unnecessary: "%{dir_with_path} is unnecessary; just use %{path}"
       url_apache_https: "Apache urls should be https://, not http (url is %{url})."
+      url_bintray_https: "Bintray urls should be https://, not http (url is %{url})."
       url_code_google_com_https: "code.google.com urls should be https://, not http (url is %{url})."
       url_code_google_com_https_2: "Use https:// URLs for downloads from code.google (url is %{url})."
       url_fossies_https: "Fossies urls should be https://, not http (url is %{url})."
