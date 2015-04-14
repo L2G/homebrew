@@ -31,11 +31,11 @@ module Homebrew
 
     unless outdated.empty?
       oh1 t('cmd.upgrade.upgrading_outdated_pkg', :count => outdated.length)
-      puts outdated.map do |f|
+      puts outdated.map { |f|
         t('cmd.upgrade.formula_name_and_version',
           :name => f.name,
           :version => f.pkg_version)
-      end.join(t('cmd.upgrade.list_join'))
+      }.join(t('cmd.upgrade.list_join'))
     else
       oh1 t('cmd.upgrade.no_pkgs_to_upgrade')
     end
