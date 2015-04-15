@@ -1,59 +1,273 @@
----
 eo:
-  #==============================================================================
-  # `brew` command
+  blacklist:
+    clojure: 
+    distributed_with_os_x: 'Apple disdonas "%{name}" kun OS X. Vi povas trovi ĝin ĉe: %{path}'
+    gfortran: 
+    google_tool: 
+    gsutil: 'Instalu "gsutil" jene: `pip install gsutil`'
+    haskell_platform: 
+    libiconv: 
+    lzma: 
+    macruby: 
+    osmium: 
+    pil: 
+    pip: 
+    play: 
+    rubinius: 
+    sshpass: 
+    tex: 
+    xcode_app_store: 
+    xcode_download: 
   brew:
-    bad_sudo: "Malkuraĝe rifuzas plenumi `sudo brew %{cmd}`"
-    homebrew_version: "Homebrew %{version}"
-    invalid_usage: "Nevalida uzado"
-    no_working_dir: "La kuranta dosierujo ne existas. Ne povas procedi."
-  #==============================================================================
-  # extend/
-  extend:
-    #----------------------------------------------------------------------------
-    # extend/pathname.rb
-    pathname:
-      does_not_exist: "ne ekzistas %{path}"
-      # "files" is used only if there is more than one file
-      files:
-        other: "%{count} dosieroj, "
-  #==============================================================================
-  # formula_installer.rb
-  formula_installer:
-    already_installed_unlink: |
-      %{name}-%{linked_name} jam estas instalita
-      Por instali ĉi tiun eldonon, unue rulu `brew unlink %{name}'
-    brew_link_not_complete: "La paŝo `brew link` ne estas sukcese kompletita"
-    summary: "%{path}: %{path_info}"
-    summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
-  #==============================================================================
-  # utils.rb
-  utils:
-    cleaning_up: "Unu sekundo, nun purigas"
-    # Indicates errors that are logged on-screen
-    error_1: "Eraro"
-    error_2: ":"
-    minutes:
-      one: "%{count} minuto"
-      other: "%{count} minutoj"
-    not_executable: "%{path} ne estas plenumebla"
-    seconds:
-      one: "%{count} sekundo"
-      other: "%{count} sekundoj"
-    # Indicates warnings that are logged on-screen
-    warning: "Averto"
-  #==============================================================================
-  # Sub-commands of `brew`
+    bad_sudo: Malkuraĝe rifuzas plenumi `sudo brew %{cmd}`
+    bad_xcode_path: 
+    formula_unspecified: 
+    homebrew_version: Homebrew %{version}
+    invalid_usage: Nevalida uzado
+    keg_unspecified: 
+    no_tiger_support: 
+    no_working_dir: La kuranta dosierujo ne existas. Ne povas procedi.
+    please_report_bug: 
+    refuse_root_or_usr: 
+    unknown_command: 
+  build:
+    git: 
+    interactive:
+      entering: 
+      install_to: 
+  caveats:
+    app: 
+    bash_completion: 
+    plist_load: 
+    plist_login: 
+    plist_manual: 
+    plist_startup: 
+    plist_then_load: 
+    plist_tmux_warning: 
+    plist_upgrade: 
+    python_find_keg_bindings: 
+    python_modules_installed: 
+    python_pth_files_installed: 
+    zsh_completion: 
   cmd:
-    #------------------------------------------------------------------------------
-    # `help` command
-    #
-    # NOTE Keep the lenth of vanilla --help less than 25 lines!
-    # This is because the default Terminal height is 25 lines. Scrolling sucks
-    # and concision is important. If more help is needed we should start
-    # specialising help like the gem command does.
-    # NOTE Keep lines less than 80 characters! Wrapping is just not cricket.
-    # <----------------------------------------------------------------------------->
+    audit:
+      add_test_do: 
+      alias_should_be: 
+      audit_problems: 
+      audit_problems_formula: 
+      audit_problems_list_item: 
+      cant_find_conflicting: 
+      cant_find_dependency: 
+      caveats_no_setuid: 
+      checksum_empty: 
+      checksum_invalid_chars: 
+      checksum_should_be_lowercase: 
+      checksum_should_be_n_chars: 
+      class_inheritance_space: 
+      comment_cmake_found: 
+      comment_remove_default: 
+      commented_out_dep: 
+      data_without_end: 
+      debian_patch_use_https: 
+      define_method_in_class_body: 
+      dependency_has_no_option: 
+      depends_on_takes_classes: 
+      devel_older_than_stable: 
+      devel_only: 
+      dont_need_to_interpolate: 
+      dont_negate_build_with: 
+      dont_negate_build_without: 
+      dont_use_dependency: 
+      dont_use_dependency_git: 
+      end_without_data: 
+      fileutils_class_dont_need: 
+      formula_factory: 
+      formula_subclass_deprecated: 
+      formulae: 
+      git_specify_revision_with_tag: 
+      github_patch_macports: 
+      github_patch_needs_rev: 
+      github_patch_use_dot_diff: 
+      head_only: 
+      homepage_apache_https: 
+      homepage_debian_https: 
+      homepage_freedesktop_https_project: 
+      homepage_freedesktop_https_software_project: 
+      homepage_freedesktop_https_wiki: 
+      homepage_github_https: 
+      homepage_github_io_https: 
+      homepage_gnome_https: 
+      homepage_gnu_ftpmirror: 
+      homepage_gnu_https: 
+      homepage_gnupg_https: 
+      homepage_googlecode_end_slash: 
+      homepage_googlecode_https: 
+      homepage_ietf_https: 
+      homepage_savannah_https: 
+      homepage_should_be_http: 
+      inreplace_block_var: 
+      is_now_unnecessary: 
+      macports_patch_use_https: 
+      md5_checksums_deprecated: 
+      migrate_deprecated_option: 
+      missing_version: 
+      name_problem: 
+      needs_ending_newline: 
+      no_dashes: 
+      no_hardcoding_compiler: 
+      path_should_be: 
+      permissions_644: 
+      problems_in: 
+      redundant_cvs_module: 
+      redundant_module_value: 
+      replace_with_optional_dep: 
+      replace_with_recommended_dep: 
+      resource_problem: 
+      scheme_deprecated: 
+      scons_args: 
+      separate_make_calls: 
+      sha1_checksums_deprecated: 
+      should_be_build_dependency: 
+      should_be_build_or_run_dependency: 
+      skip_clean_all_deprecated: 
+      specify_cvs_module: 
+      ssl3_deprecated: 
+      stable_and_devel_identical: 
+      strategy_deprecated: 
+      string_concat_in_interpolation: 
+      trailing_whitespace: 
+      unnecessary: 
+      url_apache_https: 
+      url_bintray_https: 
+      url_code_google_com_https: 
+      url_code_google_com_https_2: 
+      url_fossies_https: 
+      url_ftp_gnu_org_https: 
+      url_github_no_zips: 
+      url_github_tarballs: 
+      url_github_use_https: 
+      url_gitorious_use_https: 
+      url_googlecode_use_https: 
+      url_mirrors_kernel_org_https: 
+      url_sourceforge_geoloc: 
+      url_sourceforge_no_download: 
+      url_sourceforge_no_mirror: 
+      url_sourceforge_no_prdown: 
+      url_sourceforge_no_specific: 
+      url_sourceforge_use_https: 
+      url_tools_ietf_org_https: 
+      url_using_redundant: 
+      use_build_head: 
+      use_build_instead_of_argv: 
+      use_build_with: 
+      use_build_with_not_include: 
+      use_build_without: 
+      use_depends_on_fortran: 
+      use_depends_on_hg: 
+      use_depends_on_java_to_set_java_home: 
+      use_depends_on_x11: 
+      use_env_instead_of: 
+      use_fortran_not_gfortran: 
+      use_if_argv_build: 
+      use_if_build_with: 
+      use_if_build_without: 
+      use_macos_version: 
+      use_mpi_dependency: 
+      use_new_style_opt_defs: 
+      use_new_style_test_defs: 
+      use_patch_dsl: 
+      use_ruby_method_instead_of_system: 
+      use_spaces_not_tabs: 
+      use_system_alternative: 
+      version_empty_string: 
+      version_is_devel: 
+      version_no_leading_v: 
+      version_redundant: 
+      version_symbol_deprecated: 
+      xcodebuild_args: 
+      xcodebuild_symroot: 
+    doctor:
+      autoconf_xcode: 
+      broken_symlinks: |
+        Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
+          %{broken_symlinks}
+      cellar_and_temp_not_same_vol: 
+      dyld_vars_are_set: 
+      dyld_vars_are_set_2: 
+      dyld_vars_have_go_conflict: 
+      enthought_python_in_path: 
+      filesystem_case_sensitive: |
+        La dosiersistemo ĉe %{paths} aspektas usklecodistinga.
+        La dosiersistemo de OS X kutime estas ne-usklecodistinga.
+        Bonvolu raporti iujn ajn ŝajnajn zorgojn.
+      git_autocrlf_settings: 
+      git_not_found: 
+      git_outdated: 
+      git_remote_no_origin: 
+      git_remote_origin_suspect: 
+      homebrew_is_outdated: 
+      homebrew_not_in_usr_local: 
+      homebrew_ok: 
+      install_clt: 
+      keg_only_formula_linked: 
+      libiconv_formula_linked: 
+      libiconv_not_in_usr: 
+      macgpg2: 
+      macports_or_fink: 
+      missing_deps: 
+      name:
+        macfuse: 
+        os_x_10_8_2_supplemental: 
+      non_homebrew_gettext: 
+      non_homebrew_pkgconfig: 
+      non_homebrew_pkgconfig_mono: 
+      non_prefixed_coreutils: 
+      non_prefixed_findutils: 
+      old_env_var_homebrew_keep_info: 
+      old_share_python_in_path: 
+      old_share_python_in_path_more: 
+      osx_gcc_installer: 
+      osx_gcc_installer_advice: 
+      osx_gcc_installer_advice_lion: 
+      osx_gcc_installer_advice_mavericks: 
+      osx_libcurl_outdated: 
+      other_framework_detected: 
+      pydistutils_cfg_in_home: 
+      python_bad_symlink: 
+      python_in_library_frameworks: 
+      stray_config_scripts: 
+      stray_dev_dir: 
+      stray_dylibs: 
+      stray_las: 
+      stray_pcs: 
+      stray_static_libs: 
+      symlinked_cellar_found: 
+      tmpdir_doesnt_exist: 
+      trailing_slashes: 
+      uncommitted_mods: 
+      unlinked_kegs_in_cellar: 
+      unsupported_ruby: 
+      unwritable_access_logs: 
+      unwritable_directories: 
+      unwritable_directory: 
+      unwritable_usr_local: 
+      user_curlrc_exists: 
+      user_path_has_no_homebrew_bin: 
+      user_path_has_no_homebrew_sbin: 
+      user_path_out_of_order: 
+      xcode_clt_install_from_cli: 
+      xcode_clt_install_from_web: 
+      xcode_clt_outdated: 
+      xcode_clt_update_from_app_store: 
+      xcode_clt_update_from_web: 
+      xcode_license_not_agreed: 
+      xcode_not_installed: 
+      xcode_outdated_app_store: 
+      xcode_outdated_download: 
+      xcode_prefix_has_space: 
+      xcode_prefix_nonexistent: 
+      xcode_select_path_invalid: 
+      xquartz_is_outdated: 
     help: |
       Ekzemploj de la uzado:
         brew [info | home | options ] [FORMULA...]
@@ -78,33 +292,159 @@ eo:
       Pluaj helpoj:
         man brew
         brew home
-    #------------------------------------------------------------------------------
-    # `doctor` command
-    doctor:
-      broken_symlinks: |
-        Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
-          %{broken_symlinks}
-      filesystem_case_sensitive: |
-        La dosiersistemo ĉe %{paths} aspektas usklecodistinga.
-        La dosiersistemo de OS X kutime estas ne-usklecodistinga.
-        Bonvolu raporti iujn ajn ŝajnajn zorgojn.
-    #------------------------------------------------------------------------------
-    # `list` command
+    install:
+      cannot_create_dir: 
+      cannot_write_dir: 
+      formula_blacklisted: 
+      head_uppercase: 
+      macports_or_fink_installed_1: 
+      macports_or_fink_installed_2: 
+      searching_formulae: 
+      searching_taps: 
+      unsupported_arch: 
     list:
-      files:
-        other: "%{path}/ (%{count} dosieroj)"
-      other_files:
-        other: "%{path}/ (%{count} kromaj dosieroj)"
+      files: "%{path}/ (%{count} dosieroj)"
+      other_files: "%{path}/ (%{count} kromaj dosieroj)"
       symlink: "%{symlink} → %{target}"
-    #------------------------------------------------------------------------------
-    # `update` command
     update:
-      deleted_formulae: "Forprenitaj Formuloj"
-      install_git: "Bonvolu unue plenumi `brew install git'."
-      new_formulae: "Novaj Formuloj"
+      already_up_to_date: 
+      deleted_formulae: Forprenitaj Formuloj
+      homebrew_tap_structure_1: 
+      homebrew_tap_structure_2: 
+      homebrew_tap_structure_3: 
+      install_git: Bonvolu unue plenumi `brew install git'.
+      new_formulae: Novaj Formuloj
       no_formula_names: |
         Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
         nomojn.  Uzu `brew upgrade <formula>`.
+      update_tap_failed: 
       updated_formulae: "Ĝisdatigitaj Formuloj"
       updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
-  #==============================================================================
+    upgrade:
+      formula_already_installed: 
+      formula_name_and_version: 
+      formula_version_already_installed: 
+      list_join: 
+      no_pkgs_to_upgrade: 
+      not_upgrading_pinned_pkg: 
+      upgrading_formula: 
+      upgrading_outdated_pkg: 
+  download_strategy:
+    already_downloaded: 
+    aws_creds_missing: 
+    bad_s3_url: 
+    best_mirror: 
+    checking_out: 
+    cloning: 
+    couldnt_determine_mirror: 
+    downloading: 
+    empty_archive: 
+    install_aws_sdk: 
+    pouring: 
+    removing_invalid_repo: 
+    trying_full_download: 
+    trying_mirror: 
+    unknown_download_strategy: 
+    unknown_download_strategy_spec: 
+    updating: 
+  extend:
+    argv:
+      multiple_kegs: 
+    env:
+      alternative_fc: 
+      can_change_fc: 
+      cxx11_not_supported: 
+      gcc_formula_not_found: 
+      gcc_not_installed: 
+      gcc_not_installed_brew: 
+      gfortran_homebrew: 
+      gfortran_other: 
+      invalid_value: 
+      no_fc_flags: 
+      unsupported: 
+    fileutils: 
+    pathname:
+      does_not_exist: ne ekzistas %{path}
+      exec_scripts_empty_targets: 
+      files: "%{count} dosieroj, "
+      same_file: 
+      tried_to_install_empty_array_to: 
+      tried_to_install_empty_hash_to: 
+      will_not_overwrite: 
+  formula_installer:
+    all_deps_satisfied: 
+    already_installed_unlink: |
+      %{name}-%{linked_name} jam estas instalita
+      Por instali ĉi tiun eldonon, unue rulu `brew unlink %{name}'
+    bottle_install_fail: 
+    brew_link_error_1: 
+    brew_link_error_2: 
+    brew_link_not_complete: La paŝo `brew link` ne estas sukcese kompletita
+    brew_link_possible_conflict: 
+    brew_link_try_again_with: 
+    caveats: 
+    cellar_bottle: 
+    cleaning: 
+    cleaning_not_complete_1: 
+    cleaning_not_complete_2: 
+    dep_message: 
+    deprecated_flag: 
+    empty_installation: 
+    failed_to_create_1: 
+    failed_to_create_2: 
+    finishing_up: 
+    fix_install_names_fail_1: 
+    fix_install_names_fail_2: 
+    install_badge: 
+    install_plist_failed: 
+    installing: 
+    installing_dep_for: 
+    installing_deps_for: 
+    keg_already_linked: 
+    keg_only_1: 
+    keg_only_2: 
+    keg_only_cppflags: 
+    keg_only_ldflags: 
+    must_link_deps: 
+    nothing_installed_to: 
+    postinstall_fail_1: 
+    postinstall_fail_2: 
+    summary: "%{path}: %{path_info}"
+    summary_title: 
+    summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
+    suspicious_install_fail: 
+    unrecognized_bottle_arch: 
+  software_spec:
+    cxx11: 
+    thirty_two_bit: 
+    universal: 
+    with: 
+    without: 
+  utils:
+    arrow: 
+    authentication_failed: 
+    cleaning_up: Unu sekundo, nun purigas
+    closed_pull_requests: 
+    error_1: Eraro
+    error_2: ":"
+    failed_to_connect: 
+    failed_to_parse_json: 
+    gem_installed_but_exec_not_in_path: 
+    interactive_shell_abort: 
+    item_with_star: 
+    minutes:
+      one: "%{count} minuto"
+      other: "%{count} minutoj"
+    not_executable: "%{path} ne estas plenumebla"
+    open_pull_requests: 
+    path_component_invalid: 
+    plural_called: 
+    pull_request_with_url: 
+    rate_limit_exceeded: 
+    rate_limit_time_m_s: 
+    searching_pull_requests: 
+    seconds:
+      one: "%{count} sekundo"
+      other: "%{count} sekundoj"
+    using_editor_as_fallback: 
+    warning: Averto

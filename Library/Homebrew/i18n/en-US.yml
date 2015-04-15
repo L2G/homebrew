@@ -1,29 +1,4 @@
----
 en-US:
-  #==============================================================================
-  # `brew` command
-  brew:
-    bad_sudo: "Cowardly refusing to `sudo brew %{cmd}`"
-    bad_xcode_path: |
-      Your xcode-select path is currently set to '/'.
-      This causes the `xcrun` tool to hang, and can render Homebrew unusable.
-      If you are using Xcode, you should:
-        sudo xcode-select -switch /Applications/Xcode.app
-      Otherwise, you should:
-        sudo rm -rf /usr/share/xcode-select
-    formula_unspecified: "This command requires a formula argument"
-    homebrew_version: "Homebrew %{version}"
-    invalid_usage: "Invalid usage"
-    keg_unspecified: "This command requires a keg argument"
-    no_tiger_support: |
-      homebrew requires leopard or higher. for tiger support, see:
-      https://github.com/mistydemeo/tigerbrew
-    no_working_dir: "The current working directory doesn't exist, cannot proceed."
-    please_report_bug: "Please report this bug:"
-    refuse_root_or_usr: "Cowardly refusing to continue at this prefix: %{path}"
-    unknown_command: "Unknown command: %{cmd}"
-  #==============================================================================
-  # blacklist.rb
   blacklist:
     clojure: |
       Clojure isn't really a program but a library managed as part of a
@@ -33,14 +8,14 @@ en-US:
         brew install leiningen
       and then follow the tutorial:
         https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
-    distributed_with_os_x: "Apple distributes %{name} with OS X, you can find it in %{path}."
+    distributed_with_os_x: Apple distributes %{name} with OS X, you can find it in %{path}.
     gfortran: |
       GNU Fortran is now provided as part of GCC, and can be installed with:
         brew install gcc
     google_tool: |
       Installing %{name} system-wide is not recommended; it should be vendored
       in your projects that use it.
-    gsutil: "Install gsutil with `pip install gsutil`"
+    gsutil: Install gsutil with `pip install gsutil`
     haskell_platform: |
       We no longer package haskell-platform. Consider installing ghc
       and cabal-install instead:
@@ -52,7 +27,7 @@ en-US:
       Apple distributes %{name} with OS X, you can find it in /usr/lib.
       Some build scripts fail to detect it correctly, please check existing
       formulae for solutions.
-    lzma: "lzma is now part of the xz formula."
+    lzma: lzma is now part of the xz formula.
     macruby: |
       MacRuby works better when you install their package:
         http://www.macruby.org/
@@ -85,22 +60,38 @@ en-US:
       and only builds 32-bit (and thus can't use Homebrew deps on Snow Leopard.)
 
       We recommend using a MacTeX distribution: https://www.tug.org/mactex/
-    xcode_app_store: "Xcode can be installed from the App Store."
-    xcode_download: "Xcode can be installed from https://developer.apple.com/downloads/"
-  #==============================================================================
-  # build.rb
+    xcode_app_store: Xcode can be installed from the App Store.
+    xcode_download: Xcode can be installed from https://developer.apple.com/downloads/
+  brew:
+    bad_sudo: Cowardly refusing to `sudo brew %{cmd}`
+    bad_xcode_path: |
+      Your xcode-select path is currently set to '/'.
+      This causes the `xcrun` tool to hang, and can render Homebrew unusable.
+      If you are using Xcode, you should:
+        sudo xcode-select -switch /Applications/Xcode.app
+      Otherwise, you should:
+        sudo rm -rf /usr/share/xcode-select
+    formula_unspecified: This command requires a formula argument
+    homebrew_version: Homebrew %{version}
+    invalid_usage: Invalid usage
+    keg_unspecified: This command requires a keg argument
+    no_tiger_support: |
+      homebrew requires leopard or higher. for tiger support, see:
+      https://github.com/mistydemeo/tigerbrew
+    no_working_dir: The current working directory doesn't exist, cannot proceed.
+    please_report_bug: 'Please report this bug:'
+    refuse_root_or_usr: 'Cowardly refusing to continue at this prefix: %{path}'
+    unknown_command: 'Unknown command: %{cmd}'
   build:
     git: |
       This directory is now a git repo. Make your changes and then use:
         git diff | pbcopy
       to copy the diff to the clipboard.
     interactive:
-      entering: "Entering interactive mode"
+      entering: Entering interactive mode
       install_to: |
         Type `exit' to return and finalize the installation
         Install to this prefix: %{prefix}
-  #==============================================================================
-  # caveats.rb
   caveats:
     app: |
       .app bundles were installed.
@@ -108,13 +99,13 @@ en-US:
     bash_completion: |
       Bash completion has been installed to:
         %{path}
-    plist_load: "To load %{name}:"
-    plist_login: "To have launchd start %{name} at login:"
-    plist_manual: "Or, if you don't want/need launchctl, you can just run:"
-    plist_startup: "To have launchd start %{name} at startup:"
-    plist_then_load: "Then to load %{name} now:"
-    plist_tmux_warning: "WARNING: launchctl will fail when run under tmux."
-    plist_upgrade: "To reload %{name} after an upgrade:"
+    plist_load: 'To load %{name}:'
+    plist_login: 'To have launchd start %{name} at login:'
+    plist_manual: 'Or, if you don''t want/need launchctl, you can just run:'
+    plist_startup: 'To have launchd start %{name} at startup:'
+    plist_then_load: 'Then to load %{name} now:'
+    plist_tmux_warning: 'WARNING: launchctl will fail when run under tmux.'
+    plist_upgrade: 'To reload %{name} after an upgrade:'
     python_find_keg_bindings: |
       If you need Python to find bindings for this keg-only formula, run:
         %{cmd}
@@ -131,391 +122,170 @@ en-US:
     zsh_completion: |
       zsh completion has been installed to:
         %{path}
-  #==============================================================================
-  # download_strategy.rb
-  download_strategy:
-    already_downloaded: "Already downloaded: %{path} "
-    aws_creds_missing: "AWS credentials missing, trying public URL instead."
-    bad_s3_url: "Bad S3 URL: %{url}"
-    best_mirror: "Best Mirror %{url}"
-    checking_out: "Checking out %{ref_type} %{ref}"
-    cloning: "Cloning %{url}"
-    couldnt_determine_mirror: "Couldn't determine mirror, try again later."
-    downloading: "Downloading %{url}"
-    empty_archive: "Empty archive"
-    install_aws_sdk: "Install the aws-sdk gem into the gem repo used by brew."
-    pouring: "Pouring %{name}"
-    removing_invalid_repo: "Removing invalid repository from cache"
-    trying_full_download: "Trying a full download"
-    trying_mirror: "Trying a mirror..."
-    unknown_download_strategy: "Unknown download strategy %{name} was requested."
-    unknown_download_strategy_spec: "Unknown download strategy specification %{name}"
-    updating: "Updating %{path}"
-
-  #==============================================================================
-  # extend/
-  extend:
-    #----------------------------------------------------------------------------
-    # extend/ARGV.rb
-    argv:
-      multiple_kegs: |
-        Multiple kegs installed to %{rack}
-        However we don't know which one you refer to.
-        Please delete (with rm -rf!) all but one and then try again.
-    #----------------------------------------------------------------------------
-    # extend/ENV*
-    env:
-      alternative_fc: "Building with an alternative Fortran compiler"
-      can_change_fc: "This may be changed by setting the FC environment variable."
-      cxx11_not_supported: "The selected compiler doesn't support C++11: %{name}"
-      gcc_formula_not_found: |
-        Homebrew GCC requested, but formula %{name} not found!
-        You may need to: brew tap homebrew/versions
-      gcc_not_installed: |
-        The requested Homebrew GCC, %{name}, was not installed.
-        You must:
-          brew tap homebrew/versions
-          brew install %{name}
-      gcc_not_installed_brew: |
-        The Homebrew GCC was not installed.
-        You must:
-          brew install gcc
-      gfortran_homebrew: "Using Homebrew-provided fortran compiler."
-      gfortran_other: "Using a fortran compiler found at %{path}."
-      invalid_value: "Invalid value for %{source}: %{other}"
-      no_fc_flags: |
-        No Fortran optimization information was provided.  You may want to consider
-        setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
-        `brew install` if your compiler is compatible with GCC.
-
-        If you like the default optimization level of your compiler, ignore this
-        warning.
-      unsupported: "This is unsupported."
-    #----------------------------------------------------------------------------
-    # extend/fileutils.rb
-    fileutils:
-    #----------------------------------------------------------------------------
-    # extend/pathname.rb
-    pathname:
-      does_not_exist: "%{path} does not exist"
-      # "files" is used only if there is more than one file
-      files:
-        other: "%{count} files, "
-      exec_scripts_empty_targets: "tried to write exec scripts to %{path} for an empty list of targets"
-      same_file: "%{path} is the same file as %{other}"
-      tried_to_install_empty_array_to: "tried to install empty array to %{path}"
-      tried_to_install_empty_hash_to: "tried to install empty hash to %{path}"
-      will_not_overwrite: "Will not overwrite %{path}"
-  #==============================================================================
-  # formula_installer.rb
-  formula_installer:
-    all_deps_satisfied: "All dependencies for %{name} are satisfied."
-    already_installed_unlink: |
-      %{name}-%{linked_name} already installed
-      To install this version, first `brew unlink %{name}'
-    bottle_install_fail: "Bottle installation failed: building from source."
-    brew_link_error_1: "An unexpected error occurred during the `brew link` step"
-    brew_link_error_2: "The formula built, but is not symlinked into %{path}"
-    brew_link_not_complete: "The `brew link` step did not complete successfully"
-    brew_link_possible_conflict: "Possible conflicting files are:"
-    brew_link_try_again_with: |
-      You can try again using:
-        brew link %{name}
-    caveats: "Caveats"
-    cellar_bottle: "Building source; cellar of %{name}'s bottle is %{cellar}"
-    cleaning: "Cleaning"
-    cleaning_not_complete_1: "The cleaning step did not complete successfully"
-    cleaning_not_complete_2: "Still, the installation was successful, so we will link it into your prefix"
-    dep_message: "%{dep}: %{message}"
-    deprecated_flag: "%{name}: %{old_flag} was deprecated; using %{new_flag} instead!"
-    empty_installation: "Empty installation"
-    failed_to_create_1: "Failed to create %{path}"
-    failed_to_create_2: "Things that depend on %{name} will probably not build."
-    finishing_up: "Finishing up"
-    fix_install_names_fail_1: "Failed to fix install names"
-    fix_install_names_fail_2: |
-      The formula built, but you may encounter issues using it or linking other
-      formulae against it.
-    install_badge: 🍺
-    install_plist_failed: "Failed to install plist file"
-    installing: "Installing %{name_in_green}"
-    installing_dep_for: "Installing %{name} dependency: %{dep_in_green}"
-    installing_deps_for: "Installing dependencies for %{name}: %{deps_in_green}"
-    keg_already_linked: "This keg was marked linked already, continuing anyway"
-    keg_only_1: "This formula is keg-only, which means it was not symlinked into %{path}."
-    # Keep keg_only_2 within 72 columns
-    # <---------------------------------------------------------------------->
-    keg_only_2: |
-
-
-      Generally there are no consequences of this for you. If you build your
-      own software and it requires this formula, you'll need to add to your
-      build variables:
-
-    keg_only_cppflags: "    CPPFLAGS: -I%{path}\n"
-    keg_only_ldflags: "    LDFLAGS:  -L%{path}\n"
-    must_link_deps: "You must `brew link %{deps}' before %{name} can be installed"
-    nothing_installed_to: "Nothing was installed to %{path}"
-    postinstall_fail_1: "The post-install step did not complete successfully"
-    postinstall_fail_2: "You can try again using `brew postinstall %{name}`"
-    summary: "%{path}: %{path_info}"
-    summary_title: "Summary"
-    summary_with_build_time: "%{path}: %{path_info}, built in %{build_time}"
-    suspicious_install_fail: "Suspicious installation failure"
-    unrecognized_bottle_arch: "Unrecognized architecture for --bottle-arch: %{arch}"
-  #==============================================================================
-  # software_spec.rb
-  software_spec:
-    cxx11: "Build using C++11 mode"
-    thirty_two_bit: "Build 32-bit only"
-    universal: "Build a universal binary"
-    with: "Build with %{name} support"
-    without: "Build without %{name} support"
-  #==============================================================================
-  # utils.rb
-  utils:
-    arrow: "==>"
-    authentication_failed: |
-      GitHub %{error}
-      HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
-        https://github.com/settings/applications
-    cleaning_up: "One sec, just cleaning up"
-    closed_pull_requests: "Closed pull requests:"
-    # Indicates errors that are logged on-screen
-    error_1: "Error"
-    error_2: ":"
-    failed_to_connect: |
-      Failed to connect to: %{url}
-      %{message}
-    failed_to_parse_json: |
-      Failed to parse JSON response
-      %{message}
-    gem_installed_but_exec_not_in_path: |
-      The '%{gem}' gem is installed but couldn't find '%{executable}' in the PATH:
-      %{path}
-    interactive_shell_abort: "Aborting due to non-zero exit status"
-    item_with_star: "%{item}*"
-    minutes:
-      one: "%{count} minute"
-      other: "%{count} minutes"
-    not_executable: "%{path} is not executable"
-    open_pull_requests: "Open pull requests:"
-    path_component_invalid: "The following PATH component is invalid: %{path}"
-    plural_called: "plural() was called; Y U NO I18N ;-)"
-    # Used to print pull request titles together with their URLs
-    pull_request_with_url: "%{title} (%{html_url})"
-    rate_limit_exceeded: |
-      GitHub %{error}
-      Try again in %{duration}, or create an API token:
-        https://github.com/settings/applications
-      and then set HOMEBREW_GITHUB_API_TOKEN.
-    # For rate limit time message, e.g. "3 minutes 2 seconds"
-    rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
-    searching_pull_requests: "Searching pull requests..."
-    seconds:
-      one: "%{count} second"
-      other: "%{count} seconds"
-    using_editor_as_fallback: |
-      Using %{editor} because no editor was set in the environment.
-      This may change in the future, so we recommend setting EDITOR, VISUAL,
-      or HOMEBREW_EDITOR to your preferred text editor.
-    # Indicates warnings that are logged on-screen
-    warning: "Warning"
-  #==============================================================================
-  # Sub-commands of `brew`
   cmd:
-    #------------------------------------------------------------------------------
-    # `help` command
-    #
-    # NOTE Keep the lenth of vanilla --help less than 25 lines!
-    # This is because the default Terminal height is 25 lines. Scrolling sucks
-    # and concision is important. If more help is needed we should start
-    # specialising help like the gem command does.
-    # NOTE Keep lines less than 80 characters! Wrapping is just not cricket.
-    # <----------------------------------------------------------------------------->
-    help: |
-      Example usage:
-        brew [info | home | options ] [FORMULA...]
-        brew install FORMULA...
-        brew uninstall FORMULA...
-        brew search [foo]
-        brew list [FORMULA...]
-        brew update
-        brew upgrade [FORMULA...]
-        brew pin/unpin [FORMULA...]
-
-      Troubleshooting:
-        brew doctor
-        brew install -vd FORMULA
-        brew [--env | config]
-
-      Brewing:
-        brew create [URL [--no-fetch]]
-        brew edit [FORMULA...]
-        open https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
-
-      Further help:
-        man brew
-        brew home
-    #------------------------------------------------------------------------------
-    # `audit` command
     audit:
-      alias_should_be: "Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name }'."
-      add_test_do: "A `test do` test block should be added"
-      audit_problems: "audit problems"
+      add_test_do: A `test do` test block should be added
+      alias_should_be: Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name }'.
+      audit_problems: audit problems
       audit_problems_formula: "%{name}:"
       audit_problems_list_item: " * %{item}"
-      cant_find_conflicting: "Can't find conflicting formula %{name}."
-      cant_find_dependency: "Can't find dependency %{name}."
-      caveats_no_setuid: "Don't recommend setuid in the caveats, suggest sudo instead."
+      cant_find_conflicting: Can't find conflicting formula %{name}.
+      cant_find_dependency: Can't find dependency %{name}.
+      caveats_no_setuid: Don't recommend setuid in the caveats, suggest sudo instead.
       checksum_empty: "%{checksum_type} is empty"
       checksum_invalid_chars: "%{checksum_type} contains invalid characters"
       checksum_should_be_lowercase: "%{checksum_type} should be lowercase"
-      checksum_should_be_n_chars:
-        other: "%{checksum_type} should be %{count} characters"
-      class_inheritance_space: "Use a space in class inheritance: class Foo < %{superclass}"
-      comment_cmake_found: "Commented cmake call found"
-      comment_remove_default: "Please remove default template comments"
-      commented_out_dep: "Commented-out dep %{dep}"
+      checksum_should_be_n_chars: "%{checksum_type} should be %{count} characters"
+      class_inheritance_space: 'Use a space in class inheritance: class Foo < %{superclass}'
+      comment_cmake_found: Commented cmake call found
+      comment_remove_default: Please remove default template comments
+      commented_out_dep: Commented-out dep %{dep}
       data_without_end: "'DATA' was found, but no '__END__'"
-      debian_patch_use_https: "Patches from Debian should be https://, not http:\n%{url}"
-      define_method_in_class_body: "Define method %{method} in the class body, not at the top-level"
-      dependency_has_no_option: "Dependency %{dependency} does not define option %{option}"
+      debian_patch_use_https: |-
+        Patches from Debian should be https://, not http:
+        %{url}
+      define_method_in_class_body: Define method %{method} in the class body, not at the top-level
+      dependency_has_no_option: Dependency %{dependency} does not define option %{option}
       depends_on_takes_classes: "`depends_on` can take requirement classes instead of instances"
-      devel_older_than_stable: "devel version %{devel} is older than stable version %{stable}"
-      devel_only: "Devel-only (no stable download)"
-      dont_need_to_interpolate: "Don't need to interpolate \"%{var}\" with %{method}"
-      dont_negate_build_with: "Don't negate 'build.with?': use 'build.without?'"
-      dont_negate_build_without: "Don't negate 'build.without?': use 'build.with?'"
+      devel_older_than_stable: devel version %{devel} is older than stable version %{stable}
+      devel_only: Devel-only (no stable download)
+      dont_need_to_interpolate: Don't need to interpolate "%{var}" with %{method}
+      dont_negate_build_with: 'Don''t negate ''build.with?'': use ''build.without?'''
+      dont_negate_build_without: 'Don''t negate ''build.without?'': use ''build.with?'''
       dont_use_dependency: |
         Don't use %{name} as a dependency. We allow non-Homebrew %{name} installations.
-      dont_use_dependency_git: "Don't use git as a dependency"
+      dont_use_dependency_git: Don't use git as a dependency
       end_without_data: "'__END__' was found, but 'DATA' is not used"
-      fileutils_class_dont_need: "Don't need 'FileUtils.' before %{method}."
-      formula_factory: "\"Formula.factory(name)\" is deprecated in favor of \"Formula[name]\""
+      fileutils_class_dont_need: Don't need 'FileUtils.' before %{method}.
+      formula_factory: '"Formula.factory(name)" is deprecated in favor of "Formula[name]"'
       formula_subclass_deprecated: "%{subclass} is deprecated, use Formula instead"
       formulae:
         one: "%{count} formula"
         other: "%{count} formulae"
-      git_specify_revision_with_tag: "Git should specify :revision when a :tag is specified."
-      github_patch_macports: "MacPorts patches should specify a revision instead of trunk:\n%{url}"
-      github_patch_needs_rev: "GitHub/Gist patches should specify a revision:\n%{url}"
-      github_patch_use_dot_diff: "GitHub appends a git version to patches; use .diff instead."
-      head_only: "Head-only (no stable download)"
-      homepage_apache_https: "Apache homepages should be https:// links (URL is %{url})."
-      homepage_debian_https: "Debian homepage should be https:// links (URL is %{url})."
-      homepage_freedesktop_https_project: "The url should be styled `https://wiki.freedesktop.org/project_name`, not %{url})."
-      homepage_freedesktop_https_software_project: "The url should be styled `https://wiki.freedesktop.org/www/Software/project_name`, not %{url})."
-      homepage_freedesktop_https_wiki: "Freedesktop's Wiki subdomain should be https:// (URL is %{url})."
-      homepage_github_https: "Use https:// URLs for homepages on GitHub (URL is %{url})."
-      homepage_github_io_https: "Github Pages links should be https:// (URL is %{url})."
-      homepage_gnome_https: "Gnome homepages should be https:// links (URL is %{url})."
-      homepage_gnu_ftpmirror: "\"http://ftpmirror.gnu.org\" is preferred for GNU software (url is %{url})."
-      homepage_gnu_https: "GNU homepages should be https:// links (URL is %{url})."
-      homepage_gnupg_https: "GnuPG homepages should be https:// links (URL is %{url})."
-      homepage_googlecode_end_slash: "Google Code homepage should end with a slash (URL is %{url})."
-      homepage_googlecode_https: "Google Code homepages should be https:// links (URL is %{url})."
-      homepage_ietf_https: "ietf homepages should be https:// links (URL is %{url})."
-      homepage_should_be_http: "The homepage should start with http or https (URL is %{url})."
-      homepage_savannah_https: "Savannah homepages should be https:// links (URL is %{url})."
-      inreplace_block_var: "\"inreplace <filenames> do |s|\" is preferred over \"|%{block_var}|\"."
+      git_specify_revision_with_tag: Git should specify :revision when a :tag is specified.
+      github_patch_macports: |-
+        MacPorts patches should specify a revision instead of trunk:
+        %{url}
+      github_patch_needs_rev: |-
+        GitHub/Gist patches should specify a revision:
+        %{url}
+      github_patch_use_dot_diff: GitHub appends a git version to patches; use .diff instead.
+      head_only: Head-only (no stable download)
+      homepage_apache_https: Apache homepages should be https:// links (URL is %{url}).
+      homepage_debian_https: Debian homepage should be https:// links (URL is %{url}).
+      homepage_freedesktop_https_project: The url should be styled `https://wiki.freedesktop.org/project_name`, not %{url}).
+      homepage_freedesktop_https_software_project: The url should be styled `https://wiki.freedesktop.org/www/Software/project_name`, not %{url}).
+      homepage_freedesktop_https_wiki: Freedesktop's Wiki subdomain should be https:// (URL is %{url}).
+      homepage_github_https: Use https:// URLs for homepages on GitHub (URL is %{url}).
+      homepage_github_io_https: Github Pages links should be https:// (URL is %{url}).
+      homepage_gnome_https: Gnome homepages should be https:// links (URL is %{url}).
+      homepage_gnu_ftpmirror: '"http://ftpmirror.gnu.org" is preferred for GNU software (url is %{url}).'
+      homepage_gnu_https: GNU homepages should be https:// links (URL is %{url}).
+      homepage_gnupg_https: GnuPG homepages should be https:// links (URL is %{url}).
+      homepage_googlecode_end_slash: Google Code homepage should end with a slash (URL is %{url}).
+      homepage_googlecode_https: Google Code homepages should be https:// links (URL is %{url}).
+      homepage_ietf_https: ietf homepages should be https:// links (URL is %{url}).
+      homepage_savannah_https: Savannah homepages should be https:// links (URL is %{url}).
+      homepage_should_be_http: The homepage should start with http or https (URL is %{url}).
+      inreplace_block_var: '"inreplace <filenames> do |s|" is preferred over "|%{block_var}|".'
       is_now_unnecessary: "`%{require_formula}` is now unnecessary"
-      macports_patch_use_https: "Patches from MacPorts Trac should be https://, not http:\n%{url}"
-      md5_checksums_deprecated: "MD5 checksums are deprecated, please use SHA256"
-      migrate_deprecated_option: "Options should begin with with/without. Migrate '--%{option}' with `deprecated_option`."
-      missing_version: "missing version"
+      macports_patch_use_https: |-
+        Patches from MacPorts Trac should be https://, not http:
+        %{url}
+      md5_checksums_deprecated: MD5 checksums are deprecated, please use SHA256
+      migrate_deprecated_option: Options should begin with with/without. Migrate '--%{option}' with `deprecated_option`.
+      missing_version: missing version
       name_problem: "%{name}: %{problem}"
-      needs_ending_newline: "File should end with a newline"
-      no_dashes: "Reference '%{option}' without dashes"
-      no_hardcoding_compiler: "Use \"%{env}\" instead of hard-coding \"%{compiler}\""
-      path_should_be: "\"%{bad_path}\" should be \"%{good_path}\""
-      permissions_644: "Incorrect file permissions: chmod 644 %{path}"
+      needs_ending_newline: File should end with a newline
+      no_dashes: Reference '%{option}' without dashes
+      no_hardcoding_compiler: Use "%{env}" instead of hard-coding "%{compiler}"
+      path_should_be: '"%{bad_path}" should be "%{good_path}"'
+      permissions_644: 'Incorrect file permissions: chmod 644 %{path}'
       problems_in:
         one: "%{count} problem in %{n_formulae}"
         other: "%{count} problems in %{n_formulae}"
-      redundant_cvs_module: "Redundant CVS module appended to URL"
-      redundant_module_value: "Redundant :module value in URL"
-      replace_with_optional_dep: "Replace %{line} with \"depends_on %{dep} => :optional\""
-      replace_with_recommended_dep: "Replace %{line} with \"depends_on %{dep} => :recommended\""
+      redundant_cvs_module: Redundant CVS module appended to URL
+      redundant_module_value: Redundant :module value in URL
+      replace_with_optional_dep: Replace %{line} with "depends_on %{dep} => :optional"
+      replace_with_recommended_dep: Replace %{line} with "depends_on %{dep} => :recommended"
       resource_problem: "%{name} resource %{resource}: %{problem}"
-      scheme_deprecated: "Use of the %{url_scheme} scheme is deprecated, pass `:using => :%{symbol}` instead"
-      scons_args: "use \"scons *args\" instead of \"system 'scons', *args\""
+      scheme_deprecated: Use of the %{url_scheme} scheme is deprecated, pass `:using => :%{symbol}` instead
+      scons_args: use "scons *args" instead of "system 'scons', *args"
+      separate_make_calls: Use separate make calls
+      sha1_checksums_deprecated: SHA1 checksums are deprecated, please use SHA256
+      should_be_build_dependency: '%1 dependency should be "depends_on ''%1'' => :build"'
       should_be_build_or_run_dependency: |
         %{name} dependency should be
           depends_on "%{name}" => :build
         Or if it is indeed a runtime denpendency
           depends_on "%{name}" => :run
-      separate_make_calls: "Use separate make calls"
-      sha1_checksums_deprecated: "SHA1 checksums are deprecated, please use SHA256"
       skip_clean_all_deprecated: |
         `skip_clean :all` is deprecated; brew no longer strips symbols
                 Pass explicit paths to prevent Homebrew from removing empty folders.
-      specify_cvs_module: "Specify CVS module as `:module => \"%{module}\"` instead of appending it to the URL"
-      ssl3_deprecated: "The SSL3 download strategy is deprecated, please choose a different URL"
-      stable_and_devel_identical: "stable and devel versions are identical"
+      specify_cvs_module: Specify CVS module as `:module => "%{module}"` instead of appending it to the URL
+      ssl3_deprecated: The SSL3 download strategy is deprecated, please choose a different URL
+      stable_and_devel_identical: stable and devel versions are identical
       strategy_deprecated: "%{strategy} is deprecated, please choose a different URL"
       string_concat_in_interpolation: |
         Try not to concatenate paths in string interpolation:
            %{interpolation}
       trailing_whitespace: "%{line_num}: Trailing whitespace was found"
       unnecessary: "%{dir_with_path} is unnecessary; just use %{path}"
-      url_apache_https: "Apache urls should be https://, not http (url is %{url})."
-      url_bintray_https: "Bintray urls should be https://, not http (url is %{url})."
-      url_code_google_com_https: "code.google.com urls should be https://, not http (url is %{url})."
-      url_code_google_com_https_2: "Use https:// URLs for downloads from code.google (url is %{url})."
-      url_fossies_https: "Fossies urls should be https://, not http (url is %{url})."
-      url_ftp_gnu_org_https: "ftp.gnu.org urls should be https://, not http:// (url is %{url})."
-      url_github_no_zips: "Use GitHub tarballs rather than zipballs (url is %{url})."
-      url_github_tarballs: "Use /archive/ URLs for GitHub tarballs (url is %{url})."
-      url_github_use_https: "Use https:// URLs for accessing GitHub repositories (url is %{url})."
-      url_gitorious_use_https: "Use https:// URLs for accessing Gitorious repositories (url is %{url})."
-      url_googlecode_use_https: "Use https:// URLs for downloads from Google Code (url is %{url})."
-      url_mirrors_kernel_org_https: "mirrors.kernel urls should be https://, not http (url is %{url})."
-      url_sourceforge_geoloc: "Use http://downloads.sourceforge.net to get geolocation (url is %{url})."
-      url_sourceforge_no_download: "Don't use /download in SourceForge urls (url is %{url})."
-      url_sourceforge_no_mirror: "Don't use %{url_query_part}use_mirror in SourceForge urls (url is %{url})."
+      url_apache_https: Apache urls should be https://, not http (url is %{url}).
+      url_bintray_https: Bintray urls should be https://, not http (url is %{url}).
+      url_code_google_com_https: code.google.com urls should be https://, not http (url is %{url}).
+      url_code_google_com_https_2: Use https:// URLs for downloads from code.google (url is %{url}).
+      url_fossies_https: Fossies urls should be https://, not http (url is %{url}).
+      url_ftp_gnu_org_https: ftp.gnu.org urls should be https://, not http:// (url is %{url}).
+      url_github_no_zips: Use GitHub tarballs rather than zipballs (url is %{url}).
+      url_github_tarballs: Use /archive/ URLs for GitHub tarballs (url is %{url}).
+      url_github_use_https: Use https:// URLs for accessing GitHub repositories (url is %{url}).
+      url_gitorious_use_https: Use https:// URLs for accessing Gitorious repositories (url is %{url}).
+      url_googlecode_use_https: Use https:// URLs for downloads from Google Code (url is %{url}).
+      url_mirrors_kernel_org_https: mirrors.kernel urls should be https://, not http (url is %{url}).
+      url_sourceforge_geoloc: Use http://downloads.sourceforge.net to get geolocation (url is %{url}).
+      url_sourceforge_no_download: Don't use /download in SourceForge urls (url is %{url}).
+      url_sourceforge_no_mirror: Don't use %{url_query_part}use_mirror in SourceForge urls (url is %{url}).
       url_sourceforge_no_prdown: |
         Don't use prdownloads in SourceForge urls (url is %{url}).
             See: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/
-      url_sourceforge_no_specific: "Don't use specific dl mirrors in SourceForge urls (url is %{url})."
-      url_sourceforge_use_https: "Use https:// URLs for downloads from SourceForge (url is %{url})."
-      url_tools_ietf_org_https: "ietf urls should be https://, not http (url is %{url})."
-      url_using_redundant: "Redundant :using value in URL"
-      use_build_head: "Use 'build.head?' instead of inspecting 'version'"
-      use_build_instead_of_argv: "Use build instead of ARGV to check options"
-      use_build_with: "Don't duplicate 'with': Use `build.with? \"%{option}\"` to check for \"--with-%{option}\""
-      use_build_without: "Don't duplicate 'without': Use `build.without? \"%{option}\"` to check for \"--without-%{option}\""
-      use_build_with_not_include: "Use build.with%{out}? \"%{option}\" instead of build.include? 'with%{out}-%{option}'"
-      use_depends_on_fortran: "Use `depends_on :fortran` instead of `ENV.fortran`"
-      use_depends_on_hg: "Use `depends_on :hg` instead of `depends_on 'mercurial'`"
-      use_depends_on_java_to_set_java_home: "Use `depends_on :java` to set JAVA_HOME"
-      use_if_build_with: "Use if build.with?%{option} instead of unless build.without?%{option}"
-      use_if_build_without: "Use if build.without?%{option} instead of unless build.with?%{option}"
-      use_depends_on_x11: "Use \"depends_on :x11\" instead of \"ENV.x11\""
-      use_env_instead_of: "Use ENV instead of invoking '%{bad}' to modify the environment"
-      use_fortran_not_gfortran: "Use `depends_on :fortran` instead of `depends_on 'gfortran'`"
-      use_if_argv_build: "Use \"if build.%{build_test}?\" instead"
-      use_macos_version: "Use MacOS.version instead of MACOS_VERSION"
+      url_sourceforge_no_specific: Don't use specific dl mirrors in SourceForge urls (url is %{url}).
+      url_sourceforge_use_https: Use https:// URLs for downloads from SourceForge (url is %{url}).
+      url_tools_ietf_org_https: ietf urls should be https://, not http (url is %{url}).
+      url_using_redundant: Redundant :using value in URL
+      use_build_head: Use 'build.head?' instead of inspecting 'version'
+      use_build_instead_of_argv: Use build instead of ARGV to check options
+      use_build_with: 'Don''t duplicate ''with'': Use `build.with? "%{option}"` to check for "--with-%{option}"'
+      use_build_with_not_include: Use build.with%{out}? "%{option}" instead of build.include? 'with%{out}-%{option}'
+      use_build_without: 'Don''t duplicate ''without'': Use `build.without? "%{option}"` to check for "--without-%{option}"'
+      use_depends_on_fortran: Use `depends_on :fortran` instead of `ENV.fortran`
+      use_depends_on_hg: Use `depends_on :hg` instead of `depends_on 'mercurial'`
+      use_depends_on_java_to_set_java_home: Use `depends_on :java` to set JAVA_HOME
+      use_depends_on_x11: Use "depends_on :x11" instead of "ENV.x11"
+      use_env_instead_of: Use ENV instead of invoking '%{bad}' to modify the environment
+      use_fortran_not_gfortran: Use `depends_on :fortran` instead of `depends_on 'gfortran'`
+      use_if_argv_build: Use "if build.%{build_test}?" instead
+      use_if_build_with: Use if build.with?%{option} instead of unless build.without?%{option}
+      use_if_build_without: Use if build.without?%{option} instead of unless build.with?%{option}
+      use_macos_version: Use MacOS.version instead of MACOS_VERSION
       use_mpi_dependency: |
         There are multiple conflicting ways to install MPI. Use an MPIDependency:
           depends_on :mpi => [<lang list>]
         Where <lang list> is a comma delimited list that can include:
           :cc, :cxx, :f77, :f90
-      use_new_style_opt_defs: "Use new-style option definitions"
-      use_new_style_test_defs: "Use new-style test definitions (test do)"
-      use_patch_dsl: "Use the patch DSL instead of defining a 'patches' method"
-      use_system_alternative: "Use `system %{good_system}` instead of `system %{bad_system}` "
-      use_ruby_method_instead_of_system: "Use the `%{method}` Ruby method instead of `system %{shell_cmd}`"
-      use_spaces_not_tabs: "Use spaces instead of tabs for indentation"
-      version_empty_string: "version is set to an empty string"
+      use_new_style_opt_defs: Use new-style option definitions
+      use_new_style_test_defs: Use new-style test definitions (test do)
+      use_patch_dsl: Use the patch DSL instead of defining a 'patches' method
+      use_ruby_method_instead_of_system: Use the `%{method}` Ruby method instead of `system %{shell_cmd}`
+      use_spaces_not_tabs: Use spaces instead of tabs for indentation
+      use_system_alternative: 'Use `system %{good_system}` instead of `system %{bad_system}` '
+      version_empty_string: version is set to an empty string
       version_is_devel: "%{version} is a development release"
-      version_no_leading_v: "version %{version} should not have a leading 'v'"
-      version_redundant: "version %{version} is redundant with version scanned from URL"
-      version_symbol_deprecated: "\"%{symbol}\" is deprecated, use a comparison to MacOS.version instead"
-      xcodebuild_args: "use \"xcodebuild *args\" instead of \"system 'xcodebuild', *args\""
-      xcodebuild_symroot: "xcodebuild should be passed an explicit \"SYMROOT\""
-    #------------------------------------------------------------------------------
-    # `doctor` command
+      version_no_leading_v: version %{version} should not have a leading 'v'
+      version_redundant: version %{version} is redundant with version scanned from URL
+      version_symbol_deprecated: '"%{symbol}" is deprecated, use a comparison to MacOS.version instead'
+      xcodebuild_args: use "xcodebuild *args" instead of "system 'xcodebuild', *args"
+      xcodebuild_symroot: xcodebuild should be passed an explicit "SYMROOT"
     doctor:
       autoconf_xcode: |
         An "autoconf" in your path blocks the Xcode-provided version at:
@@ -535,8 +305,9 @@ en-US:
       dyld_vars_are_set: |
         Setting DYLD_* vars can break dynamic linking.
         Set variables:
-      dyld_vars_are_set_2: "    %{name}: %{value}\n"
-      dyld_vars_have_go_conflict: |
+      dyld_vars_are_set_2: |2
+            %{name}: %{value}
+      dyld_vars_have_go_conflict: |2
 
         Setting DYLD_INSERT_LIBRARIES can cause Go builds to fail.
         Having this set is common if you use this software:
@@ -592,7 +363,7 @@ en-US:
         Your Homebrew is not installed to /usr/local
         You can install Homebrew anywhere you want, but some brews may only build
         correctly if you install in /usr/local. Sorry!
-      homebrew_ok: "Your system is ready to brew."
+      homebrew_ok: Your system is ready to brew.
       install_clt: |
         No developer tools installed.
         Install the Command Line Tools:
@@ -608,12 +379,9 @@ en-US:
         with other strange results.
 
         You may wish to `brew unlink` these brews:
-
       libiconv_formula_linked: |
         A libiconv formula is installed and linked
         This will break stuff. For serious. Unlink it.
-      # Keep libiconv_not_in_usr within 72 columns
-      # <---------------------------------------------------------------------->
       libiconv_not_in_usr: |
         libiconv files detected at a system prefix other than /usr
         Homebrew doesn't provide a libiconv formula, and expects to link against
@@ -642,12 +410,9 @@ en-US:
             brew install %{deps}
 
         Run `brew missing` for more details.
-      # Packages mentioned by name
       name:
-        macfuse: "MacFuse"
-        os_x_10_8_2_supplemental: "OS X 10.8.2 Supplemental Update"
-      # Keep non_homebrew_gettext within 72 columns
-      # <---------------------------------------------------------------------->
+        macfuse: MacFuse
+        os_x_10_8_2_supplemental: OS X 10.8.2 Supplemental Update
       non_homebrew_gettext: |
         gettext files detected at a system prefix
         These files can cause compilation and link failures, especially if they
@@ -675,7 +440,8 @@ en-US:
         `HOMEBREW_KEEP_INFO` is no longer used
         info files are no longer deleted by default; you may
         remove this environment variable.
-      old_share_python_in_path: "%{path_prefix}/share/python%{python_suffix} is not needed in PATH.\n"
+      old_share_python_in_path: |
+        %{path_prefix}/share/python%{python_suffix} is not needed in PATH.
       old_share_python_in_path_more: |
         Formerly homebrew put Python scripts you installed via `pip` or `pip3`
         (or `easy_install`) into that directory above but now it can be removed
@@ -688,9 +454,9 @@ en-US:
         You seem to have osx-gcc-installer installed.
         Homebrew doesn't support osx-gcc-installer. It causes many builds to fail and
         is an unlicensed distribution of really old Xcode files.
-      osx_gcc_installer_advice: "Please install Xcode %{latest_xcode}."
+      osx_gcc_installer_advice: Please install Xcode %{latest_xcode}.
       osx_gcc_installer_advice_lion: |
-          Please install the CLT or Xcode %{latest_xcode}.
+        Please install the CLT or Xcode %{latest_xcode}.
       osx_gcc_installer_advice_mavericks: |
         Please run `xcode-select --install` to install the CLT.
       osx_libcurl_outdated: |
@@ -714,15 +480,15 @@ en-US:
         builds to fail. See:
           https://bugs.python.org/issue6138
           https://bugs.python.org/issue4655
+      python_bad_symlink: |
+        python is symlinked to %{python_bin}
+        This will confuse build scripts and in general lead to subtle breakage.
       python_in_library_frameworks: |
         Python is installed at /Library/Frameworks/Python.framework
 
         Homebrew only supports building against the System-provided Python or a
         brewed Python. In particular, Pythons installed to /Library can interfere
         with other software installs.
-      python_bad_symlink: |
-        python is symlinked to %{python_bin}
-        This will confuse build scripts and in general lead to subtle breakage.
       stray_config_scripts: |
         "config" scripts exist outside your system or Homebrew directories.
         `./configure` scripts often look for *-config scripts to determine if
@@ -732,7 +498,6 @@ en-US:
         Having additional scripts in your path can confuse software installed via
         Homebrew if the config script overrides a system or Homebrew provided
         script of the same name. We found the following "config" scripts:
-
       stray_dev_dir: |
         You have leftover files from an older version of Xcode.
         You should delete them using:
@@ -773,13 +538,11 @@ en-US:
         Older installations of Homebrew may have created a symlinked Cellar, but this can
         cause problems when two formula install to locations that are mapped on top of each
         other during the linking step.
-      tmpdir_doesnt_exist: "TMPDIR %{path} doesn't exist."
+      tmpdir_doesnt_exist: TMPDIR %{path} doesn't exist.
       trailing_slashes: |
         Some directories in your path end in a slash.
         Directories in your path should not end in a slash. This can break other
         doctor checks. The following directories should be edited:
-      # Keep uncommitted_mods within 72 columns
-      # <---------------------------------------------------------------------->
       uncommitted_mods: |
         You have uncommitted modifications to Homebrew
         If this a surprise to you, then you should stash these modifications.
@@ -807,7 +570,6 @@ en-US:
         by Homebrew. If a brew tries to add locale information to one of these
         directories, then the install will fail during the link step.
         You should probably `chown` them:
-
       unwritable_directory: |
         %{path} isn't writable.
 
@@ -899,59 +661,240 @@ en-US:
         Your XQuartz (%{installed_version}) is outdated
         Please install XQuartz %{latest_version}:
           https://xquartz.macosforge.org
-    #------------------------------------------------------------------------------
-    # `install` command
+    help: |
+      Example usage:
+        brew [info | home | options ] [FORMULA...]
+        brew install FORMULA...
+        brew uninstall FORMULA...
+        brew search [foo]
+        brew list [FORMULA...]
+        brew update
+        brew upgrade [FORMULA...]
+        brew pin/unpin [FORMULA...]
+
+      Troubleshooting:
+        brew doctor
+        brew install -vd FORMULA
+        brew [--env | config]
+
+      Brewing:
+        brew create [URL [--no-fetch]]
+        brew edit [FORMULA...]
+        open https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
+
+      Further help:
+        man brew
+        brew home
     install:
       cannot_create_dir: |
         Could not create %{path}
         Check you have permission to write to %{parent}
-      cannot_write_dir: "Cannot write to %{path}"
-      head_uppercase: "Specify `--HEAD` in uppercase to build from trunk."
-      macports_or_fink_installed_1: "It appears you have MacPorts or Fink installed."
+      cannot_write_dir: Cannot write to %{path}
+      formula_blacklisted: |-
+        No available formula for %1
+        %2
+      head_uppercase: Specify `--HEAD` in uppercase to build from trunk.
+      macports_or_fink_installed_1: It appears you have MacPorts or Fink installed.
       macports_or_fink_installed_2: |
         Software installed with other package managers causes known problems for
         Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again.
-      searching_formulae: "Searching formulae..."
-      searching_taps: "Searching taps..."
+      searching_formulae: Searching formulae...
+      searching_taps: Searching taps...
       unsupported_arch: |
         Sorry, Homebrew does not support your computer's CPU architecture.
         For PPC support, see: https://github.com/mistydemeo/tigerbrew
-    #------------------------------------------------------------------------------
-    # `list` command
     list:
-      files:
-        other: "%{path}/ (%{count} files)"
-      other_files:
-        other: "%{path}/ (%{count} other files)"
+      files: "%{path}/ (%{count} files)"
+      other_files: "%{path}/ (%{count} other files)"
       symlink: "%{symlink} -> %{target}"
-    #------------------------------------------------------------------------------
-    # `update` command
     update:
-      already_up_to_date: "Already up-to-date."
-      deleted_formulae: "Deleted Formulae"
-      homebrew_tap_structure_1: "Homebrew changed the structure of Taps like <someuser>/<sometap>. %{cont}"
-      homebrew_tap_structure_2: "So you may need to rename %{tap_path} manually."
+      already_up_to_date: Already up-to-date.
+      deleted_formulae: Deleted Formulae
+      homebrew_tap_structure_1: Homebrew changed the structure of Taps like <someuser>/<sometap>. %{cont}
+      homebrew_tap_structure_2: So you may need to rename %{tap_path} manually.
       homebrew_tap_structure_3: "%{tap_name} is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."
-      new_formulae: "New Formulae"
+      install_git: 
+      new_formulae: New Formulae
       no_formula_names: |
         This command updates brew itself, and does not take formula names.
         Use `brew upgrade <formula>`.
-      update_tap_failed: "Failed to update tap: %{github_user}/%{repo_name}"
-      updated_formulae: "Updated Formulae"
-      updated_homebrew: "Updated Homebrew from %{initial_revision} to %{current_revision}"
-    #------------------------------------------------------------------------------
-    # `upgrade` command
+      update_tap_failed: 'Failed to update tap: %{github_user}/%{repo_name}'
+      updated_formulae: Updated Formulae
+      updated_homebrew: Updated Homebrew from %{initial_revision} to %{current_revision}
     upgrade:
       formula_already_installed: "%{name} already installed"
       formula_name_and_version: "%{name} %{version}"
       formula_version_already_installed: "%{name} %{version} already installed"
       list_join: ", "
-      no_pkgs_to_upgrade: "No packages to upgrade"
+      no_pkgs_to_upgrade: No packages to upgrade
       not_upgrading_pinned_pkg:
-        one: "Not upgrading %{count} pinned package:"
-        other: "Not upgrading %{count} pinned packages:"
-      upgrading_formula: "Upgrading %{name}"
+        one: 'Not upgrading %{count} pinned package:'
+        other: 'Not upgrading %{count} pinned packages:'
+      upgrading_formula: Upgrading %{name}
       upgrading_outdated_pkg:
-        one: "Upgrading %{count} outdated package, with result:"
-        other: "Upgrading %{count} outdated packages, with result:"
-  #==============================================================================
+        one: 'Upgrading %{count} outdated package, with result:'
+        other: 'Upgrading %{count} outdated packages, with result:'
+  download_strategy:
+    already_downloaded: 'Already downloaded: %{path} '
+    aws_creds_missing: AWS credentials missing, trying public URL instead.
+    bad_s3_url: 'Bad S3 URL: %{url}'
+    best_mirror: Best Mirror %{url}
+    checking_out: Checking out %{ref_type} %{ref}
+    cloning: Cloning %{url}
+    couldnt_determine_mirror: Couldn't determine mirror, try again later.
+    downloading: Downloading %{url}
+    empty_archive: Empty archive
+    install_aws_sdk: Install the aws-sdk gem into the gem repo used by brew.
+    pouring: Pouring %{name}
+    removing_invalid_repo: Removing invalid repository from cache
+    trying_full_download: Trying a full download
+    trying_mirror: Trying a mirror...
+    unknown_download_strategy: Unknown download strategy %{name} was requested.
+    unknown_download_strategy_spec: Unknown download strategy specification %{name}
+    updating: Updating %{path}
+  extend:
+    argv:
+      multiple_kegs: |
+        Multiple kegs installed to %{rack}
+        However we don't know which one you refer to.
+        Please delete (with rm -rf!) all but one and then try again.
+    env:
+      alternative_fc: Building with an alternative Fortran compiler
+      can_change_fc: This may be changed by setting the FC environment variable.
+      cxx11_not_supported: 'The selected compiler doesn''t support C++11: %{name}'
+      gcc_formula_not_found: |
+        Homebrew GCC requested, but formula %{name} not found!
+        You may need to: brew tap homebrew/versions
+      gcc_not_installed: |
+        The requested Homebrew GCC, %{name}, was not installed.
+        You must:
+          brew tap homebrew/versions
+          brew install %{name}
+      gcc_not_installed_brew: |
+        The Homebrew GCC was not installed.
+        You must:
+          brew install gcc
+      gfortran_homebrew: Using Homebrew-provided fortran compiler.
+      gfortran_other: Using a fortran compiler found at %{path}.
+      invalid_value: 'Invalid value for %{source}: %{other}'
+      no_fc_flags: |
+        No Fortran optimization information was provided.  You may want to consider
+        setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
+        `brew install` if your compiler is compatible with GCC.
+
+        If you like the default optimization level of your compiler, ignore this
+        warning.
+      unsupported: This is unsupported.
+    fileutils: 
+    pathname:
+      does_not_exist: "%{path} does not exist"
+      exec_scripts_empty_targets: tried to write exec scripts to %{path} for an empty list of targets
+      files: "%{count} files, "
+      same_file: "%{path} is the same file as %{other}"
+      tried_to_install_empty_array_to: tried to install empty array to %{path}
+      tried_to_install_empty_hash_to: tried to install empty hash to %{path}
+      will_not_overwrite: Will not overwrite %{path}
+  formula_installer:
+    all_deps_satisfied: All dependencies for %{name} are satisfied.
+    already_installed_unlink: |
+      %{name}-%{linked_name} already installed
+      To install this version, first `brew unlink %{name}'
+    bottle_install_fail: 'Bottle installation failed: building from source.'
+    brew_link_error_1: An unexpected error occurred during the `brew link` step
+    brew_link_error_2: The formula built, but is not symlinked into %{path}
+    brew_link_not_complete: The `brew link` step did not complete successfully
+    brew_link_possible_conflict: 'Possible conflicting files are:'
+    brew_link_try_again_with: |
+      You can try again using:
+        brew link %{name}
+    caveats: Caveats
+    cellar_bottle: Building source; cellar of %{name}'s bottle is %{cellar}
+    cleaning: Cleaning
+    cleaning_not_complete_1: The cleaning step did not complete successfully
+    cleaning_not_complete_2: Still, the installation was successful, so we will link it into your prefix
+    dep_message: "%{dep}: %{message}"
+    deprecated_flag: "%{name}: %{old_flag} was deprecated; using %{new_flag} instead!"
+    empty_installation: Empty installation
+    failed_to_create_1: Failed to create %{path}
+    failed_to_create_2: Things that depend on %{name} will probably not build.
+    finishing_up: Finishing up
+    fix_install_names_fail_1: Failed to fix install names
+    fix_install_names_fail_2: |
+      The formula built, but you may encounter issues using it or linking other
+      formulae against it.
+    install_badge: "\U0001F37A"
+    install_plist_failed: Failed to install plist file
+    installing: Installing %{name_in_green}
+    installing_dep_for: 'Installing %{name} dependency: %{dep_in_green}'
+    installing_deps_for: 'Installing dependencies for %{name}: %{deps_in_green}'
+    keg_already_linked: This keg was marked linked already, continuing anyway
+    keg_only_1: This formula is keg-only, which means it was not symlinked into %{path}.
+    keg_only_2: |2
+
+
+      Generally there are no consequences of this for you. If you build your
+      own software and it requires this formula, you'll need to add to your
+      build variables:
+    keg_only_cppflags: |2
+          CPPFLAGS: -I%{path}
+    keg_only_ldflags: |2
+          LDFLAGS:  -L%{path}
+    must_link_deps: You must `brew link %{deps}' before %{name} can be installed
+    nothing_installed_to: Nothing was installed to %{path}
+    postinstall_fail_1: The post-install step did not complete successfully
+    postinstall_fail_2: You can try again using `brew postinstall %{name}`
+    summary: "%{path}: %{path_info}"
+    summary_title: Summary
+    summary_with_build_time: "%{path}: %{path_info}, built in %{build_time}"
+    suspicious_install_fail: Suspicious installation failure
+    unrecognized_bottle_arch: 'Unrecognized architecture for --bottle-arch: %{arch}'
+  software_spec:
+    cxx11: Build using C++11 mode
+    thirty_two_bit: Build 32-bit only
+    universal: Build a universal binary
+    with: Build with %{name} support
+    without: Build without %{name} support
+  utils:
+    arrow: "==>"
+    authentication_failed: |
+      GitHub %{error}
+      HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
+        https://github.com/settings/applications
+    cleaning_up: One sec, just cleaning up
+    closed_pull_requests: 'Closed pull requests:'
+    error_1: Error
+    error_2: ":"
+    failed_to_connect: |
+      Failed to connect to: %{url}
+      %{message}
+    failed_to_parse_json: |
+      Failed to parse JSON response
+      %{message}
+    gem_installed_but_exec_not_in_path: |
+      The '%{gem}' gem is installed but couldn't find '%{executable}' in the PATH:
+      %{path}
+    interactive_shell_abort: Aborting due to non-zero exit status
+    item_with_star: "%{item}*"
+    minutes:
+      one: "%{count} minute"
+      other: "%{count} minutes"
+    not_executable: "%{path} is not executable"
+    open_pull_requests: 'Open pull requests:'
+    path_component_invalid: 'The following PATH component is invalid: %{path}'
+    plural_called: plural() was called; Y U NO I18N ;-)
+    pull_request_with_url: "%{title} (%{html_url})"
+    rate_limit_exceeded: |
+      GitHub %{error}
+      Try again in %{duration}, or create an API token:
+        https://github.com/settings/applications
+      and then set HOMEBREW_GITHUB_API_TOKEN.
+    rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
+    searching_pull_requests: Searching pull requests...
+    seconds:
+      one: "%{count} second"
+      other: "%{count} seconds"
+    using_editor_as_fallback: |
+      Using %{editor} because no editor was set in the environment.
+      This may change in the future, so we recommend setting EDITOR, VISUAL,
+      or HOMEBREW_EDITOR to your preferred text editor.
+    warning: Warning
