@@ -284,7 +284,6 @@ ja:
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
       homebrew_tap_structure_3: 
-      install_git: 
       new_formulae: 
       no_formula_names: 
       update_tap_failed: 
@@ -332,7 +331,6 @@ ja:
       invalid_value: 
       no_fc_flags: 
       unsupported: 
-    fileutils: 
     pathname:
       does_not_exist: 
       exec_scripts_empty_targets: 

@@ -312,7 +312,6 @@ eo:
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
       homebrew_tap_structure_3: 
-      install_git: Bonvolu unue plenumi `brew install git'.
       new_formulae: Novaj Formuloj
       no_formula_names: |
         Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
@@ -362,7 +361,6 @@ eo:
       invalid_value: 
       no_fc_flags: 
       unsupported: 
-    fileutils: 
     pathname:
       does_not_exist: ne ekzistas %{path}
       exec_scripts_empty_targets: 
