@@ -258,12 +258,12 @@ def check_for_osx_gcc_installer
       MacOS.clang_version == "2.1"
     message = t('cmd.doctor.osx_gcc_installer')
     if MacOS.version >= :mavericks
-      message += t('cmd.doctor.osx_gcc_installer_advice.mavericks')
+      message += t('cmd.doctor.osx_gcc_installer_advice_mavericks')
     elsif MacOS.version >= :lion
-      message += t('cmd.doctor.osx_gcc_installer_advice.lion',
+      message += t('cmd.doctor.osx_gcc_installer_advice_lion',
                    :latest_xcode => MacOS::Xcode.latest_version)
     else
-      message += t('cmd.doctor.osx_gcc_installer_advice.other',
+      message += t('cmd.doctor.osx_gcc_installer_advice',
                    :latest_xcode => MacOS::Xcode.latest_version)
     end
   end

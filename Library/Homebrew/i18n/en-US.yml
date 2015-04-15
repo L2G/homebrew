@@ -688,13 +688,11 @@ en-US:
         You seem to have osx-gcc-installer installed.
         Homebrew doesn't support osx-gcc-installer. It causes many builds to fail and
         is an unlicensed distribution of really old Xcode files.
-      osx_gcc_installer_advice:
-        mavericks: |
-          Please run `xcode-select --install` to install the CLT.
-        lion: |
+      osx_gcc_installer_advice: "Please install Xcode %{latest_xcode}."
+      osx_gcc_installer_advice_lion: |
           Please install the CLT or Xcode %{latest_xcode}.
-        other: |
-          Please install Xcode %{latest_xcode}.
+      osx_gcc_installer_advice_mavericks: |
+        Please run `xcode-select --install` to install the CLT.
       osx_libcurl_outdated: |
         The version of libcurl provided with Mac OS X %{macos_version} has outdated
         SSL certificates.
