@@ -4,6 +4,16 @@ ja:
   # using online tools only. They are here just to demonstrate the look of
   # Japanese translations in Homebrew, and they probably need to be corrected.
   #==============================================================================
+  # cmd/
+  cmd:
+    #------------------------------------------------------------------------------
+    # `list` command
+    list:
+      files:
+        other: "%{path}/ （%{count}枚のファイル）"
+      other_files:
+        other: "%{path}/ （%{count}枚の追加ファイル）"
+  #==============================================================================
   # extend/
   extend:
     #----------------------------------------------------------------------------
@@ -19,4 +29,13 @@ ja:
     install_badge: 🍶
     summary: "%{path}：%{path_info}"
     summary_title: "結語"
+  #==============================================================================
+  utils:
+    minutes:
+      one: "%{count}分"
+      other: "%{count}分"
+    rate_limit_time_m_s: "%{n_minutes}%{n_seconds}"
+    seconds:
+      one: "%{count}秒"
+      other: "%{count}秒"
   #==============================================================================
