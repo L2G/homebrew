@@ -125,7 +125,7 @@ en-US:
   cmd:
     audit:
       add_test_do: A `test do` test block should be added
-      alias_should_be: Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name }'.
+      alias_should_be: Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name}'.
       audit_problems: audit problems
       audit_problems_formula: "%{name}:"
       audit_problems_list_item: " * %{item}"

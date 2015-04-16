@@ -1,32 +1,81 @@
-eo:
+en-CA:
   blacklist:
-    clojure: 
-    distributed_with_os_x: 'Apple disdonas "%{name}" kun OS X. Vi povas trovi ĝin ĉe: %{path}'
-    gfortran: 
-    google_tool: 
-    gsutil: 'Instalu "gsutil" jene: `pip install gsutil`'
-    haskell_platform: 
-    libiconv: 
-    lzma: 
-    macruby: 
-    osmium: 
-    pil: 
-    pip: 
-    play: 
-    rubinius: 
-    sshpass: 
-    tex: 
-    xcode_app_store: 
-    xcode_download: 
+    clojure: |-
+      Clojure isn't really a program but a library managed as part of a
+      project and Leiningen is the user interface to that library.
+
+      To install Clojure you should install Leiningen:
+        brew install leiningen
+      and then follow the tutorial:
+        https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
+    distributed_with_os_x: Apple distributes %{name} with OS X, you can find it in %{path}.
+    gfortran: |-
+      GNU Fortran is now provided as part of GCC, and can be installed with:
+        brew install gcc
+    google_tool: |-
+      Installing %{name} system-wide is not recommended; it should be vendored
+      in your projects that use it.
+    gsutil: Install gsutil with `pip install gsutil`
+    haskell_platform: |-
+      We no longer package haskell-platform. Consider installing ghc
+      and cabal-install instead:
+        brew install ghc cabal-install
+
+      A binary installer is available:
+        https://www.haskell.org/platform/mac.html
+    libiconv: |-
+      Apple distributes %{name} with OS X, you can find it in /usr/lib.
+      Some build scripts fail to detect it correctly, please check existing
+      formulae for solutions.
+    lzma: lzma is now part of the xz formula.
+    macruby: |-
+      MacRuby works better when you install their package:
+        http://www.macruby.org/
+    osmium: |-
+      The creator of Osmium requests that it not be packaged and that people
+      use the GitHub master branch instead.
+    pil: Instead of PIL, consider `pip install pillow` or `brew install Homebrew/python/pillow`.
+    pip: |-
+      Homebrew provides pip via: `brew install python`. However you will then
+      have two Pythons installed on your Mac, so alternatively you can:
+          sudo easy_install pip
+    play: |-
+      Play 2.3 replaces the play command with activator:
+        brew install typesafe-activator
+
+      You can read more about this change at:
+        https://www.playframework.com/documentation/2.3.x/Migration23
+        https://www.playframework.com/documentation/2.3.x/Highlights23
+    rubinius: |-
+      Rubinius requires an existing Ruby 2.0 to bootstrap.
+      Doing this through Homebrew is error-prone. Instead, consider using
+      `ruby-build` to build and install specific versions of Ruby:
+          brew install ruby-build
+    sshpass: |-
+      We won't add sshpass because it makes it too easy for novice SSH users to
+      ruin SSH's security.
+    tex: |-
+      Installing TeX from source is weird and gross, requires a lot of patches,
+      and only builds 32-bit (and thus can't use Homebrew deps on Snow Leopard.)
+
+      We recommend using a MacTeX distribution: https://www.tug.org/mactex/
+    xcode_app_store: Xcode can be installed from the App Store.
+    xcode_download: Xcode can be installed from https://developer.apple.com/downloads/
   brew:
-    bad_sudo: Malkuraĝe rifuzas plenumi `sudo brew %{cmd}`
-    bad_xcode_path: 
+    bad_sudo: Cowardly refusing to `sudo brew %{cmd}`
+    bad_xcode_path: |-
+      Your xcode-select path is currently set to '/'.
+      This causes the `xcrun` tool to hang, and can render Homebrew unusable.
+      If you are using Xcode, you should:
+        sudo xcode-select -switch /Applications/Xcode.app
+      Otherwise, you should:
+        sudo rm -rf /usr/share/xcode-select
     formula_unspecified: 
-    homebrew_version: Homebrew %{version}
-    invalid_usage: Nevalida uzado
+    homebrew_version: 
+    invalid_usage: 
     keg_unspecified: 
     no_tiger_support: 
-    no_working_dir: La kuranta dosierujo ne existas. Ne povas procedi.
+    no_working_dir: 
     please_report_bug: 
     refuse_root_or_usr: 
     unknown_command: 
@@ -44,29 +93,41 @@ eo:
     plist_startup: 
     plist_then_load: 
     plist_tmux_warning: 
-    plist_upgrade: 
-    python_find_keg_bindings: 
-    python_modules_installed: 
-    python_pth_files_installed: 
-    zsh_completion: 
+    plist_upgrade: 'To reload %{name} after an upgrade:'
+    python_find_keg_bindings: |-
+      If you need Python to find bindings for this keg-only formula, run:
+        %{cmd}
+    python_modules_installed: |-
+      Python modules have been installed and Homebrew's site-packages is not
+      in your Python sys.path, so you will not be able to import the modules
+      this formula installed. If you plan to develop with these modules,
+      please run:
+    python_pth_files_installed: |-
+      This formula installed .pth files to Homebrew's site-packages and your
+      Python isn't configured to process them, so you will not be able to
+      import the modules this formula installed. If you plan to develop
+      with these modules, please run:
+    zsh_completion: |-
+      zsh completion has been installed to:
+        %{path}
   cmd:
     audit:
-      add_test_do: 
-      alias_should_be: 
-      audit_problems: 
-      audit_problems_formula: 
-      audit_problems_list_item: 
-      cant_find_conflicting: 
-      cant_find_dependency: 
-      caveats_no_setuid: 
-      checksum_empty: 
-      checksum_invalid_chars: 
-      checksum_should_be_lowercase: 
-      checksum_should_be_n_chars: 
-      class_inheritance_space: 
-      comment_cmake_found: 
+      add_test_do: A `test do` test block should be added
+      alias_should_be: Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name}'.
+      audit_problems: audit problems
+      audit_problems_formula: "%{name}:"
+      audit_problems_list_item: " * %{item}"
+      cant_find_conflicting: Can't find conflicting formula %{name}.
+      cant_find_dependency: Can't find dependency %{name}.
+      caveats_no_setuid: Don't recommend setuid in the caveats, suggest sudo instead.
+      checksum_empty: "%{checksum_type} is empty"
+      checksum_invalid_chars: "%{checksum_type} contains invalid characters"
+      checksum_should_be_lowercase: "%{checksum_type} should be lowercase"
+      checksum_should_be_n_chars: "%{checksum_type} should be %{count} characters"
+      class_inheritance_space: 'Use a space in class inheritance: class Foo < %{superclass}'
+      comment_cmake_found: Commented cmake call found
       comment_remove_default: 
-      commented_out_dep: 
+      commented_out_dep: Commented-out dep %{dep}
       data_without_end: 
       debian_patch_use_https: 
       define_method_in_class_body: 
@@ -84,28 +145,28 @@ eo:
       formula_factory: 
       formula_subclass_deprecated: 
       formulae: 
-      git_specify_revision_with_tag: 
+      git_specify_revision_with_tag: Git should specify :revision when a :tag is specified.
       github_patch_macports: 
       github_patch_needs_rev: 
-      github_patch_use_dot_diff: 
-      head_only: 
-      homepage_apache_https: 
-      homepage_debian_https: 
-      homepage_freedesktop_https_project: 
-      homepage_freedesktop_https_software_project: 
-      homepage_freedesktop_https_wiki: 
-      homepage_github_https: 
-      homepage_github_io_https: 
-      homepage_gnome_https: 
-      homepage_gnu_ftpmirror: 
-      homepage_gnu_https: 
-      homepage_gnupg_https: 
-      homepage_googlecode_end_slash: 
-      homepage_googlecode_https: 
-      homepage_ietf_https: 
-      homepage_savannah_https: 
-      homepage_should_be_http: 
-      inreplace_block_var: 
+      github_patch_use_dot_diff: GitHub appends a git version to patches; use .diff instead.
+      head_only: Head-only (no stable download)
+      homepage_apache_https: Apache homepages should be https:// links (URL is %{url}).
+      homepage_debian_https: Debian homepage should be https:// links (URL is %{url}).
+      homepage_freedesktop_https_project: The url should be styled `https://wiki.freedesktop.org/project_name`, not %{url}).
+      homepage_freedesktop_https_software_project: The url should be styled `https://wiki.freedesktop.org/www/Software/project_name`, not %{url}).
+      homepage_freedesktop_https_wiki: Freedesktop's Wiki subdomain should be https:// (URL is %{url}).
+      homepage_github_https: Use https:// URLs for homepages on GitHub (URL is %{url}).
+      homepage_github_io_https: Github Pages links should be https:// (URL is %{url}).
+      homepage_gnome_https: Gnome homepages should be https:// links (URL is %{url}).
+      homepage_gnu_ftpmirror: '"http://ftpmirror.gnu.org" is preferred for GNU software (url is %{url}).'
+      homepage_gnu_https: GNU homepages should be https:// links (URL is %{url}).
+      homepage_gnupg_https: GnuPG homepages should be https:// links (URL is %{url}).
+      homepage_googlecode_end_slash: Google Code homepage should end with a slash (URL is %{url}).
+      homepage_googlecode_https: Google Code homepages should be https:// links (URL is %{url}).
+      homepage_ietf_https: ietf homepages should be https:// links (URL is %{url}).
+      homepage_savannah_https: Savannah homepages should be https:// links (URL is %{url}).
+      homepage_should_be_http: The homepage should start with http or https (URL is %{url}).
+      inreplace_block_var: '"inreplace <filenames> do |s|" is preferred over "|%{block_var}|".'
       is_now_unnecessary: 
       macports_patch_use_https: 
       md5_checksums_deprecated: 
@@ -188,18 +249,13 @@ eo:
       xcodebuild_symroot: 
     doctor:
       autoconf_xcode: 
-      broken_symlinks: |
-        Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
-          %{broken_symlinks}
+      broken_symlinks: 
       cellar_and_temp_not_same_vol: 
       dyld_vars_are_set: 
       dyld_vars_are_set_2: 
       dyld_vars_have_go_conflict: 
       enthought_python_in_path: 
-      filesystem_case_sensitive: |
-        La dosiersistemo ĉe %{paths} aspektas usklecodistinga.
-        La dosiersistemo de OS X kutime estas ne-usklecodistinga.
-        Bonvolu raporti iujn ajn ŝajnajn zorgojn.
+      filesystem_case_sensitive: 
       git_autocrlf_settings: 
       git_not_found: 
       git_outdated: 
@@ -268,30 +324,7 @@ eo:
       xcode_prefix_nonexistent: 
       xcode_select_path_invalid: 
       xquartz_is_outdated: 
-    help: |
-      Ekzemploj de la uzado:
-        brew [info | home | options ] [FORMULA...]
-        brew install FORMULA...
-        brew uninstall FORMULA...
-        brew search [foo]
-        brew list [FORMULA...]
-        brew update
-        brew upgrade [FORMULA...]
-        brew pin/unpin [FORMULA...]
-
-      Diagnozi ĝenaĵojn:
-        brew doctor
-        brew install -vd FORMULA
-        brew [--env | config]
-
-      Fermenti:
-        brew create [URL [--no-fetch]]
-        brew edit [FORMULA...]
-        open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
-
-      Pluaj helpoj:
-        man brew
-        brew home
+    help: 
     install:
       cannot_create_dir: 
       cannot_write_dir: 
@@ -303,22 +336,20 @@ eo:
       searching_taps: 
       unsupported_arch: 
     list:
-      files: "%{path}/ (%{count} dosieroj)"
-      other_files: "%{path}/ (%{count} kromaj dosieroj)"
-      symlink: "%{symlink} → %{target}"
+      files: 
+      other_files: 
+      symlink: 
     update:
       already_up_to_date: 
-      deleted_formulae: Forprenitaj Formuloj
+      deleted_formulae: 
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
       homebrew_tap_structure_3: 
-      new_formulae: Novaj Formuloj
-      no_formula_names: |
-        Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
-        nomojn.  Uzu `brew upgrade <formula>`.
+      new_formulae: 
+      no_formula_names: 
       update_tap_failed: 
-      updated_formulae: "Ĝisdatigitaj Formuloj"
-      updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
+      updated_formulae: 
+      updated_homebrew: 
     upgrade:
       formula_already_installed: 
       formula_name_and_version: 
@@ -362,22 +393,20 @@ eo:
       no_fc_flags: 
       unsupported: 
     pathname:
-      does_not_exist: ne ekzistas %{path}
+      does_not_exist: 
       exec_scripts_empty_targets: 
-      files: "%{count} dosieroj, "
+      files: 
       same_file: 
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 
       will_not_overwrite: 
   formula_installer:
     all_deps_satisfied: 
-    already_installed_unlink: |
-      %{name}-%{linked_name} jam estas instalita
-      Por instali ĉi tiun eldonon, unue rulu `brew unlink %{name}'
+    already_installed_unlink: 
     bottle_install_fail: 
     brew_link_error_1: 
     brew_link_error_2: 
-    brew_link_not_complete: La paŝo `brew link` ne estas sukcese kompletita
+    brew_link_not_complete: 
     brew_link_possible_conflict: 
     brew_link_try_again_with: 
     caveats: 
@@ -407,9 +436,9 @@ eo:
     nothing_installed_to: 
     postinstall_fail_1: 
     postinstall_fail_2: 
-    summary: "%{path}: %{path_info}"
+    summary: 
     summary_title: 
-    summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
+    summary_with_build_time: 
     suspicious_install_fail: 
     unrecognized_bottle_arch: 
   software_spec:
@@ -421,28 +450,24 @@ eo:
   utils:
     arrow: 
     authentication_failed: 
-    cleaning_up: Unu sekundo, nun purigas
+    cleaning_up: 
     closed_pull_requests: 
-    error_1: Eraro
-    error_2: ":"
+    error_1: 
+    error_2: 
     failed_to_connect: 
     failed_to_parse_json: 
     gem_installed_but_exec_not_in_path: 
     interactive_shell_abort: 
     item_with_star: 
-    minutes:
-      one: "%{count} minuto"
-      other: "%{count} minutoj"
-    not_executable: "%{path} ne estas plenumebla"
+    minutes: 
+    not_executable: 
     open_pull_requests: 
     path_component_invalid: 
     plural_called: 
     pull_request_with_url: 
     rate_limit_exceeded: 
-    rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
+    rate_limit_time_m_s: 
     searching_pull_requests: 
-    seconds:
-      one: "%{count} sekundo"
-      other: "%{count} sekundoj"
+    seconds: 
     using_editor_as_fallback: 
-    warning: Averto
+    warning: 

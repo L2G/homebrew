@@ -1,7 +1,7 @@
 ja:
   blacklist:
     clojure: 
-    distributed_with_os_x: 
+    distributed_with_os_x: Appleはそれが%{path}にありますOS Xに%{name}を配布しています。
     gfortran: 
     google_tool: 
     gsutil: 
@@ -387,17 +387,21 @@ ja:
     with: 
     without: 
   utils:
-    arrow: 
+    arrow: "＝＝＞"
     authentication_failed: 
     cleaning_up: 
     closed_pull_requests: 
-    error_1: 
-    error_2: 
-    failed_to_connect: 
-    failed_to_parse_json: 
+    error_1: "エラー"
+    error_2: "："
+    failed_to_connect: |-
+      %{url}：への接続に失敗しました
+      %{message}
+    failed_to_parse_json: |-
+      JSONレスポンスの解析に失敗しました
+      %{message}
     gem_installed_but_exec_not_in_path: 
     interactive_shell_abort: 
-    item_with_star: 
+    item_with_star: "%{item}*"
     minutes:
       one: "%{count}分"
       other: "%{count}分"
