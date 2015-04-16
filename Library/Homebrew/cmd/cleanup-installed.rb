@@ -10,12 +10,7 @@
 
 module Homebrew
   def cleanup_installed
-    opoo <<-EOS.undent
-      brew cleanup-installed is deprecated and will be removed soon!
-
-      Please consider using the `brew brewdle dump` and `brew brewdle cleanup`
-      commands from https://github.com/Homebrew/homebrew-brewdler
-    EOS
+    opoo t('cmd.cleanup_installed_deprecated')
     cleanup_file = Pathname.new "#{ENV["HOME"]}/.brew-cleanup-installed"
     return unless cleanup_file.exist?
 

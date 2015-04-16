@@ -249,6 +249,11 @@ en-CA:
       version_symbol_deprecated: 
       xcodebuild_args: 
       xcodebuild_symroot: 
+    cleanup_installed_deprecated: |
+      brew cleanup-installed is deprecated and will be removed soon!
+
+      Please consider using the `brew brewdle dump` and `brew brewdle cleanup`
+      commands from https://github.com/Homebrew/homebrew-brewdler
     doctor:
       autoconf_xcode: 
       broken_symlinks: 

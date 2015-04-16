@@ -288,6 +288,11 @@ en-US:
       version_symbol_deprecated: '"%{symbol}" is deprecated, use a comparison to MacOS.version instead'
       xcodebuild_args: use "xcodebuild *args" instead of "system 'xcodebuild', *args"
       xcodebuild_symroot: xcodebuild should be passed an explicit "SYMROOT"
+    cleanup_installed_deprecated: |
+      brew cleanup-installed is deprecated and will be removed soon!
+
+      Please consider using the `brew brewdle dump` and `brew brewdle cleanup`
+      commands from https://github.com/Homebrew/homebrew-brewdler
     doctor:
       autoconf_xcode: |
         An "autoconf" in your path blocks the Xcode-provided version at:

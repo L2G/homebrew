@@ -189,6 +189,7 @@ eo:
       version_symbol_deprecated: 
       xcodebuild_args: 
       xcodebuild_symroot: 
+    cleanup_installed_deprecated: 
     doctor:
       autoconf_xcode: 
       broken_symlinks: |
