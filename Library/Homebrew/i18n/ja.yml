@@ -378,7 +378,6 @@ ja:
     summary: "%{path}：%{path_info}"
     summary_title: "結語"
     summary_with_build_time: 
-    suspicious_install_fail: 
     unrecognized_bottle_arch: 
   software_spec:
     cxx11: 

@@ -844,7 +844,6 @@ en-US:
     summary: "%{path}: %{path_info}"
     summary_title: Summary
     summary_with_build_time: "%{path}: %{path_info}, built in %{build_time}"
-    suspicious_install_fail: Suspicious installation failure
     unrecognized_bottle_arch: 'Unrecognized architecture for --bottle-arch: %{arch}'
   software_spec:
     cxx11: Build using C++11 mode

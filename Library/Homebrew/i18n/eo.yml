@@ -410,7 +410,6 @@ eo:
     summary: "%{path}: %{path_info}"
     summary_title: 
     summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
-    suspicious_install_fail: 
     unrecognized_bottle_arch: 
   software_spec:
     cxx11: 
