@@ -108,6 +108,7 @@ ja:
       homepage_savannah_https: 
       homepage_should_be_http: 
       inreplace_block_var: 
+      installation_empty: 
       is_now_unnecessary: 
       macports_patch_use_https: 
       md5_checksums_deprecated: 
@@ -120,6 +121,7 @@ ja:
       path_should_be: 
       permissions_644: 
       problems_in: 
+      quoted_dep: 
       redundant_cvs_module: 
       redundant_module_value: 
       replace_with_optional_dep: 

@@ -186,6 +186,10 @@ en-US:
       homepage_savannah_https: Savannah homepages should be https:// links (URL is %{url}).
       homepage_should_be_http: The homepage should start with http or https (URL is %{url}).
       inreplace_block_var: '"inreplace <filenames> do |s|" is preferred over "|%{block_var}|".'
+      installation_empty: |
+        The installation seems to be empty. Please ensure the prefix
+        is set correctly and expected files are installed.
+        The prefix configure/make argument may be case-sensitive.
       is_now_unnecessary: "`%{require_formula}` is now unnecessary"
       macports_patch_use_https: |-
         Patches from MacPorts Trac should be https://, not http:
@@ -202,6 +206,7 @@ en-US:
       problems_in:
         one: "%{count} problem in %{n_formulae}"
         other: "%{count} problems in %{n_formulae}"
+      quoted_dep: "'%{dep}'"
       redundant_cvs_module: Redundant CVS module appended to URL
       redundant_module_value: Redundant :module value in URL
       replace_with_optional_dep: Replace %{line} with "depends_on %{dep} => :optional"

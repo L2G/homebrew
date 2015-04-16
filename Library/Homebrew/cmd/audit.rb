@@ -778,11 +778,7 @@ class FormulaAuditor
       return
     end
 
-    problem <<-EOS.undent
-      The installation seems to be empty. Please ensure the prefix
-      is set correctly and expected files are installed.
-      The prefix configure/make argument may be case-sensitive.
-    EOS
+    problem t('cmd.audit.installation_empty')
   end
 
   def audit_conditional_dep(dep, condition, line)
@@ -802,7 +798,7 @@ class FormulaAuditor
   end
 
   def quote_dep(dep)
-    Symbol === dep ? dep.inspect : "'#{dep}'"
+    Symbol === dep ? dep.inspect : t('cmd.audit.quoted_dep', :dep => dep)
   end
 
   def audit_check_output(output)
@@ -952,8 +948,7 @@ class ResourceAuditor
         if mod == name
           problem t('cmd.audit.redundant_cvs_module')
         else
-          problem t('cmd.audit.specify_cvs_module',
-                    :module => mod)
+          problem t('cmd.audit.specify_cvs_module', :module => mod)
         end
       end
     end

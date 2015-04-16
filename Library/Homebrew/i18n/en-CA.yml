@@ -165,6 +165,10 @@ en-CA:
       homepage_savannah_https: Savannah homepages should be https:// links (URL is %{url}).
       homepage_should_be_http: The homepage should start with http or https (URL is %{url}).
       inreplace_block_var: '"inreplace <filenames> do |s|" is preferred over "|%{block_var}|".'
+      installation_empty: |
+        The installation seems to be empty. Please ensure the prefix
+        is set correctly and expected files are installed.
+        The prefix configure/make argument may be case-sensitive.
       is_now_unnecessary: 
       macports_patch_use_https: 
       md5_checksums_deprecated: 
@@ -177,6 +181,7 @@ en-CA:
       path_should_be: 
       permissions_644: 
       problems_in: 
+      quoted_dep: "'%{dep}'"
       redundant_cvs_module: 
       redundant_module_value: 
       replace_with_optional_dep: 
