@@ -47,11 +47,6 @@ en-US:
       You can read more about this change at:
         https://www.playframework.com/documentation/2.3.x/Migration23
         https://www.playframework.com/documentation/2.3.x/Highlights23
-    rubinius: |
-      Rubinius requires an existing Ruby 2.0 to bootstrap.
-      Doing this through Homebrew is error-prone. Instead, consider using
-      `ruby-build` to build and install specific versions of Ruby:
-          brew install ruby-build
     sshpass: |
       We won't add sshpass because it makes it too easy for novice SSH users to
       ruin SSH's security.
@@ -213,7 +208,6 @@ en-US:
       scons_args: use "scons *args" instead of "system 'scons', *args"
       separate_make_calls: Use separate make calls
       sha1_checksums_deprecated: SHA1 checksums are deprecated, please use SHA256
-      should_be_build_dependency: '%1 dependency should be "depends_on ''%1'' => :build"'
       should_be_build_or_run_dependency: |
         %{name} dependency should be
           depends_on "%{name}" => :build
@@ -363,7 +357,6 @@ en-US:
         Your Homebrew is not installed to /usr/local
         You can install Homebrew anywhere you want, but some brews may only build
         correctly if you install in /usr/local. Sorry!
-      homebrew_ok: Your system is ready to brew.
       install_clt: |
         No developer tools installed.
         Install the Command Line Tools:
@@ -410,9 +403,6 @@ en-US:
             brew install %{deps}
 
         Run `brew missing` for more details.
-      name:
-        macfuse: MacFuse
-        os_x_10_8_2_supplemental: OS X 10.8.2 Supplemental Update
       non_homebrew_gettext: |
         gettext files detected at a system prefix
         These files can cause compilation and link failures, especially if they
@@ -611,16 +601,12 @@ en-US:
         Consider setting your PATH so that %{path}
         occurs before /usr/bin. Here is a one-liner:
             echo 'export PATH="%{path}:$PATH"' >> %{shell_profile}
-      xcode_clt_install_from_cli: |
-        Run `xcode-select --install` to install them.
       xcode_clt_install_from_web: |
         No developer tools installed.
         You should install the Command Line Tools.
         The standalone package can be obtained from
           https://developer.apple.com/downloads
         or it can be installed via Xcode's preferences.
-      xcode_clt_outdated: |
-        A newer Command Line Tools release is available
       xcode_clt_update_from_app_store: |
         A newer Command Line Tools release is available.
         Update them from Software Update in the App Store.
@@ -690,9 +676,6 @@ en-US:
         Could not create %{path}
         Check you have permission to write to %{parent}
       cannot_write_dir: Cannot write to %{path}
-      formula_blacklisted: |-
-        No available formula for %1
-        %2
       head_uppercase: Specify `--HEAD` in uppercase to build from trunk.
       macports_or_fink_installed_1: It appears you have MacPorts or Fink installed.
       macports_or_fink_installed_2: |

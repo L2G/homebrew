@@ -13,7 +13,6 @@ eo:
     pil: 
     pip: 
     play: 
-    rubinius: 
     sshpass: 
     tex: 
     xcode_app_store: 
@@ -127,7 +126,6 @@ eo:
       scons_args: 
       separate_make_calls: 
       sha1_checksums_deprecated: 
-      should_be_build_dependency: 
       should_be_build_or_run_dependency: 
       skip_clean_all_deprecated: 
       specify_cvs_module: 
@@ -207,7 +205,6 @@ eo:
       git_remote_origin_suspect: 
       homebrew_is_outdated: 
       homebrew_not_in_usr_local: 
-      homebrew_ok: 
       install_clt: 
       keg_only_formula_linked: 
       libiconv_formula_linked: 
@@ -215,9 +212,6 @@ eo:
       macgpg2: 
       macports_or_fink: 
       missing_deps: 
-      name:
-        macfuse: 
-        os_x_10_8_2_supplemental: 
       non_homebrew_gettext: 
       non_homebrew_pkgconfig: 
       non_homebrew_pkgconfig_mono: 
@@ -255,9 +249,7 @@ eo:
       user_path_has_no_homebrew_bin: 
       user_path_has_no_homebrew_sbin: 
       user_path_out_of_order: 
-      xcode_clt_install_from_cli: 
       xcode_clt_install_from_web: 
-      xcode_clt_outdated: 
       xcode_clt_update_from_app_store: 
       xcode_clt_update_from_web: 
       xcode_license_not_agreed: 
@@ -295,7 +287,6 @@ eo:
     install:
       cannot_create_dir: 
       cannot_write_dir: 
-      formula_blacklisted: 
       head_uppercase: 
       macports_or_fink_installed_1: 
       macports_or_fink_installed_2: 
