@@ -189,6 +189,12 @@ ja:
       version_symbol_deprecated: 
       xcodebuild_args: 
       xcodebuild_symroot: 
+    cleanup:
+      only_one_version: 
+      removing_path: 
+      removing_path_dry_run: 
+      skipping_keg_only: 
+      skipping_linked_keg: 
     cleanup_installed_deprecated: 
     doctor:
       autoconf_xcode: 

@@ -249,6 +249,12 @@ en-CA:
       version_symbol_deprecated: 
       xcodebuild_args: 
       xcodebuild_symroot: 
+    cleanup:
+      only_one_version: 'Skipping %{name}: most recent version %{version} not installed'
+      removing_path: 'Removing: %{path}... (%{abv})'
+      removing_path_dry_run: 'Would remove: %{path} (%{abv})'
+      skipping_keg_only: 'Skipping (old) keg-only: %{name}'
+      skipping_linked_keg: Skipping (old) %{name} due to it being linked
     cleanup_installed_deprecated: |
       brew cleanup-installed is deprecated and will be removed soon!
 

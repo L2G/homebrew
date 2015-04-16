@@ -288,6 +288,12 @@ en-US:
       version_symbol_deprecated: '"%{symbol}" is deprecated, use a comparison to MacOS.version instead'
       xcodebuild_args: use "xcodebuild *args" instead of "system 'xcodebuild', *args"
       xcodebuild_symroot: xcodebuild should be passed an explicit "SYMROOT"
+    cleanup:
+      only_one_version: 'Skipping %{name}: most recent version %{version} not installed'
+      removing_path: 'Removing: %{path}... (%{abv})'
+      removing_path_dry_run: 'Would remove: %{path} (%{abv})'
+      skipping_keg_only: 'Skipping (old) keg-only: %{name}'
+      skipping_linked_keg: Skipping (old) %{name} due to it being linked
     cleanup_installed_deprecated: |
       brew cleanup-installed is deprecated and will be removed soon!
 

@@ -46,19 +46,21 @@ module Homebrew
         if f.can_cleanup?
           cleanup_keg(keg)
         else
-          opoo "Skipping (old) keg-only: #{keg}"
+          opoo t('cmd.cleanup.skipping_keg_only', :name => keg)
         end
       end
     elsif f.rack.subdirs.length > 1
       # If the cellar only has one version installed, don't complain
       # that we can't tell which one to keep.
-      opoo "Skipping #{f.name}: most recent version #{f.pkg_version} not installed"
+      opoo t('cmd.cleanup.only_one_version',
+             :name => f.name,
+             :version => f.pkg_version)
     end
   end
 
   def cleanup_keg keg
     if keg.linked?
-      opoo "Skipping (old) #{keg} due to it being linked"
+      opoo t('cmd.cleanup.skipping_linked_keg', :name => keg)
     else
       cleanup_path(keg) { keg.uninstall }
     end
@@ -84,9 +86,13 @@ module Homebrew
 
   def cleanup_path(path)
     if ARGV.dry_run?
-      puts "Would remove: #{path} (#{path.abv})"
+      puts t('cmd.cleanup.removing_path_dry_run',
+             :path => path,
+             :abv => path.abv)
     else
-      puts "Removing: #{path}... (#{path.abv})"
+      puts t('cmd.cleanup.removing_path',
+             :path => path,
+             :abv => path.abv)
       yield
     end
   end
