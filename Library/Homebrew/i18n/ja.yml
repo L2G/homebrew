@@ -48,6 +48,9 @@ ja:
     python_modules_installed: 
     python_pth_files_installed: 
     zsh_completion: 
+  cleaner:
+    fixing_permissions: 
+    rmdir_empty: 
   cmd:
     audit:
       add_test_do: 

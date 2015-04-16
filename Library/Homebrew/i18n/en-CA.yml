@@ -105,6 +105,9 @@ en-CA:
     zsh_completion: |-
       zsh completion has been installed to:
         %{path}
+  cleaner:
+    fixing_permissions: Fixing %{path} permissions from %{old_perms} to %{new_perms}
+    rmdir_empty: 'rmdir: %{path} (empty)'
   cmd:
     audit:
       add_test_do: A `test do` test block should be added
