@@ -427,6 +427,8 @@ en-CA:
     summary_title: 
     summary_with_build_time: 
     unrecognized_bottle_arch: 
+  global:
+    sudo_bad: 
   software_spec:
     cxx11: 
     thirty_two_bit: 
