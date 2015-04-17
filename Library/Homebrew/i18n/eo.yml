@@ -310,7 +310,7 @@ eo:
       other_files: "%{path}/ (%{count} kromaj dosieroj)"
       symlink: "%{symlink} → %{target}"
     update:
-      already_up_to_date: 
+      already_up_to_date: Jam estas ĝisdata.
       deleted_formulae: Forprenitaj Formuloj
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
@@ -423,7 +423,7 @@ eo:
     with: 
     without: 
   utils:
-    arrow: 
+    arrow: "==>"
     authentication_failed: 
     cleaning_up: Unu sekundo, nun purigas
     closed_pull_requests: 

@@ -346,7 +346,7 @@ en-CA:
       other_files: 
       symlink: 
     update:
-      already_up_to_date: 
+      already_up_to_date: Already up-to-date.
       deleted_formulae: 
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
@@ -455,7 +455,7 @@ en-CA:
     with: 
     without: 
   utils:
-    arrow: 
+    arrow: "==>"
     authentication_failed: 
     cleaning_up: 
     closed_pull_requests: 
