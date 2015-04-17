@@ -1,10 +1,28 @@
 # About i18nbrew
 
-i18nbrew is an experimental fork of [Homebrew][home] to facilitate localizing it
-for all human languages.
+i18nbrew is an experimental fork of [Homebrew](http://brew.sh),
+[internationalized](https://en.wikipedia.org/wiki/Internationalization_and_localization)
+to make it ready to translate into any human language.
 
-It is _highly unstable_ at this time, but if you are interested in experimenting
-with it, please email [Larry Gilbert](mailto:larry+i18nbrew@l2g.to).
+I track the [official Homebrew code](https://github.com/Homebrew/homebrew/) by
+occasionally merging it into i18nbrew, making adjustments, and adding new
+translation keys as I spot them.  Please see the file [README.i18n.md](README.i18n.md)
+for more details.
+
+I'm still experimenting with this.  Occasionally I may work out a better way to do
+things, and even more occasionally I may force-update the master branch.
+Having said that, I _am_
+[dogfooding](https://en.wikipedia.org/wiki/Eating_your_own_dog_food) i18nbrew
+full-time on my MacBook Pro with OS X 10.9.5, and it's working just swimmingly.
+
+If you want to help with translation, simply join the [LocaleApp "i18nbrew"
+project](http://www.localeapp.com/projects/7650).  If you have suggestions or
+patches, please submit them through the usual GitHub idioms (issues and pull
+requests).  If you have bigger ideas, questions, or concerns, you may telephone
+me at [+1 858 866 8276](tel:+1-858-866-8276), or toll-free in the United states
+at [1-844-L2G-GEEK](tel:+1-844-524-4335).  Email works too, of course, but
+because I get so bloody much email, telephoning me is the best way to get my
+attention.
 
 The original README for Homebrew is included below.
 
