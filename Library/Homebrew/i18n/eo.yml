@@ -362,14 +362,14 @@ eo:
       upgrading_formula: 
       upgrading_outdated_pkg: 
   download_strategy:
-    already_downloaded: 
+    already_downloaded: 'Jam estas elŝutita: %{path}'
     aws_creds_missing: 
     bad_s3_url: 
     best_mirror: 
     checking_out: 
     cloning: 
     couldnt_determine_mirror: 
-    downloading: 
+    downloading: Elŝutas %{url}
     empty_archive: 
     install_aws_sdk: 
     pouring: 
