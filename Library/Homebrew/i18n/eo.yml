@@ -196,6 +196,36 @@ eo:
       skipping_keg_only: 
       skipping_linked_keg: 
     cleanup_installed_deprecated: 
+    commands:
+      built_in_commands: 
+      external_commands: 
+    config:
+      comma_join: ", "
+      item_clang: 'Clang: %{value}'
+      item_clt: 'CLT: %{value}'
+      item_gcc_40: 'GCC-4.0: %{value}'
+      item_gcc_42: 'GCC-4.2: %{value}'
+      item_hardware: 
+      item_head: 'HEAD: %{value}'
+      item_homebrew_cellar: 'HOMEBREW_CELLAR: %{value}'
+      item_homebrew_prefix: 'HOMEBREW_PREFIX: %{value}'
+      item_homebrew_version: 'HOMEBREW_VERSION: %{value}'
+      item_java: 'Java: %{value}'
+      item_last_commit: 'Last commit: %{value}'
+      item_llvm_gcc: 'LLVM-GCC: build %{llvm}'
+      item_macports_fink: 'MacPorts/Fink: %{value}'
+      item_origin: 'ORIGIN: %{value}'
+      item_os_x: 'OS X: %{version}-%{kernel}'
+      item_perl: 'Perl: %{value}'
+      item_python: 'Python: %{value}'
+      item_ruby: 'Ruby: %{value}'
+      item_system_ruby: 'System Ruby: %{value}'
+      item_x11: 'X11: %{value}'
+      item_xcode: 'Xcode: %{value}'
+      never: 
+      none: 
+      not_applicable: 
+      pair_with_arrow: "%{from} => %{to}"
     doctor:
       autoconf_xcode: 
       broken_symlinks: |

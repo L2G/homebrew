@@ -5,7 +5,7 @@ module Homebrew
     cmds = (HOMEBREW_REPOSITORY/"Library/Homebrew/cmd").
            children(with_directory).
            map {|f| File.basename(f, '.rb')}
-    puts "Built-in commands"
+    puts t('cmd.commands.built_in_commands')
     puts_columns cmds
 
     # Find commands in the path
@@ -17,7 +17,7 @@ module Homebrew
 
     unless exts.empty?
       puts
-      puts "External commands"
+      puts t('cmd.commands.external_commands')
       puts_columns exts
     end
   end

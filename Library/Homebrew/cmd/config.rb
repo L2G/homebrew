@@ -29,9 +29,13 @@ module Homebrew
     if instance_variable_defined?(:@xcode)
       @xcode
     elsif MacOS::Xcode.installed?
-      @xcode = MacOS::Xcode.version
-      @xcode += " => #{MacOS::Xcode.prefix}" unless MacOS::Xcode.default_prefix?
-      @xcode
+      @xcode = if MacOS::Xcode.default_prefix?
+                 MacOS::Xcode.version
+               else
+                 t('cmd.config.pair_with_arrow',
+                   :from => MacOS::Xcode.version,
+                   :to => MacOS::Xcode.prefix)
+               end
     end
   end
 
@@ -44,29 +48,38 @@ module Homebrew
   end
 
   def head
-    Homebrew.git_head || "(none)"
+    Homebrew.git_head || t('cmd.config.none')
   end
 
   def last_commit
-    Homebrew.git_last_commit || "never"
+    Homebrew.git_last_commit || t('cmd.config.never')
   end
 
   def origin
     origin = HOMEBREW_REPOSITORY.cd do
       `git config --get remote.origin.url 2>/dev/null`.chomp
     end
-    if origin.empty? then "(none)" else origin end
+    if origin.empty? then t('cmd.config.none') else origin end
   end
 
   def describe_path path
-    return "N/A" if path.nil?
+    return t('cmd.config.not_applicable') if path.nil?
     realpath = path.realpath
-    if realpath == path then path else "#{path} => #{realpath}" end
+    if realpath == path
+      path
+    else
+      t('cmd.config.pair_with_arrow', :from => path, :to => realpath)
+    end
   end
 
   def describe_x11
-    return "N/A" unless MacOS::XQuartz.installed?
-    return "#{MacOS::XQuartz.version} => #{describe_path(MacOS::XQuartz.prefix)}"
+    if MacOS::XQuartz.installed?
+      t('cmd.config.pair_with_arrow',
+        :from => MacOS::XQuartz.version,
+        :to => describe_path(MacOS::XQuartz.prefix))
+    else
+      t('cmd.config.not_applicable')
+    end
   end
 
   def describe_perl
@@ -76,7 +89,13 @@ module Homebrew
   def describe_python
     python = which 'python'
     if %r{/shims/python$} =~ python && which('pyenv')
-      "#{python} => #{Pathname.new(`pyenv which python`.strip).realpath}" rescue describe_path(python)
+      begin
+        t('cmd.config.pair_with_arrow',
+          :from => python,
+          :to => Pathname.new(`pyenv which python`.strip).realpath)
+      rescue
+        describe_path(python)
+      end
     else
       describe_path(python)
     end
@@ -85,14 +104,23 @@ module Homebrew
   def describe_ruby
     ruby = which 'ruby'
     if %r{/shims/ruby$} =~ ruby && which('rbenv')
-      "#{ruby} => #{Pathname.new(`rbenv which ruby`.strip).realpath}" rescue describe_path(ruby)
+      begin
+        t('cmd.config.pair_with_arrow',
+          :from => ruby,
+          :to => Pathname.new(`rbenv which ruby`.strip).realpath)
+      rescue
+        describe_path(ruby)
+      end
     else
       describe_path(ruby)
     end
   end
 
   def hardware
-    "CPU: #{Hardware.cores_as_words}-core #{Hardware::CPU.bits}-bit #{Hardware::CPU.family}"
+    t('cmd.config.item_hardware',
+      :cores_as_words => Hardware.cores_as_words,
+      :cpu_bits => Hardware::CPU.bits,
+      :cpu_family => Hardware::CPU.family)
   end
 
   def kernel
@@ -101,7 +129,7 @@ module Homebrew
 
   def macports_or_fink
     @ponk ||= MacOS.macports_or_fink
-    @ponk.join(", ") unless @ponk.empty?
+    @ponk.join(t('cmd.config.comma_join')) unless @ponk.empty?
   end
 
   def describe_system_ruby
@@ -114,16 +142,16 @@ module Homebrew
     end
 
     if RUBY_PATH.to_s !~ %r[^/System/Library/Frameworks/Ruby.framework/Versions/[12]\.[089]/usr/bin/ruby]
-      s << " => #{RUBY_PATH}"
+      s = t('cmd.config.pair_with_arrow', :from => s, :to => RUBY_PATH)
     end
     s
   end
 
   def describe_java
     if which("java").nil?
-      "N/A"
+      t('cmd.config.not_applicable')
     elsif !(`/usr/libexec/java_home --failfast &>/dev/null` && $?.success?)
-      "N/A"
+      t('cmd.config.not_applicable')
     else
       java = `java -version 2>&1`.lines.first.chomp
       java =~ /java version "(.+?)"/ ? $1 : java
@@ -131,26 +159,32 @@ module Homebrew
   end
 
   def dump_verbose_config(f=$stdout)
-    f.puts "HOMEBREW_VERSION: #{HOMEBREW_VERSION}"
-    f.puts "ORIGIN: #{origin}"
-    f.puts "HEAD: #{head}"
-    f.puts "Last commit: #{last_commit}"
-    f.puts "HOMEBREW_PREFIX: #{HOMEBREW_PREFIX}"
-    f.puts "HOMEBREW_CELLAR: #{HOMEBREW_CELLAR}"
+    f.puts t('cmd.config.item_homebrew_version', :value => HOMEBREW_VERSION)
+    f.puts t('cmd.config.item_origin', :value => origin)
+    f.puts t('cmd.config.item_head', :value => head)
+    f.puts t('cmd.config.item_last_commit', :value => last_commit)
+    f.puts t('cmd.config.item_homebrew_prefix', :value => HOMEBREW_PREFIX)
+    f.puts t('cmd.config.item_homebrew_cellar', :value => HOMEBREW_CELLAR)
     f.puts hardware
-    f.puts "OS X: #{MACOS_FULL_VERSION}-#{kernel}"
-    f.puts "Xcode: #{xcode ? xcode : "N/A"}"
-    f.puts "CLT: #{clt ? clt : "N/A"}"
-    f.puts "GCC-4.0: build #{gcc_40}" if gcc_40
-    f.puts "GCC-4.2: build #{gcc_42}" if gcc_42
-    f.puts "LLVM-GCC: build #{llvm}"  if llvm
-    f.puts "Clang: #{clang ? "#{clang} build #{clang_build}" : "N/A"}"
-    f.puts "MacPorts/Fink: #{macports_or_fink}" if macports_or_fink
-    f.puts "X11: #{describe_x11}"
-    f.puts "System Ruby: #{describe_system_ruby}"
-    f.puts "Perl: #{describe_perl}"
-    f.puts "Python: #{describe_python}"
-    f.puts "Ruby: #{describe_ruby}"
-    f.puts "Java: #{describe_java}"
+    f.puts t('cmd.config.item_os_x',
+             :version => MACOS_FULL_VERSION,
+             :kernel => kernel)
+    f.puts t('cmd.config.item_xcode',
+             :value => xcode ? xcode : t('cmd.config.not_applicable'))
+    f.puts t('cmd.config.item_clt',
+             :value => clt ? clt : t('cmd.config.not_applicable'))
+    f.puts t('cmd.config.item_gcc_40', :value => gcc_40) if gcc_40
+    f.puts t('cmd.config.item_gcc_42', :value => gcc_42) if gcc_42
+    f.puts t('cmd.config.item_llvm_gcc', :value => llvm) if llvm
+    f.puts t('cmd.config.item_clang',
+             :value => clang ? "#{clang} build #{clang_build}"
+                             : t('cmd.config.not_applicable'))
+    f.puts t('cmd.config.item_macports_fink', :value => macports_or_fink) if macports_or_fink
+    f.puts t('cmd.config.item_x11', :value => describe_x11)
+    f.puts t('cmd.config.item_system_ruby', :value => describe_system_ruby)
+    f.puts t('cmd.config.item_perl', :value => describe_perl)
+    f.puts t('cmd.config.item_python', :value => describe_python)
+    f.puts t('cmd.config.item_ruby', :value => describe_ruby)
+    f.puts t('cmd.config.item_java', :value => describe_java)
   end
 end
