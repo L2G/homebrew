@@ -329,7 +329,7 @@ ja:
       list_join: 
       no_pkgs_to_upgrade: 
       not_upgrading_pinned_pkg: 
-      upgrading_formula: 
+      upgrading_formula: "%{name}をアップグレード"
       upgrading_outdated_pkg: 
   download_strategy:
     already_downloaded: 
@@ -342,7 +342,7 @@ ja:
     downloading: 
     empty_archive: 
     install_aws_sdk: 
-    pouring: 
+    pouring: "%{name}注ぐ"
     removing_invalid_repo: 
     trying_full_download: 
     trying_mirror: 

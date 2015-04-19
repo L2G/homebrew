@@ -393,7 +393,7 @@ en-CA:
       list_join: 
       no_pkgs_to_upgrade: 
       not_upgrading_pinned_pkg: 
-      upgrading_formula: 
+      upgrading_formula: Upgrading %{name}
       upgrading_outdated_pkg: 
   download_strategy:
     already_downloaded: 
@@ -406,7 +406,7 @@ en-CA:
     downloading: 
     empty_archive: 
     install_aws_sdk: 
-    pouring: 
+    pouring: Pouring %{name}
     removing_invalid_repo: 
     trying_full_download: 
     trying_mirror: 

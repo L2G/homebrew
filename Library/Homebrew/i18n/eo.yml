@@ -359,7 +359,7 @@ eo:
       list_join: 
       no_pkgs_to_upgrade: 
       not_upgrading_pinned_pkg: 
-      upgrading_formula: 
+      upgrading_formula: Promocias %{name}
       upgrading_outdated_pkg: 
   download_strategy:
     already_downloaded: 'Jam estas elŝutita: %{path}'
@@ -372,7 +372,7 @@ eo:
     downloading: Elŝutas %{url}
     empty_archive: 
     install_aws_sdk: 
-    pouring: 
+    pouring: Verŝas %{name}
     removing_invalid_repo: 
     trying_full_download: 
     trying_mirror: 
