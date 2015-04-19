@@ -739,6 +739,14 @@ en-US:
       files: "%{path}/ (%{count} files)"
       other_files: "%{path}/ (%{count} other files)"
       symlink: "%{symlink} -> %{target}"
+    uninstall:
+      comma: ", "
+      must_remove_all: Use `brew remove --force %{name}` to remove all versions.
+      remove_all: Remove them all with `brew uninstall --force %{name}`.
+      still_installed:
+        one: "%{name} %{versions} is still installed."
+        other: "%{name} %{versions} are still installed."
+      uninstalling: Uninstalling %{name}... (%{abv})
     update:
       already_up_to_date: Already up-to-date.
       deleted_formulae: Deleted Formulae
