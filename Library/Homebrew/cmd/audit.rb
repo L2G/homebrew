@@ -433,9 +433,11 @@ class FormulaAuditor
       next unless spec = formula.send(name.downcase)
 
       ra = ResourceAuditor.new(spec).audit
-      problems.concat ra.problems.map do |problem|
-        t('cmd.audit.name_problem', :name => name, :problem => problem)
-      end
+      problems.concat(
+        ra.problems.map do |problem|
+          t('cmd.audit.name_problem', :name => name, :problem => problem)
+        end
+      )
 
       spec.resources.each_value do |resource|
         ra = ResourceAuditor.new(resource).audit
