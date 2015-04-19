@@ -342,11 +342,11 @@ eo:
     uninstall:
       comma: ", "
       must_remove_all: 
-      remove_all: 
+      remove_all: Malinstalas ĉiujn per `brew uninstall --force %{name}`.
       still_installed:
         one: "%{name} %{versions} estas ankoraŭ instalita."
         other: "%{name} %{versions} estas ankoraŭ instalitaj."
-      uninstalling: Uninstalling %{name}... (%{abv})
+      uninstalling: Malinstalas %{name}... (%{abv})
     update:
       already_up_to_date: Jam estas ĝisdata.
       deleted_formulae: Forprenitaj Formuloj
