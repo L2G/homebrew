@@ -485,17 +485,17 @@ en-CA:
     with: 
     without: 
   utils:
-    arrow: "==>"
     authentication_failed: 
     cleaning_up: 
     closed_pull_requests: 
-    error_1: 
-    error_2: 
+    error_1: Error
     failed_to_connect: 
     failed_to_parse_json: 
     gem_installed_but_exec_not_in_path: 
     interactive_shell_abort: 
     item_with_star: 
+    message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
+    message_w_intro_colored: "%{intro_color}%{intro}%{reset_color}: %{message}"
     minutes: 
     not_executable: 
     open_pull_requests: 

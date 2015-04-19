@@ -889,7 +889,6 @@ en-US:
     with: Build with %{name} support
     without: Build without %{name} support
   utils:
-    arrow: "==>"
     authentication_failed: |
       GitHub %{error}
       HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
@@ -897,7 +896,6 @@ en-US:
     cleaning_up: One sec, just cleaning up
     closed_pull_requests: 'Closed pull requests:'
     error_1: Error
-    error_2: ":"
     failed_to_connect: |
       Failed to connect to: %{url}
       %{message}
@@ -909,6 +907,8 @@ en-US:
       %{path}
     interactive_shell_abort: Aborting due to non-zero exit status
     item_with_star: "%{item}*"
+    message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
+    message_w_intro_colored: "%{intro_color}%{intro}%{reset_color}: %{message}"
     minutes:
       one: "%{count} minute"
       other: "%{count} minutes"

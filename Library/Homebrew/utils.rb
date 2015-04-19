@@ -45,21 +45,37 @@ end
 
 def ohai title, *sput
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts "#{Tty.blue}#{t('utils.arrow')}#{Tty.white} #{title}#{Tty.reset}"
+  puts t('utils.message_colored_w_arrow_colored',
+         :message => title,
+         :message_color => Tty.white,
+         :arrow_color => Tty.blue,
+         :reset_color => Tty.reset)
   puts sput
 end
 
 def oh1 title
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts "#{Tty.green}#{t('utils.arrow')}#{Tty.white} #{title}#{Tty.reset}"
+  puts t('utils.message_colored_w_arrow_colored',
+         :message => title,
+         :message_color => Tty.white,
+         :arrow_color => Tty.green,
+         :reset_color => Tty.reset)
 end
 
 def opoo warning
-  $stderr.puts "#{Tty.red}#{t('utils.warning')}#{Tty.reset}: #{warning}"
+  $stderr.puts t('utils.message_w_intro_colored',
+                 :intro => t('utils.warning'),
+                 :message => warning,
+                 :intro_color => Tty.red,
+                 :reset_color => Tty.reset)
 end
 
 def onoe error
-  $stderr.puts "#{Tty.red}#{t('utils.error_1')}#{Tty.reset}#{t('utils.error_2')} #{error}"
+  $stderr.puts t('utils.message_w_intro_colored',
+                 :intro => t('utils.error_1'),
+                 :message => error,
+                 :intro_color => Tty.red,
+                 :reset_color => Tty.reset)
 end
 
 def ofail error
