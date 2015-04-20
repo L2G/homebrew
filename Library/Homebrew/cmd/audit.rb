@@ -876,6 +876,10 @@ class ResourceAuditor
     if version.to_s =~ /^v/
       problem t('cmd.audit.version_no_leading_v', :version => version)
     end
+
+    if version.to_s =~ /_\d+$/
+      problem "version #{version} should not end with a underline and a number"
+    end
   end
 
   def audit_checksum
