@@ -1,3 +1,5 @@
+[![Join the chat at https://gitter.im/L2G/i18nbrew](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/L2G/i18nbrew?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # About i18nbrew
 
 i18nbrew is an experimental fork of [Homebrew](http://brew.sh),
