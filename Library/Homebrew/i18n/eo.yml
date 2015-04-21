@@ -400,13 +400,15 @@ eo:
       updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
     upgrade:
       formula_already_installed: 
-      formula_name_and_version: 
+      formula_name_and_version: "%{name} %{version}"
       formula_version_already_installed: 
-      list_join: 
+      list_join: ", "
       no_pkgs_to_upgrade: 
       not_upgrading_pinned_pkg: 
       upgrading_formula: Promocias %{name}
-      upgrading_outdated_pkg: 
+      upgrading_outdated_pkg:
+        one: 'Promocias %{count} malaktualan pakon, rezultate:'
+        other: 'Promocias %{count} malaktualajn pakojn, rezultate:'
   download_strategy:
     already_downloaded: 'Jam estas elŝutita: %{path}'
     aws_creds_missing: 
@@ -466,7 +468,7 @@ eo:
     brew_link_not_complete: La paŝo `brew link` ne estas sukcese kompletita
     brew_link_possible_conflict: 
     brew_link_try_again_with: 
-    caveats: 
+    caveats: Admonoj
     cellar_bottle: 
     cleaning: 
     cleaning_not_complete_1: 
@@ -494,7 +496,7 @@ eo:
     postinstall_fail_1: 
     postinstall_fail_2: 
     summary: "%{path}: %{path_info}"
-    summary_title: 
+    summary_title: Resumo
     summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
     unrecognized_bottle_arch: 
   global:
