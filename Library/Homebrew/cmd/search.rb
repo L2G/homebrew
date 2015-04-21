@@ -42,7 +42,10 @@ module Homebrew
       if not query.empty? and $stdout.tty? and msg = blacklisted?(query)
         unless local_results.empty?
           puts
-          puts "If you meant #{query.inspect} precisely:"
+          # XXX [i18n] is inspect just a shortcut for putting quotes around the
+          # string?
+          puts t("cmd.search.if_you_meant_precisely",
+                 :term => query.inspect)
           puts
         end
         puts msg
@@ -53,7 +56,9 @@ module Homebrew
       count = local_results.length + tap_results.length
 
       if count == 0 and not blacklisted? query
-        puts "No formula found for #{query.inspect}."
+        # XXX [i18n] is inspect just a shortcut for putting quotes around the
+        # string?
+        puts t("cmd.search.no_formula_found", :term => query.inspect)
         begin
           GitHub.print_pull_requests_matching(query)
         rescue GitHub::Error => e
@@ -68,8 +73,8 @@ module Homebrew
       end
     end
     if ARGV.any? && bad_regex
-      ohai "Did you mean to perform a regular expression search?"
-      ohai "Surround your query with /slashes/ to search by regex."
+      ohai t("cmd.search.suggest_regex_1")
+      ohai t("cmd.search.suggest_regex_2")
     end
     raise SEARCH_ERROR_QUEUE.pop unless SEARCH_ERROR_QUEUE.empty?
   end
@@ -133,7 +138,7 @@ module Homebrew
       results << "#{user}/#{repo}/#{name}" if rx === name
     end
   rescue GitHub::HTTPNotFoundError => e
-    opoo "Failed to search tap: #{user}/#{repo}. Please run `brew update`"
+    opoo t("cmd.search.failed_to_search_tap", :user => user, :repo => repo)
     []
   rescue GitHub::Error => e
     SEARCH_ERROR_QUEUE << e

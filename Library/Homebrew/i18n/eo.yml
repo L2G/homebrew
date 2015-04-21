@@ -358,6 +358,12 @@ eo:
       files: "%{path}/ (%{count} dosieroj)"
       other_files: "%{path}/ (%{count} kromaj dosieroj)"
       symlink: "%{symlink} → %{target}"
+    search:
+      failed_to_search_tap: 
+      if_you_meant_precisely: 
+      no_formula_found: 
+      suggest_regex_1: 
+      suggest_regex_2: 
     tap:
       could_not_create_link: 
       invalid_name: 

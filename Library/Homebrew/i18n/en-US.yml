@@ -798,6 +798,12 @@ en-US:
       files: "%{path}/ (%{count} files)"
       other_files: "%{path}/ (%{count} other files)"
       symlink: "%{symlink} -> %{target}"
+    search:
+      failed_to_search_tap: 'Failed to search tap: %{user}/%{repo}. Please run `brew update`'
+      if_you_meant_precisely: '"If you meant %{term} precisely:"'
+      no_formula_found: No formula found for %{term}.
+      suggest_regex_1: Did you mean to perform a regular expression search?
+      suggest_regex_2: Surround your query with /slashes/ to search by regex.
     tap:
       could_not_create_link: |
         Could not create link for %{highlight_color}%{path}%{reset_color}, as it
