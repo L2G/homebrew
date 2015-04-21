@@ -470,6 +470,11 @@ ja:
     not_inside_keg: 
     not_valid_keg: 
     suggest_overwrite: 
+  requirements:
+    ruby_requirement:
+      ruby_is_required: 
+      ruby_version_is_required: 
+      version_required: 
   software_spec:
     cxx11: 
     thirty_two_bit: 

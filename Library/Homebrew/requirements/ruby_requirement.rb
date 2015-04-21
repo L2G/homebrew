@@ -4,7 +4,7 @@ class RubyRequirement < Requirement
 
   def initialize(tags)
     @version = tags.shift if /(\d\.)+\d/ === tags.first
-    raise "RubyRequirement requires a version!" unless @version
+    raise t("requirements.ruby_requirement.version_required") unless @version
     super
   end
 
@@ -20,9 +20,12 @@ class RubyRequirement < Requirement
   end
 
   def message
-    version_string = " #{@version}" if @version
-
-    s = "Ruby#{version_string} is required to install this formula."
+    s = if @version
+          t("requirements.ruby_requirement.ruby_version_is_required",
+            :version => @version)
+        else
+          t("requirements.ruby_requirement.ruby_is_required")
+        end
     s += super
     s
   end
