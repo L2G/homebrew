@@ -25,16 +25,13 @@ module Homebrew
     files = []
     tapd.find_formula { |file| files << file }
     link_tap_formula(files)
-    puts "Tapped #{files.length} formula#{plural(files.length, 'e')} (#{tapd.abv})"
+    puts t("cmd.tap.tapped_formulae_abv", :count => files.length, :abv => tapd.abv)
 
-    if private_tap?(repouser, repo) then puts <<-EOS.undent
-      It looks like you tapped a private repository. To avoid entering your
-      credentials each time you update, you can use git HTTP credential caching
-      or issue the following command:
-
-        cd #{tapd}
-        git remote set-url origin git@github.com:#{repouser}/homebrew-#{repo}.git
-      EOS
+    if private_tap?(repouser, repo)
+      puts t("cmd.tap.private_repo_tapped",
+             :path => tapd,
+             :repo => repo,
+             :repo_user => repouser)
     end
 
     true
@@ -54,12 +51,13 @@ module Homebrew
         to.make_relative_symlink(path)
       rescue SystemCallError
         to = to.resolved_path if to.symlink?
-        opoo <<-EOS.undent if warn_about_conflicts
-          Could not create link for #{Tty.white}#{tap_ref(path)}#{Tty.reset}, as it
-          conflicts with #{Tty.white}#{tap_ref(to)}#{Tty.reset}. You will need to use the
-          fully-qualified name when referring this formula, e.g.
-            brew install #{tap_ref(path)}
-          EOS
+        if warn_about_conflicts
+          opoo t("cmd.tap.could_not_create_link",
+                 :path => tap_ref(path),
+                 :to_path => tap_ref(to),
+                 :highlight_color => Tty.white,
+                 :reset_color => Tty.reset)
+        end
       else
         ignores << path.basename.to_s
         tapped += 1
@@ -80,7 +78,7 @@ module Homebrew
         count += 1
       end
     end
-    puts "Pruned #{count} dead formula#{plural(count, 'e')}"
+    puts t("cmd.tap.pruned_formulae", :count => count)
 
     return unless HOMEBREW_REPOSITORY.join("Library/Taps").exist?
 
@@ -92,7 +90,7 @@ module Homebrew
       count += link_tap_formula(files, warn_about_conflicts)
     end
 
-    puts "Tapped #{count} formula#{plural(count, 'e')}"
+    puts t("cmd.tap.tapped_formulae", :count => count)
   end
 
   private
@@ -111,7 +109,7 @@ module Homebrew
 
   def tap_args(tap_name=ARGV.first)
     tap_name =~ HOMEBREW_TAP_ARGS_REGEX
-    raise "Invalid tap name" unless $1 && $3
+    raise t("cmd.tap.invalid_name") unless $1 && $3
     [$1, $3]
   end
 

@@ -358,6 +358,19 @@ eo:
       files: "%{path}/ (%{count} dosieroj)"
       other_files: "%{path}/ (%{count} kromaj dosieroj)"
       symlink: "%{symlink} → %{target}"
+    tap:
+      could_not_create_link: 
+      invalid_name: 
+      private_repo_tapped: 
+      pruned_formulae:
+        one: Tondis %{count} malvivan formulon
+        other: Tondis %{count} malvivajn formulojn
+      tapped_formulae:
+        one: Spilis %{count} formulon
+        other: Spilis %{count} formulojn
+      tapped_formulae_abv:
+        one: Spilis %{count} formulon (%{abv})
+        other: Spilis %{count} formulojn (%{abv})
     uninstall:
       comma: ", "
       must_remove_all: 

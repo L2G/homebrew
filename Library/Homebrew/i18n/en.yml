@@ -797,6 +797,29 @@ en:
       files: "%{path}/ (%{count} files)"
       other_files: "%{path}/ (%{count} other files)"
       symlink: "%{symlink} -> %{target}"
+    tap:
+      could_not_create_link: |
+        Could not create link for %{highlight_color}%{path}%{reset_color}, as it
+        conflicts with %{highlight_color}%{to_path}%{reset_color}. You will need to use the
+        fully-qualified name when referring this formula, e.g.
+          brew install %{path}
+      invalid_name: Invalid tap name
+      private_repo_tapped: |
+        It looks like you tapped a private repository. To avoid entering your
+        credentials each time you update, you can use git HTTP credential caching
+        or issue the following command:
+
+          cd %{path}
+          git remote set-url origin git@github.com:%{repo_user}/homebrew-%{repo}.git
+      pruned_formulae:
+        one: Pruned %{count} dead formula
+        other: Pruned %{count} dead formulae
+      tapped_formulae:
+        one: Tapped %{count} formula
+        other: Tapped %{count} formulae
+      tapped_formulae_abv:
+        one: Tapped %{count} formula (%{abv})
+        other: Tapped %{count} formulae (%{abv})
     uninstall:
       comma: ", "
       must_remove_all: Use `brew remove --force %{name}` to remove all versions.

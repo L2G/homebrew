@@ -330,6 +330,13 @@ ja:
       files: "%{path}/ （%{count}枚のファイル）"
       other_files: "%{path}/ （%{count}枚の追加ファイル）"
       symlink: 
+    tap:
+      could_not_create_link: 
+      invalid_name: 
+      private_repo_tapped: 
+      pruned_formulae: 
+      tapped_formulae: "%{count}式がタップされている"
+      tapped_formulae_abv: "%{count}式がタップされている（%{abv}）"
     uninstall:
       comma: "、"
       must_remove_all: 
