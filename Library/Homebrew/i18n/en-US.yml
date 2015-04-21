@@ -833,7 +833,7 @@ en-US:
         one: 'Upgrading %{count} outdated package, with result:'
         other: 'Upgrading %{count} outdated packages, with result:'
   download_strategy:
-    already_downloaded: 'Already downloaded: %{path} '
+    already_downloaded: 'Already downloaded: %{path}'
     aws_creds_missing: AWS credentials missing, trying public URL instead.
     bad_s3_url: 'Bad S3 URL: %{url}'
     best_mirror: Best Mirror %{url}
@@ -873,7 +873,7 @@ en-US:
         You must:
           brew install gcc
       gfortran_homebrew: Using Homebrew-provided fortran compiler.
-      gfortran_other: Using a fortran compiler found at %{path}.
+      gfortran_other: Using a Fortran compiler found at %{path}.
       invalid_value: 'Invalid value for %{source}: %{other}'
       no_fc_flags: |
         No Fortran optimization information was provided.  You may want to consider
@@ -886,7 +886,9 @@ en-US:
     pathname:
       does_not_exist: "%{path} does not exist"
       exec_scripts_empty_targets: tried to write exec scripts to %{path} for an empty list of targets
-      files: "%{count} files, "
+      files:
+        one: "%{count} file,"
+        other: "%{count} files,"
       same_file: "%{path} is the same file as %{other}"
       tried_to_install_empty_array_to: tried to install empty array to %{path}
       tried_to_install_empty_hash_to: tried to install empty hash to %{path}

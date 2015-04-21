@@ -807,65 +807,91 @@ en:
       uninstalling: Uninstalling %{name}... (%{abv})
     update:
       already_up_to_date: Already up-to-date.
-      deleted_formulae: 
-      homebrew_tap_structure_1: 
-      homebrew_tap_structure_2: 
-      homebrew_tap_structure_3: 
-      new_formulae: 
-      no_formula_names: 
-      update_tap_failed: 
-      updated_formulae: 
-      updated_homebrew: 
+      deleted_formulae: Deleted Formulae
+      homebrew_tap_structure_1: Homebrew changed the structure of Taps like <someuser>/<sometap>. %{cont}
+      homebrew_tap_structure_2: So you may need to rename %{tap_path} manually.
+      homebrew_tap_structure_3: "%{tap_name} is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."
+      new_formulae: New Formulae
+      no_formula_names: |-
+        This command updates brew itself, and does not take formula names.
+        Use `brew upgrade <formula>`.
+      update_tap_failed: 'Failed to update tap: %{github_user}/%{repo_name}'
+      updated_formulae: Updated Formulae
+      updated_homebrew: Updated Homebrew from %{initial_revision} to %{current_revision}
     upgrade:
-      formula_already_installed: 
-      formula_name_and_version: 
-      formula_version_already_installed: 
-      list_join: 
-      no_pkgs_to_upgrade: 
-      not_upgrading_pinned_pkg: 
+      formula_already_installed: "%{name} already installed"
+      formula_name_and_version: "%{name} %{version}"
+      formula_version_already_installed: "%{name} %{version} already installed"
+      list_join: ", "
+      no_pkgs_to_upgrade: No packages to upgrade
+      not_upgrading_pinned_pkg:
+        one: 'Not upgrading %{count} pinned package:'
+        other: 'Not upgrading %{count} pinned packages:'
       upgrading_formula: Upgrading %{name}
-      upgrading_outdated_pkg: 
+      upgrading_outdated_pkg:
+        one: 'Upgrading %{count} outdated package, with result:'
+        other: 'Upgrading %{count} outdated packages, with result:'
   download_strategy:
-    already_downloaded: 
-    aws_creds_missing: 
-    bad_s3_url: 
-    best_mirror: 
-    checking_out: 
-    cloning: 
-    couldnt_determine_mirror: 
-    downloading: 
-    empty_archive: 
-    install_aws_sdk: 
+    already_downloaded: 'Already downloaded: %{path}'
+    aws_creds_missing: AWS credentials missing, trying public URL instead.
+    bad_s3_url: 'Bad S3 URL: %{url}'
+    best_mirror: Best Mirror %{url}
+    checking_out: Checking out %{ref_type} %{ref}
+    cloning: Cloning %{url}
+    couldnt_determine_mirror: Couldn't determine mirror, try again later.
+    downloading: Downloading %{url}
+    empty_archive: Empty archive
+    install_aws_sdk: Install the aws-sdk gem into the gem repo used by brew.
     pouring: Pouring %{name}
-    removing_invalid_repo: 
-    trying_full_download: 
-    trying_mirror: 
-    unknown_download_strategy: 
-    unknown_download_strategy_spec: 
-    updating: 
+    removing_invalid_repo: Removing invalid repository from cache
+    trying_full_download: Trying a full download
+    trying_mirror: Trying a mirror...
+    unknown_download_strategy: Unknown download strategy %{name} was requested.
+    unknown_download_strategy_spec: Unknown download strategy specification %{name}
+    updating: Updating %{path}
   extend:
     argv:
-      multiple_kegs: 
+      multiple_kegs: |-
+        Multiple kegs installed to %{rack}
+        However we don't know which one you refer to.
+        Please delete (with rm -rf!) all but one and then try again.
     env:
-      alternative_fc: 
-      can_change_fc: 
-      cxx11_not_supported: 
-      gcc_formula_not_found: 
-      gcc_not_installed: 
-      gcc_not_installed_brew: 
-      gfortran_homebrew: 
-      gfortran_other: 
-      invalid_value: 
-      no_fc_flags: 
-      unsupported: 
+      alternative_fc: Building with an alternative Fortran compiler
+      can_change_fc: This may be changed by setting the FC environment variable.
+      cxx11_not_supported: 'The selected compiler doesn''t support C++11: %{name}'
+      gcc_formula_not_found: |-
+        Homebrew GCC requested, but formula %{name} not found!
+        You may need to: brew tap homebrew/versions
+      gcc_not_installed: |-
+        The requested Homebrew GCC, %{name}, was not installed.
+        You must:
+          brew tap homebrew/versions
+          brew install %{name}
+      gcc_not_installed_brew: |-
+        The Homebrew GCC was not installed.
+        You must:
+          brew install gcc
+      gfortran_homebrew: Using Homebrew-provided fortran compiler.
+      gfortran_other: Using a Fortran compiler found at %{path}.
+      invalid_value: 'Invalid value for %{source}: %{other}'
+      no_fc_flags: |-
+        No Fortran optimization information was provided.  You may want to consider
+        setting FCFLAGS and FFLAGS or pass the `--default-fortran-flags` option to
+        `brew install` if your compiler is compatible with GCC.
+
+        If you like the default optimization level of your compiler, ignore this
+        warning.
+      unsupported: This is unsupported.
     pathname:
-      does_not_exist: 
-      exec_scripts_empty_targets: 
-      files: 
-      same_file: 
-      tried_to_install_empty_array_to: 
-      tried_to_install_empty_hash_to: 
-      will_not_overwrite: 
+      does_not_exist: "%{path} does not exist"
+      exec_scripts_empty_targets: tried to write exec scripts to %{path} for an empty list of targets
+      files:
+        one: "%{count} file,"
+        other: "%{count} files,"
+      same_file: "%{path} is the same file as %{other}"
+      tried_to_install_empty_array_to: tried to install empty array to %{path}
+      tried_to_install_empty_hash_to: tried to install empty hash to %{path}
+      will_not_overwrite: Will not overwrite %{path}
   formula:
     at_least_url_required: formulae require at least a URL
     cannot_override_brew_method: You cannot override Formula#brew in class %{name}
@@ -874,51 +900,64 @@ en:
     tap_action_fetching: Fetching %{name} from %{tap}
     tap_action_installing: Installing %{name} from %{tap}
   formula_installer:
-    all_deps_satisfied: 
-    already_installed_unlink: 
-    bottle_install_fail: 
-    brew_link_error_1: 
-    brew_link_error_2: 
-    brew_link_not_complete: 
-    brew_link_possible_conflict: 
-    brew_link_try_again_with: 
-    caveats: 
-    cellar_bottle: 
-    cleaning: 
-    cleaning_not_complete_1: 
-    cleaning_not_complete_2: 
-    dep_message: 
-    deprecated_flag: 
-    empty_installation: 
-    failed_to_create_1: 
-    failed_to_create_2: 
-    finishing_up: 
-    fix_install_names_fail_1: 
-    fix_install_names_fail_2: 
+    all_deps_satisfied: All dependencies for %{name} are satisfied.
+    already_installed_unlink: |-
+      %{name}-%{linked_name} already installed
+      To install this version, first `brew unlink %{name}'
+    bottle_install_fail: 'Bottle installation failed: building from source.'
+    brew_link_error_1: An unexpected error occurred during the `brew link` step
+    brew_link_error_2: The formula built, but is not symlinked into %{path}
+    brew_link_not_complete: The `brew link` step did not complete successfully
+    brew_link_possible_conflict: 'Possible conflicting files are:'
+    brew_link_try_again_with: |-
+      You can try again using:
+        brew link %{name}
+    caveats: Caveats
+    cellar_bottle: Building source; cellar of %{name}'s bottle is %{cellar}
+    cleaning: Cleaning
+    cleaning_not_complete_1: The cleaning step did not complete successfully
+    cleaning_not_complete_2: Still, the installation was successful, so we will link it into your prefix
+    dep_message: "%{dep}: %{message}"
+    deprecated_flag: "%{name}: %{old_flag} was deprecated; using %{new_flag} instead!"
+    empty_installation: Empty installation
+    failed_to_create_1: Failed to create %{path}
+    failed_to_create_2: Things that depend on %{name} will probably not build.
+    finishing_up: Finishing up
+    fix_install_names_fail_1: Failed to fix install names
+    fix_install_names_fail_2: |-
+      The formula built, but you may encounter issues using it or linking other
+      formulae against it.
     install_badge: "\U0001F37A"
-    install_plist_failed: 
-    installing: 
-    installing_dep_for: 
-    installing_deps_for: 
-    keg_already_linked: 
-    keg_only_1: 
-    keg_only_2: 
-    keg_only_cppflags: 
-    keg_only_ldflags: 
-    must_link_deps: 
-    nothing_installed_to: 
-    postinstall_fail_1: 
-    postinstall_fail_2: 
-    summary: 
-    summary_title: 
-    summary_with_build_time: 
-    unrecognized_bottle_arch: 
+    install_plist_failed: Failed to install plist file
+    installing: Installing %{name_in_green}
+    installing_dep_for: 'Installing %{name} dependency: %{dep_in_green}'
+    installing_deps_for: 'Installing dependencies for %{name}: %{deps_in_green}'
+    keg_already_linked: This keg was marked linked already, continuing anyway
+    keg_only_1: This formula is keg-only, which means it was not symlinked into %{path}.
+    keg_only_2: |2-
+
+      Generally there are no consequences of this for you. If you build your
+      own software and it requires this formula, you'll need to add to your
+      build variables:
+    keg_only_cppflags: "    CPPFLAGS: -I%{path}"
+    keg_only_ldflags: "    LDFLAGS:  -L%{path}"
+    must_link_deps: You must `brew link %{deps}' before %{name} can be installed
+    nothing_installed_to: Nothing was installed to %{path}
+    postinstall_fail_1: The post-install step did not complete successfully
+    postinstall_fail_2: You can try again using `brew postinstall %{name}`
+    summary: "%{path}: %{path_info}"
+    summary_title: Summary
+    summary_with_build_time: "%{path}: %{path_info}, built in %{build_time}"
+    unrecognized_bottle_arch: 'Unrecognized architecture for --bottle-arch: %{arch}'
   global:
-    sudo_bad: 
+    sudo_bad: |-
+      You can use brew with sudo, but only if the brew executable is owned by root.
+      However, this is both not recommended and completely unsupported so do so at
+      your own risk.
   software_spec:
-    cxx11: 
-    thirty_two_bit: 
-    universal: 
+    cxx11: Build using C++11 mode
+    thirty_two_bit: Build 32-bit only
+    universal: Build a universal binary
     with: Build with %{name} support
     without: Build without %{name} support
   tab:
@@ -931,24 +970,41 @@ en:
       HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
         https://github.com/settings/applications
     cleaning_up: One sec, just cleaning up
-    closed_pull_requests: 
+    closed_pull_requests: 'Closed pull requests:'
     error_1: Error
-    failed_to_connect: 
-    failed_to_parse_json: 
-    gem_installed_but_exec_not_in_path: 
-    interactive_shell_abort: 
-    item_with_star: 
+    failed_to_connect: |-
+      Failed to connect to: %{url}
+      %{message}
+    failed_to_parse_json: |-
+      Failed to parse JSON response
+      %{message}
+    gem_installed_but_exec_not_in_path: |-
+      The '%{gem}' gem is installed but couldn't find '%{executable}' in the PATH:
+      %{path}
+    interactive_shell_abort: Aborting due to non-zero exit status
+    item_with_star: "%{item}*"
     message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
     message_w_intro_colored: "%{intro_color}%{intro}%{reset_color}: %{message}"
-    minutes: 
-    not_executable: 
-    open_pull_requests: 
-    path_component_invalid: 
-    plural_called: 
-    pull_request_with_url: 
-    rate_limit_exceeded: 
-    rate_limit_time_m_s: 
-    searching_pull_requests: 
-    seconds: 
-    using_editor_as_fallback: 
-    warning: 
+    minutes:
+      one: "%{count} minute"
+      other: "%{count} minutes"
+    not_executable: "%{path} is not executable"
+    open_pull_requests: 'Open pull requests:'
+    path_component_invalid: 'The following PATH component is invalid: %{path}'
+    plural_called: plural() was called; Y U NO I18N ;-)
+    pull_request_with_url: "%{title} (%{html_url})"
+    rate_limit_exceeded: |-
+      GitHub %{error}
+      Try again in %{duration}, or create an API token:
+        https://github.com/settings/applications
+      and then set HOMEBREW_GITHUB_API_TOKEN.
+    rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
+    searching_pull_requests: Searching pull requests...
+    seconds:
+      one: "%{count} second"
+      other: "%{count} seconds"
+    using_editor_as_fallback: |-
+      Using %{editor} because no editor was set in the environment.
+      This may change in the future, so we recommend setting EDITOR, VISUAL,
+      or HOMEBREW_EDITOR to your preferred text editor.
+    warning: Warning
