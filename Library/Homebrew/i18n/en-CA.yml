@@ -65,29 +65,40 @@ en-CA:
         sudo xcode-select -switch /Applications/Xcode.app
       Otherwise, you should:
         sudo rm -rf /usr/share/xcode-select
-    formula_unspecified: 
-    homebrew_version: 
-    invalid_usage: 
-    keg_unspecified: 
-    no_tiger_support: 
-    no_working_dir: 
-    please_report_bug: 
-    refuse_root_or_usr: 
-    unknown_command: 
+    formula_unspecified: This command requires a formula argument
+    homebrew_version: Homebrew %{version}
+    invalid_usage: Invalid usage
+    keg_unspecified: This command requires a keg argument
+    no_tiger_support: |
+      homebrew requires leopard or higher. for tiger support, see:
+      https://github.com/mistydemeo/tigerbrew
+    no_working_dir: The current working directory doesn't exist, cannot proceed.
+    please_report_bug: 'Please report this bug:'
+    refuse_root_or_usr: 'Cowardly refusing to continue at this prefix: %{path}'
+    unknown_command: 'Unknown command: %{cmd}'
   build:
-    git: 
+    git: |
+      This directory is now a git repo. Make your changes and then use:
+        git diff | pbcopy
+      to copy the diff to the clipboard.
     interactive:
-      entering: 
-      install_to: 
+      entering: Entering interactive mode
+      install_to: |
+        Type `exit' to return and finalise the installation
+        Install to this prefix: %{prefix}
   caveats:
-    app: 
-    bash_completion: 
-    plist_load: 
-    plist_login: 
-    plist_manual: 
-    plist_startup: 
-    plist_then_load: 
-    plist_tmux_warning: 
+    app: |
+      .app bundles were installed.
+      Run `brew linkapps %{name}` to symlink these to /Applications.
+    bash_completion: |
+      Bash completion has been installed to:
+        %{path}
+    plist_load: 'To load %{name}:'
+    plist_login: 'To have launchd start %{name} at login:'
+    plist_manual: 'Or, if you don''t want/need launchctl, you can just run:'
+    plist_startup: 'To have launchd start %{name} at startup:'
+    plist_then_load: 'Then to load %{name} now:'
+    plist_tmux_warning: 'WARNING: launchctl will fail when run under tmux.'
     plist_upgrade: 'To reload %{name} after an upgrade:'
     python_find_keg_bindings: |-
       If you need Python to find bindings for this keg-only formula, run:
@@ -124,28 +135,37 @@ en-CA:
       checksum_should_be_n_chars: "%{checksum_type} should be %{count} characters"
       class_inheritance_space: 'Use a space in class inheritance: class Foo < %{superclass}'
       comment_cmake_found: Commented cmake call found
-      comment_remove_default: 
+      comment_remove_default: Please remove default template comments
       commented_out_dep: Commented-out dep %{dep}
-      data_without_end: 
-      debian_patch_use_https: 
-      define_method_in_class_body: 
-      dependency_has_no_option: 
-      depends_on_takes_classes: 
-      devel_older_than_stable: 
-      devel_only: 
-      dont_need_to_interpolate: 
-      dont_negate_build_with: 
-      dont_negate_build_without: 
-      dont_use_dependency: 
-      dont_use_dependency_git: 
-      end_without_data: 
-      fileutils_class_dont_need: 
-      formula_factory: 
-      formula_subclass_deprecated: 
-      formulae: 
+      data_without_end: "'DATA' was found, but no '__END__'"
+      debian_patch_use_https: |-
+        Patches from Debian should be https://, not http:
+        %{url}
+      define_method_in_class_body: Define method %{method} in the class body, not at the top-level
+      dependency_has_no_option: Dependency %{dependency} does not define option %{option}
+      depends_on_takes_classes: "`depends_on` can take requirement classes instead of instances"
+      devel_older_than_stable: devel version %{devel} is older than stable version %{stable}
+      devel_only: Devel-only (no stable download)
+      dont_need_to_interpolate: Don't need to interpolate "%{var}" with %{method}
+      dont_negate_build_with: 'Don''t negate ''build.with?'': use ''build.without?'''
+      dont_negate_build_without: 'Don''t negate ''build.without?'': use ''build.with?'''
+      dont_use_dependency: |
+        Don't use %{name} as a dependency. We allow non-Homebrew %{name} installations.
+      dont_use_dependency_git: Don't use git as a dependency
+      end_without_data: "'__END__' was found, but 'DATA' is not used"
+      fileutils_class_dont_need: Don't need 'FileUtils.' before %{method}.
+      formula_factory: '"Formula.factory(name)" is deprecated in favour of "Formula[name]"'
+      formula_subclass_deprecated: "%{subclass} is deprecated, use Formula instead"
+      formulae:
+        one: "%{count} formula"
+        other: "%{count} formulae"
       git_specify_revision_with_tag: Git should specify :revision when a :tag is specified.
-      github_patch_macports: 
-      github_patch_needs_rev: 
+      github_patch_macports: |-
+        MacPorts patches should specify a revision instead of trunk:
+        %{url}
+      github_patch_needs_rev: |-
+        GitHub/Gist patches should specify a revision:
+        %{url}
       github_patch_use_dot_diff: GitHub appends a git version to patches; use .diff instead.
       head_only: Head-only (no stable download)
       homepage_apache_https: Apache homepages should be https:// links (URL is %{url}).
@@ -169,18 +189,22 @@ en-CA:
         The installation seems to be empty. Please ensure the prefix
         is set correctly and expected files are installed.
         The prefix configure/make argument may be case-sensitive.
-      is_now_unnecessary: 
-      macports_patch_use_https: 
-      md5_checksums_deprecated: 
-      migrate_deprecated_option: 
-      missing_version: 
-      name_problem: 
-      needs_ending_newline: 
-      no_dashes: 
-      no_hardcoding_compiler: 
-      path_should_be: 
-      permissions_644: 
-      problems_in: 
+      is_now_unnecessary: "`%{require_formula}` is now unnecessary"
+      macports_patch_use_https: |-
+        Patches from MacPorts Trac should be https://, not http:
+        %{url}
+      md5_checksums_deprecated: MD5 checksums are deprecated, please use SHA256
+      migrate_deprecated_option: Options should begin with with/without. Migrate '--%{option}' with `deprecated_option`.
+      missing_version: missing version
+      name_problem: "%{name}: %{problem}"
+      needs_ending_newline: File should end with a newline
+      no_dashes: Reference '%{option}' without dashes
+      no_hardcoding_compiler: Use "%{env}" instead of hard-coding "%{compiler}"
+      path_should_be: '"%{bad_path}" should be "%{good_path}"'
+      permissions_644: 'Incorrect file permissions: chmod 644 %{path}'
+      problems_in:
+        one: "%{count} problem in %{n_formulae}"
+        other: "%{count} problems in %{n_formulae}"
       quoted_dep: "'%{dep}'"
       redundant_cvs_module: 
       redundant_module_value: 
