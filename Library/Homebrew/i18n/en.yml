@@ -1,4 +1,4 @@
-en-CA:
+en:
   blacklist:
     clojure: |-
       Clojure isn't really a program but a library managed as part of a
