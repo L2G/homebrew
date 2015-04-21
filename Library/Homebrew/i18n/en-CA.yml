@@ -361,6 +361,11 @@ en-CA:
       xcode_prefix_nonexistent: 
       xcode_select_path_invalid: 
       xquartz_is_outdated: 
+    edit:
+      changes_will_be_lost: |
+        Changes will be lost!
+        The first time you `brew update', all local changes will be lost, you should
+        thus `brew update' before you `brew edit'!
     help: 
     install:
       cannot_create_dir: 

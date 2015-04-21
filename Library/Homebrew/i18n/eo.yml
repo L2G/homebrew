@@ -302,6 +302,8 @@ eo:
       xcode_prefix_nonexistent: 
       xcode_select_path_invalid: 
       xquartz_is_outdated: 
+    edit:
+      changes_will_be_lost: 
     help: |
       Ekzemploj de la uzado:
         brew [info | home | options ] [FORMULA...]

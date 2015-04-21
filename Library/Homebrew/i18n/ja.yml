@@ -297,6 +297,8 @@ ja:
       xcode_prefix_nonexistent: 
       xcode_select_path_invalid: 
       xquartz_is_outdated: 
+    edit:
+      changes_will_be_lost: 
     help: 
     install:
       cannot_create_dir: 

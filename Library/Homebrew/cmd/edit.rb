@@ -3,11 +3,7 @@ require 'formula'
 module Homebrew
   def edit
     unless (HOMEBREW_REPOSITORY/'.git').directory?
-      raise <<-EOS.undent
-        Changes will be lost!
-        The first time you `brew update', all local changes will be lost, you should
-        thus `brew update' before you `brew edit'!
-        EOS
+      raise t("cmd.edit.changes_will_be_lost")
     end
 
     # If no brews are listed, open the project root in an editor.

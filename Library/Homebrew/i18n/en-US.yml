@@ -696,6 +696,11 @@ en-US:
         Your XQuartz (%{installed_version}) is outdated
         Please install XQuartz %{latest_version}:
           https://xquartz.macosforge.org
+    edit:
+      changes_will_be_lost: |
+        Changes will be lost!
+        The first time you `brew update', all local changes will be lost, you should
+        thus `brew update' before you `brew edit'!
     help: |
       Example usage:
         brew [info | home | options ] [FORMULA...]
