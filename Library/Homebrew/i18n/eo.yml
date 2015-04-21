@@ -458,8 +458,12 @@ eo:
     cxx11: 
     thirty_two_bit: 
     universal: 
-    with: 
-    without: 
+    with: Konstrui kun apogo de %{name}
+    without: Konstrui sen apogo de %{name}
+  tab:
+    built_from_source: 
+    path_or_url: 
+    poured_from_bottle: Verŝita el botelo
   utils:
     authentication_failed: 
     cleaning_up: Unu sekundo, nun purigas

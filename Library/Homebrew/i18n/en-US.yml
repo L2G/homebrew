@@ -896,6 +896,10 @@ en-US:
     universal: Build a universal binary
     with: Build with %{name} support
     without: Build without %{name} support
+  tab:
+    built_from_source: Built from source
+    path_or_url: path or URL
+    poured_from_bottle: Poured from bottle
   utils:
     authentication_failed: |
       GitHub %{error}
