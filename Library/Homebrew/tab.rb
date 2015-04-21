@@ -36,7 +36,7 @@ class Tab < OpenStruct
     attributes["source"] ||= {}
 
     tapped_from = attributes["tapped_from"]
-    unless tapped_from.nil? || tapped_from == "path or URL"
+    unless tapped_from.nil? || tapped_from == t("tab.path_or_url")
       attributes["source"]["tap"] = attributes.delete("tapped_from")
     end
 
@@ -193,8 +193,8 @@ class Tab < OpenStruct
   def to_s
     s = []
     case poured_from_bottle
-    when true  then s << "Poured from bottle"
-    when false then s << "Built from source"
+    when true  then s << t("tab.poured_from_bottle")
+    when false then s << t("tab.built_from_source")
     end
     unless used_options.empty?
       s << "Installed" if s.empty?
