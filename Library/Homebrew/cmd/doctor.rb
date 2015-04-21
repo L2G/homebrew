@@ -165,13 +165,7 @@ def check_for_stray_headers
     "osxfuse/**/*.h", # OSXFuse
   ]
 
-  __check_stray_files "/usr/local/include", "**/*.h", white_list, <<-EOS.undent
-    Unbrewed header files were found in /usr/local/include.
-    If you didn't put them there on purpose they could cause problems when
-    building Homebrew formulae, and may need to be deleted.
-
-    Unexpected header files:
-  EOS
+  __check_stray_files "/usr/local/include", "**/*.h", white_list, t('cmd.doctor.stray_includes')
 end
 
 def check_for_other_package_managers
@@ -286,13 +280,8 @@ def check_for_bad_install_name_tool
   # otool may not work, for example if the Xcode license hasn't been accepted yet
   return if libs.empty?
 
-  unless libs.include? "/usr/lib/libxcselect.dylib" then <<-EOS.undent
-    You have an outdated version of /usr/bin/install_name_tool installed.
-    This will cause binary package installations to fail.
-    This can happen if you install osx-gcc-installer or RailsInstaller.
-    To restore it, you must reinstall OS X or restore the binary from
-    the OS packages.
-    EOS
+  unless libs.include? "/usr/lib/libxcselect.dylib"
+    t("cmd.doctor.bad_install_name_tool")
   end
 end
 
@@ -342,14 +331,7 @@ end
 
 def check_access_site_packages
   if Language::Python.homebrew_site_packages.exist? && !Language::Python.homebrew_site_packages.writable_real?
-    <<-EOS.undent
-      #{Language::Python.homebrew_site_packages} isn't writable.
-      This can happen if you "sudo pip install" software that isn't managed
-      by Homebrew. If you install a formula with Python modules, the install
-      will fail during the link step.
-
-      You should probably `chown` #{Language::Python.homebrew_site_packages}
-    EOS
+    t("cmd.doctor.unwritable_site_packages", :path => Language::Python.homebrew_site_packages)
   end
 end
 
@@ -361,31 +343,20 @@ end
 
 def check_access_cache
   if HOMEBREW_CACHE.exist? && !HOMEBREW_CACHE.writable_real?
-    <<-EOS.undent
-      #{HOMEBREW_CACHE} isn't writable.
-      This can happen if you run `brew install` or `brew fetch` as another user.
-      Homebrew caches downloaded files to this location.
-      You should probably `chown` #{HOMEBREW_CACHE}
-    EOS
+    t('cmd.doctor.unwritable_cache', :path => HOMEBREW_CACHE)
   end
 end
 
 def check_access_cellar
   if HOMEBREW_CELLAR.exist? && !HOMEBREW_CELLAR.writable_real?
-    <<-EOS.undent
-      #{HOMEBREW_CELLAR} isn't writable.
-      You should `chown` #{HOMEBREW_CELLAR}
-    EOS
+    t("cmd.doctor.unwritable", :path => HOMEBREW_CELLAR)
   end
 end
 
 def check_access_prefix_opt
   opt = HOMEBREW_PREFIX.join("opt")
   if opt.exist? && !opt.writable_real?
-    <<-EOS.undent
-      #{opt} isn't writable.
-      You should `chown` #{opt}
-    EOS
+    t("cmd.doctor.unwritable", :path => opt)
   end
 end
 
@@ -883,16 +854,9 @@ end
     return if Language::Python.reads_brewed_pth_files?("python") != false
     return unless Language::Python.in_sys_path?("python", homebrew_site_packages)
     user_site_packages = Language::Python.user_site_packages "python"
-    <<-EOS.undent
-      Your default Python does not recognize the Homebrew site-packages
-      directory as a special site-packages directory, which means that .pth
-      files will not be followed. This means you will not be able to import
-      some modules after installing them with Homebrew, like wxpython. To fix
-      this for the current user, you can run:
-
-        mkdir -p #{user_site_packages}
-        echo 'import site; site.addsitedir("#{homebrew_site_packages}")' >> #{user_site_packages}/homebrew.pth
-    EOS
+    t("cmd.doctor.no_pth_support",
+      :user_site_packages => user_site_packages,
+      :homebrew_site_packages => homebrew_site_packages)
   end
 
   def check_for_external_cmd_name_conflict
@@ -906,9 +870,9 @@ end
     end
     cmd_map.reject! { |cmd_name, cmd_paths| cmd_paths.size == 1 }
     return if cmd_map.empty?
-    s = "You have external commands with conflicting names."
+    s = t("cmd.doctor.external_commands_conflict")
     cmd_map.each do |cmd_name, cmd_paths|
-      s += "\n\nFound command `#{cmd_name}` in following places:\n"
+      s += "\n\n" + t("cmd.doctor.found_command_here", :cmd_name => cmd_name) + "\n"
       s += cmd_paths.map { |f| "  #{f}" }.join("\n")
     end
     s
@@ -944,16 +908,12 @@ module Homebrew
         out = checks.send(method)
       rescue NoMethodError
         Homebrew.failed = true
-        puts "No check available by the name: #{method}"
+        puts t("cmd.doctor.no_check_by_that_name", :method => method)
         next
       end
       unless out.nil? or out.empty?
         if first_warning
-          puts <<-EOS.undent
-            #{Tty.white}Please note that these warnings are just used to help the Homebrew maintainers
-            with debugging if you file an issue. If everything you use Homebrew for is
-            working fine: please don't worry and just ignore them. Thanks!#{Tty.reset}
-          EOS
+          puts Tty.white + t("cmd.doctor.note_on_warnings") + Tty.reset
         end
 
         puts

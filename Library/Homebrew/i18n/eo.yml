@@ -228,6 +228,7 @@ eo:
       pair_with_arrow: "%{from} => %{to}"
     doctor:
       autoconf_xcode: 
+      bad_install_name_tool: 
       broken_symlinks: |
         Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
           %{broken_symlinks}
@@ -236,10 +237,12 @@ eo:
       dyld_vars_are_set_2: 
       dyld_vars_have_go_conflict: 
       enthought_python_in_path: 
+      external_commands_conflict: 
       filesystem_case_sensitive: |
         La dosiersistemo ĉe %{paths} aspektas usklecodistinga.
         La dosiersistemo de OS X kutime estas ne-usklecodistinga.
         Bonvolu raporti iujn ajn ŝajnajn zorgojn.
+      found_command_here: 
       git_autocrlf_settings: 
       git_not_found: 
       git_outdated: 
@@ -254,11 +257,14 @@ eo:
       macgpg2: 
       macports_or_fink: 
       missing_deps: 
+      no_check_by_that_name: 
+      no_pth_support: 
       non_homebrew_gettext: 
       non_homebrew_pkgconfig: 
       non_homebrew_pkgconfig_mono: 
       non_prefixed_coreutils: 
       non_prefixed_findutils: 
+      note_on_warnings: 
       old_env_var_homebrew_keep_info: 
       old_share_python_in_path: 
       old_share_python_in_path_more: 
@@ -274,6 +280,7 @@ eo:
       stray_config_scripts: 
       stray_dev_dir: 
       stray_dylibs: 
+      stray_includes: 
       stray_las: 
       stray_pcs: 
       stray_static_libs: 
@@ -283,9 +290,12 @@ eo:
       uncommitted_mods: 
       unlinked_kegs_in_cellar: 
       unsupported_ruby: 
+      unwritable: 
       unwritable_access_logs: 
+      unwritable_cache: 
       unwritable_directories: 
       unwritable_directory: 
+      unwritable_site_packages: 
       unwritable_usr_local: 
       user_curlrc_exists: 
       user_path_has_no_homebrew_bin: 

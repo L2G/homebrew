@@ -335,6 +335,12 @@ en-US:
           %{path}
 
         This custom autoconf may cause some Homebrew formulae to fail to compile.
+      bad_install_name_tool: |
+        You have an outdated version of /usr/bin/install_name_tool installed.
+        This will cause binary package installations to fail.
+        This can happen if you install osx-gcc-installer or RailsInstaller.
+        To restore it, you must reinstall OS X or restore the binary from
+        the OS packages.
       broken_symlinks: |
         Broken symlinks were found. Remove them with `brew prune`:
           %{broken_symlinks}
@@ -360,9 +366,11 @@ en-US:
         This can cause build problems, as this software installs its own
         copies of iconv and libxml2 into directories that are picked up by
         other build systems.
+      external_commands_conflict: You have external commands with conflicting names.
       filesystem_case_sensitive: |
         The filesystem on %{paths} appears to be case-sensitive.
         The default OS X filesystem is case-insensitive. Please report any apparent problems.
+      found_command_here: 'Found command `%{cmd_name}` in following places:'
       git_autocrlf_settings: |
         Suspicious Git newline settings found.
 
@@ -452,6 +460,16 @@ en-US:
             brew install %{deps}
 
         Run `brew missing` for more details.
+      no_check_by_that_name: 'No check available by the name: %{method}'
+      no_pth_support: |
+        Your default Python does not recognize the Homebrew site-packages
+        directory as a special site-packages directory, which means that .pth
+        files will not be followed. This means you will not be able to import
+        some modules after installing them with Homebrew, like wxpython. To fix
+        this for the current user, you can run:
+
+          mkdir -p %{user_site_packages}
+          echo 'import site; site.addsitedir("%{homebrew_site_packages}")' >> %{user_site_packages}/homebrew.pth
       non_homebrew_gettext: |
         gettext files detected at a system prefix
         These files can cause compilation and link failures, especially if they
@@ -475,6 +493,7 @@ en-US:
         Putting non-prefixed coreutils in your path can cause gmp builds to fail.
       non_prefixed_findutils: |
         Putting non-prefixed findutils in your path can cause python builds to fail.
+      note_on_warnings: 
       old_env_var_homebrew_keep_info: |
         `HOMEBREW_KEEP_INFO` is no longer used
         info files are no longer deleted by default; you may
@@ -547,6 +566,12 @@ en-US:
         building Homebrew formulae, and may need to be deleted.
 
         Unexpected dylibs:
+      stray_includes: |
+        Unbrewed header files were found in /usr/local/include.
+        If you didn't put them there on purpose they could cause problems when
+        building Homebrew formulae, and may need to be deleted.
+
+        Unexpected header files:
       stray_las: |
         Unbrewed .la files were found in /usr/local/lib.
         If you didn't put them there on purpose they could cause problems when
@@ -599,9 +624,17 @@ en-US:
         is developed and tested on Ruby %{supported_ruby}, and may not work correctly
         on other Rubies. Patches are accepted as long as they don't cause breakage
         on supported Rubies.
+      unwritable: |
+        %{path} isn't writable.
+        You should `chown` %{path}
       unwritable_access_logs: |
         %{path} isn't writable.
         Homebrew writes debugging logs to this location.
+        You should probably `chown` %{path}
+      unwritable_cache: |
+        %{path} isn't writable.
+        This can happen if you run `brew install` or `brew fetch` as another user.
+        Homebrew caches downloaded files to this location.
         You should probably `chown` %{path}
       unwritable_directories: |
         Some directories in %{path} aren't writable.
@@ -615,6 +648,13 @@ en-US:
         This can happen if you "sudo make install" software that isn't managed by
         by Homebrew. If a formula tries to write a file to this directory, the
         install will fail during the link step.
+
+        You should probably `chown` %{path}
+      unwritable_site_packages: |
+        %{path} isn't writable.
+        This can happen if you "sudo pip install" software that isn't managed
+        by Homebrew. If you install a formula with Python modules, the install
+        will fail during the link step.
 
         You should probably `chown` %{path}
       unwritable_usr_local: |
