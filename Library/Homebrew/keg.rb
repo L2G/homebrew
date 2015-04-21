@@ -6,10 +6,9 @@ require "ostruct"
 class Keg
   class AlreadyLinkedError < RuntimeError
     def initialize(keg)
-      super <<-EOS.undent
-        Cannot link #{keg.name}
-        Another version is already linked: #{keg.linked_keg_record.resolved_path}
-        EOS
+      super t("keg.cannot_link",
+              :name => keg.name,
+              :path => keg.linked_keg_record.resolved_path)
     end
   end
 
@@ -30,34 +29,25 @@ class Keg
     def suggestion
       conflict = Keg.for(dst)
     rescue NotAKegError, Errno::ENOENT
-      "already exists. You may want to remove it:\n  rm '#{dst}'\n"
+      t("keg.already_exists", :target => dst)
     else
-      <<-EOS.undent
-      is a symlink belonging to #{conflict.name}. You can unlink it:
-        brew unlink #{conflict.name}
-      EOS
+      t("keg.is_symlink", :target => dst, :conflict_name => conflict.name)
     end
 
     def to_s
       s = []
-      s << "Could not symlink #{src}"
-      s << "Target #{dst}" << suggestion
-      s << <<-EOS.undent
-        To force the link and overwrite all conflicting files:
-          brew link --overwrite #{keg.name}
-
-        To list all files that would be deleted:
-          brew link --overwrite --dry-run #{keg.name}
-        EOS
+      s << t("keg.cannot_symlink", :path => src)
+      s << suggestion
+      s << t("keg.suggest_overwrite", :name => keg.name)
       s.join("\n")
     end
   end
 
   class DirectoryNotWritableError < LinkError
-    def to_s; <<-EOS.undent
-      Could not symlink #{src}
-      #{dst.dirname} is not writable.
-      EOS
+    def to_s
+      t("keg.cannot_symlink_dir_not_writable",
+        :src => src,
+        :dest => dst.dirname)
     end
   end
 
@@ -88,15 +78,15 @@ class Keg
       return Keg.new(path) if path.parent.parent == HOMEBREW_CELLAR.realpath
       path = path.parent.realpath # realpath() prevents root? failing
     end
-    raise NotAKegError, "#{path} is not inside a keg"
+    raise NotAKegError, t("keg.not_inside_keg", :path => path)
   end
 
   attr_reader :path, :name, :linked_keg_record, :opt_record
   protected :path
 
   def initialize path
-    raise "#{path} is not a valid keg" unless path.parent.parent.realpath == HOMEBREW_CELLAR.realpath
-    raise "#{path} is not a directory" unless path.directory?
+    raise t("keg.not_valid_keg", :path => path) unless path.parent.parent.realpath == HOMEBREW_CELLAR.realpath
+    raise t("keg.not_directory", :path => path) unless path.directory?
     @path = path
     @name = path.parent.basename.to_s
     @linked_keg_record = HOMEBREW_LIBRARY.join("LinkedKegs", name)
@@ -104,7 +94,7 @@ class Keg
   end
 
   def fname
-    opoo "Keg#fname is a deprecated alias for Keg#name and will be removed soon"
+    opoo t("keg.fname_alias_deprecated")
     name
   end
 

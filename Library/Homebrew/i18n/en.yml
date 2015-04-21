@@ -977,6 +977,30 @@ en:
       You can use brew with sudo, but only if the brew executable is owned by root.
       However, this is both not recommended and completely unsupported so do so at
       your own risk.
+  keg:
+    already_exists: |-
+      Target %{target} already exists. You may want to remove it:
+        rm '%{target}'
+    cannot_link: |-
+      Cannot link %{name}
+      Another version is already linked: %{path}
+    cannot_symlink: Could not symlink %{path}
+    cannot_symlink_dir_not_writable: |
+      Could not symlink %{src}
+      %{dest} is not writable.
+    fname_alias_deprecated: Keg#fname is a deprecated alias for Keg#name and will be removed soon
+    is_symlink: |-
+      Target %{target} is a symlink belonging to %{conflict_name}. You can unlink it:
+        brew unlink %{name}
+    not_directory: "%{path} is not a directory"
+    not_inside_keg: "%{path} is not inside a keg"
+    not_valid_keg: "%{path} is not a valid keg"
+    suggest_overwrite: |
+      To force the link and overwrite all conflicting files:
+        brew link --overwrite %{name}
+
+      To list all files that would be deleted:
+        brew link --overwrite --dry-run %{name}
   software_spec:
     cxx11: Build using C++11 mode
     thirty_two_bit: Build 32-bit only

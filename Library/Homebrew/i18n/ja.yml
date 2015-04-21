@@ -453,6 +453,17 @@ ja:
     unrecognized_bottle_arch: 
   global:
     sudo_bad: 
+  keg:
+    already_exists: 
+    cannot_link: 
+    cannot_symlink: 
+    cannot_symlink_dir_not_writable: 
+    fname_alias_deprecated: 
+    is_symlink: 
+    not_directory: 
+    not_inside_keg: 
+    not_valid_keg: 
+    suggest_overwrite: 
   software_spec:
     cxx11: 
     thirty_two_bit: 
