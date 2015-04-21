@@ -493,7 +493,10 @@ en-US:
         Putting non-prefixed coreutils in your path can cause gmp builds to fail.
       non_prefixed_findutils: |
         Putting non-prefixed findutils in your path can cause python builds to fail.
-      note_on_warnings: 
+      note_on_warnings: |
+        Please note that these warnings are just used to help the Homebrew maintainers
+        with debugging if you file an issue. If everything you use Homebrew for is
+        working fine: please don't worry and just ignore them. Thanks!
       old_env_var_homebrew_keep_info: |
         `HOMEBREW_KEEP_INFO` is no longer used
         info files are no longer deleted by default; you may

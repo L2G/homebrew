@@ -336,7 +336,10 @@ en-CA:
       non_homebrew_pkgconfig_mono: 
       non_prefixed_coreutils: 
       non_prefixed_findutils: 
-      note_on_warnings: 
+      note_on_warnings: |
+        Please note that these warnings are just used to help the Homebrew maintainers
+        with debugging if you file an issue. If everything you use Homebrew for is
+        working fine: please don't worry and just ignore them. Thanks!
       old_env_var_homebrew_keep_info: 
       old_share_python_in_path: 
       old_share_python_in_path_more: 
