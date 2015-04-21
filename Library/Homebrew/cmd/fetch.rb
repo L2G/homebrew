@@ -17,7 +17,7 @@ module Homebrew
 
     puts "Fetching: #{bucket * ', '}" if bucket.size > 1
     bucket.each do |f|
-      f.print_tap_action :verb => "Fetching"
+      f.print_tap_action :verb => :fetching
 
       if fetch_bottle?(f)
         fetch_formula(f.bottle)

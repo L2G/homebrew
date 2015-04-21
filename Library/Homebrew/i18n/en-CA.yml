@@ -408,11 +408,22 @@ en-CA:
         thus `brew update' before you `brew edit'!
     help: 
     install:
+      already_installed: "%{name}-%{version} already installed"
+      already_installed_not_linked: "%{name}-%{version} already installed, it's just not linked"
       cannot_create_dir: 
       cannot_write_dir: 
+      devel_only_formula: |
+        %{name} is a devel-only formula
+        Install with `brew install --devel %{name}`
+      head_only_formula: |
+        %{name} is a head-only formula
+        Install with `brew install --HEAD %{name}`
       head_uppercase: 
       macports_or_fink_installed_1: 
       macports_or_fink_installed_2: 
+      no_devel_defined: No devel block is defined for %{name}
+      no_head_defined: No head is defined for %{name}
+      no_stable_download: "%{name} has no stable download, please choose --devel or --HEAD"
       searching_formulae: 
       searching_taps: 
       unsupported_arch: 
@@ -489,6 +500,13 @@ en-CA:
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 
       will_not_overwrite: 
+  formula:
+    at_least_url_required: formulae require at least a URL
+    cannot_override_brew_method: You cannot override Formula#brew in class %{name}
+    failed_to_import: 'Failed to import: %{name}'
+    python_method_deprecated: Formula#python is deprecated and will go away shortly.
+    tap_action_fetching: Fetching %{name} from %{tap}
+    tap_action_installing: Installing %{name} from %{tap}
   formula_installer:
     all_deps_satisfied: 
     already_installed_unlink: 

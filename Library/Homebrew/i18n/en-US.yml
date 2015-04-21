@@ -766,15 +766,26 @@ en-US:
         man brew
         brew home
     install:
+      already_installed: "%{name}-%{version} already installed"
+      already_installed_not_linked: "%{name}-%{version} already installed, it's just not linked"
       cannot_create_dir: |
         Could not create %{path}
         Check you have permission to write to %{parent}
       cannot_write_dir: Cannot write to %{path}
+      devel_only_formula: |
+        %{name} is a devel-only formula
+        Install with `brew install --devel %{name}`
+      head_only_formula: |
+        %{name} is a head-only formula
+        Install with `brew install --HEAD %{name}`
       head_uppercase: Specify `--HEAD` in uppercase to build from trunk.
       macports_or_fink_installed_1: It appears you have MacPorts or Fink installed.
       macports_or_fink_installed_2: |
         Software installed with other package managers causes known problems for
         Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again.
+      no_devel_defined: No devel block is defined for %{name}
+      no_head_defined: No head is defined for %{name}
+      no_stable_download: "%{name} has no stable download, please choose --devel or --HEAD"
       searching_formulae: Searching formulae...
       searching_taps: Searching taps...
       unsupported_arch: |
@@ -877,6 +888,13 @@ en-US:
       tried_to_install_empty_array_to: tried to install empty array to %{path}
       tried_to_install_empty_hash_to: tried to install empty hash to %{path}
       will_not_overwrite: Will not overwrite %{path}
+  formula:
+    at_least_url_required: formulae require at least a URL
+    cannot_override_brew_method: You cannot override Formula#brew in class %{name}
+    failed_to_import: 'Failed to import: %{name}'
+    python_method_deprecated: Formula#python is deprecated and will go away shortly.
+    tap_action_fetching: Fetching %{name} from %{tap}
+    tap_action_installing: Installing %{name} from %{tap}
   formula_installer:
     all_deps_satisfied: All dependencies for %{name} are satisfied.
     already_installed_unlink: |

@@ -41,38 +41,38 @@ module Homebrew
       ARGV.formulae.each do |f|
         # head-only without --HEAD is an error
         if not ARGV.build_head? and f.stable.nil? and f.devel.nil?
-          raise <<-EOS.undent
-          #{f.name} is a head-only formula
-          Install with `brew install --HEAD #{f.name}`
-          EOS
+          raise t("cmd.install.head_only_formula", :name => f.name)
         end
 
         # devel-only without --devel is an error
         if not ARGV.build_devel? and f.stable.nil? and f.head.nil?
-          raise <<-EOS.undent
-          #{f.name} is a devel-only formula
-          Install with `brew install --devel #{f.name}`
-          EOS
+          raise t("cmd.install.devel_only_formula", :name => f.name)
         end
 
         if ARGV.build_stable? and f.stable.nil?
-          raise "#{f.name} has no stable download, please choose --devel or --HEAD"
+          raise t("cmd.install.no_stable_download", :name => f.name)
         end
 
         # --HEAD, fail with no head defined
         if ARGV.build_head? and f.head.nil?
-          raise "No head is defined for #{f.name}"
+          raise t("cmd.install.no_head_defined", :name => f.name)
         end
 
         # --devel, fail with no devel defined
         if ARGV.build_devel? and f.devel.nil?
-          raise "No devel block is defined for #{f.name}"
+          raise t("cmd.install.no_devel_defined", :name => f.name)
         end
 
         if f.installed?
-          msg = "#{f.name}-#{f.installed_version} already installed"
-          msg << ", it's just not linked" unless f.linked_keg.symlink? or f.keg_only?
-          opoo msg
+          if f.linked_keg.symlink? or f.keg_only?
+            opoo t("cmd.install.already_installed",
+                   :name => f.name,
+                   :version => :f.installed_version)
+          else
+            opoo t("cmd.install.already_installed_not_linked",
+                   :name => f.name,
+                   :version => :f.installed_version)
+          end
         else
           formulae << f
         end

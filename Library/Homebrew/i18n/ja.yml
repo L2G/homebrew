@@ -311,11 +311,18 @@ ja:
       changes_will_be_lost: 
     help: 
     install:
+      already_installed: 
+      already_installed_not_linked: 
       cannot_create_dir: 
       cannot_write_dir: 
+      devel_only_formula: 
+      head_only_formula: 
       head_uppercase: 
       macports_or_fink_installed_1: 
       macports_or_fink_installed_2: 
+      no_devel_defined: 
+      no_head_defined: 
+      no_stable_download: 
       searching_formulae: 
       searching_taps: 
       unsupported_arch: 
@@ -390,6 +397,13 @@ ja:
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 
       will_not_overwrite: 
+  formula:
+    at_least_url_required: 
+    cannot_override_brew_method: 
+    failed_to_import: 
+    python_method_deprecated: 
+    tap_action_fetching: 
+    tap_action_installing: 
   formula_installer:
     all_deps_satisfied: 
     already_installed_unlink: 

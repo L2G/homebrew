@@ -111,7 +111,7 @@ class Formula
 
   def determine_active_spec(requested)
     spec = send(requested) || stable || devel || head
-    spec or raise FormulaSpecificationError, "formulae require at least a URL"
+    spec or raise FormulaSpecificationError, t("formula.at_least_url_required")
   end
 
   def validate_attributes!
@@ -586,7 +586,7 @@ class Formula
 
   # @deprecated
   def python(options={}, &block)
-    opoo 'Formula#python is deprecated and will go away shortly.'
+    opoo t("formula.python_method_deprecated")
     block.call if block_given?
     PythonDependency.new
   end
@@ -604,7 +604,7 @@ class Formula
         yield Formulary.factory(name)
       rescue StandardError => e
         # Don't let one broken formula break commands. But do complain.
-        onoe "Failed to import: #{name}"
+        onoe t("formula.failed_to_import", :name => name)
         puts e
         next
       end
@@ -645,8 +645,8 @@ class Formula
 
   def print_tap_action options={}
     if tap?
-      verb = options[:verb] || "Installing"
-      ohai "#{verb} #{name} from #{tap}"
+      verb = options[:verb].to_s || "installing"
+      t("formula.tap_action_#{verb}", :name => name, :tap => tap)
     end
   end
 
@@ -893,7 +893,7 @@ class Formula
   def self.method_added method
     case method
     when :brew
-      raise "You cannot override Formula#brew in class #{name}"
+      raise t("formula.cannot_override_brew_method", :name => name)
     when :test
       define_method(:test_defined?) { true }
     when :options
