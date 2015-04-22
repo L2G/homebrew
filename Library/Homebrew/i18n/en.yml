@@ -58,6 +58,10 @@ en:
     xcode_download: Xcode can be installed from https://developer.apple.com/downloads/
   brew:
     bad_sudo: Cowardly refusing to `sudo brew %{cmd}`
+    bad_sudo_2: |-
+      You can use brew with sudo, but only if the brew executable is owned by root.
+      However, this is both not recommended and completely unsupported so do so at
+      your own risk.
     bad_xcode_path: |-
       Your xcode-select path is currently set to '/'.
       This causes the `xcrun` tool to hang, and can render Homebrew unusable.
@@ -978,11 +982,6 @@ en:
     summary_title: Summary
     summary_with_build_time: "%{path}: %{path_info}, built in %{build_time}"
     unrecognized_bottle_arch: 'Unrecognized architecture for --bottle-arch: %{arch}'
-  global:
-    sudo_bad: |-
-      You can use brew with sudo, but only if the brew executable is owned by root.
-      However, this is both not recommended and completely unsupported so do so at
-      your own risk.
   keg:
     already_exists: |-
       Target %{target} already exists. You may want to remove it:

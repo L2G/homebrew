@@ -92,7 +92,9 @@ begin
 
   if sudo_check.include? cmd
     if Process.uid.zero? and not File.stat(HOMEBREW_BREW_FILE).uid.zero?
-      raise t('brew.bad_sudo', :cmd => cmd) + "\n" + SUDO_BAD_ERRMSG
+      # TODO [i18n] combine once translations for 'bad_sudo' and 'bad_sudo_2'
+      # are in sync
+      raise t('brew.bad_sudo', :cmd => cmd) + "\n" + t('brew.bad_sudo_2')
     end
   end
 

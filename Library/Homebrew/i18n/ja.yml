@@ -19,6 +19,7 @@ ja:
     xcode_download: 
   brew:
     bad_sudo: 
+    bad_sudo_2: 
     bad_xcode_path: 
     formula_unspecified: 
     homebrew_version: 
@@ -457,8 +458,6 @@ ja:
     summary_title: "結語"
     summary_with_build_time: 
     unrecognized_bottle_arch: 
-  global:
-    sudo_bad: 
   keg:
     already_exists: 
     cannot_link: 

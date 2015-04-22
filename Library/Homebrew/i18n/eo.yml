@@ -19,6 +19,7 @@ eo:
     xcode_download: 
   brew:
     bad_sudo: Malkuraĝe rifuzas plenumi `sudo brew %{cmd}`
+    bad_sudo_2: 
     bad_xcode_path: 
     formula_unspecified: 
     homebrew_version: Homebrew %{version}
@@ -499,8 +500,6 @@ eo:
     summary_title: Resumo
     summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
     unrecognized_bottle_arch: 
-  global:
-    sudo_bad: 
   keg:
     already_exists: 
     cannot_link: 
