@@ -1015,6 +1015,8 @@ en-US:
       ruby_is_required: Ruby is required to install this formula.
       ruby_version_is_required: Ruby %{version} is required to install this formula.
       version_required: RubyRequirement requires a version!
+  sandbox:
+    sandbox_profile: 'Sandbox profile:'
   software_spec:
     cxx11: Build using C++11 mode
     thirty_two_bit: Build 32-bit only

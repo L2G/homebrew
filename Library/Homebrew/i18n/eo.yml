@@ -516,6 +516,8 @@ eo:
       ruby_is_required: 
       ruby_version_is_required: 
       version_required: 
+  sandbox:
+    sandbox_profile: 
   software_spec:
     cxx11: 
     thirty_two_bit: 

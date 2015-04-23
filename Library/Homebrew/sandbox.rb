@@ -68,7 +68,7 @@ class Sandbox
       safe_system SANDBOX_EXEC, "-f", seatbelt.path, *args
     rescue
       if ARGV.verbose?
-        ohai "Sandbox profile:"
+        ohai t("sandbox.sandbox_profile")
         puts @profile.dump
       end
       raise
