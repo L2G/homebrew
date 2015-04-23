@@ -38,7 +38,7 @@ module Homebrew
 
     if fc.name.nil? || fc.name.strip.empty?
       stem = Pathname.new(url).stem
-      print "Formula name [#{stem}]: "
+      print t("cmd.create.prompt_formula_name", :stem => stem)
       fc.name = __gets || stem
       fc.path = Formula.path(fc.name)
     end
@@ -47,22 +47,20 @@ module Homebrew
     # unless --force is specified.
     unless ARGV.force?
       if msg = blacklisted?(fc.name)
-        raise "#{fc.name} is blacklisted for creation.\n#{msg}\nIf you really want to create this formula use --force."
+        raise t("cmd.create.error_blacklisted", :name => fc.name, :msg => msg)
       end
 
       if Formula.aliases.include? fc.name
         realname = Formulary.canonical_name(fc.name)
-        raise <<-EOS.undent
-          The formula #{realname} is already aliased to #{fc.name}
-          Please check that you are not creating a duplicate.
-          To force creation use --force.
-          EOS
+        raise t("cmd.create.error_already_aliased",
+                :real_name => realname,
+                :alias => fc.name)
       end
     end
 
     fc.generate!
 
-    puts "Please `brew audit --strict #{fc.name}` before submitting, thanks."
+    puts t("cmd.create.suggest_brew_audit_strict", :name => name)
     exec_editor fc.path
   end
 
@@ -100,11 +98,11 @@ class FormulaCreator
   end
 
   def generate!
-    raise "#{path} already exists" if path.exist?
+    raise t("cmd.create.error_path_exists", :path => path) if path.exist?
 
     if version.nil?
-      opoo "Version cannot be determined from URL."
-      puts "You'll need to add an explicit 'version' to the formula."
+      opoo t("cmd.create.warn_cant_determine_version_1")
+      puts t("cmd.create.warn_cant_determine_version_2")
     end
 
     if fetch? && version

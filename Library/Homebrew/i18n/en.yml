@@ -332,6 +332,20 @@ en:
       none: "(none)"
       not_applicable: N/A
       pair_with_arrow: "%{from} => %{to}"
+    create:
+      error_already_aliased: |
+        The formula %{real_name} is already aliased to %{alias}
+        Please check that you are not creating a duplicate.
+        To force creation use --force.
+      error_blacklisted: |
+        %{name} is blacklisted for creation.
+        %{msg}
+        If you really want to create this formula use --force.
+      error_path_exists: "%{path} already exists"
+      prompt_formula_name: 'Formula name [%{stem}]: '
+      suggest_brew_audit_strict: Please `brew audit --strict %{name}` before submitting, thanks.
+      warn_cant_determine_version_1: Version cannot be determined from URL.
+      warn_cant_determine_version_2: You'll need to add an explicit 'version' to the formula.
     doctor:
       autoconf_xcode: |
         An "autoconf" in your path blocks the Xcode-provided version at:

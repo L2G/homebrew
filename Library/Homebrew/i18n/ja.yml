@@ -227,6 +227,14 @@ ja:
       none: 
       not_applicable: 
       pair_with_arrow: "%{from}＝＞%{to}"
+    create:
+      error_already_aliased: 
+      error_blacklisted: 
+      error_path_exists: 
+      prompt_formula_name: 
+      suggest_brew_audit_strict: 
+      warn_cant_determine_version_1: 
+      warn_cant_determine_version_2: 
     doctor:
       autoconf_xcode: 
       bad_install_name_tool: 
