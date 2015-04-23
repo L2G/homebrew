@@ -433,6 +433,7 @@ eo:
     removing_invalid_repo: 
     trying_full_download: 
     trying_mirror: 
+    unexpected_revision: 
     unknown_download_strategy: 
     unknown_download_strategy_spec: 
     updating: 

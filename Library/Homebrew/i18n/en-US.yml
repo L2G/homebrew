@@ -894,6 +894,9 @@ en-US:
     removing_invalid_repo: Removing invalid repository from cache
     trying_full_download: Trying a full download
     trying_mirror: Trying a mirror...
+    unexpected_revision: |
+      %{ref} tag should be %{expected}
+      but is actually %{actual}!
     unknown_download_strategy: Unknown download strategy %{name} was requested.
     unknown_download_strategy_spec: Unknown download strategy specification %{name}
     updating: Updating %{path}

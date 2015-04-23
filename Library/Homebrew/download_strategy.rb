@@ -123,10 +123,10 @@ class VCSDownloadStrategy < AbstractDownloadStrategy
 
     if @ref_type == :tag && @revision && current_revision
       unless current_revision == @revision
-        raise <<-EOS.undent
-          #{@ref} tag should be #{@revision}
-          but is actually #{current_revision}!
-        EOS
+        raise t("download_strategy.unexpected_revision",
+                :ref => @ref,
+                :expected => @revision,
+                :actual => current_revision)
       end
     end
   end
