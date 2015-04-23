@@ -479,10 +479,19 @@ ja:
     not_valid_keg: 
     suggest_overwrite: 
   requirements:
+    architecture_required: 
+    full_xcode_required: 
+    full_xcode_required_with_version: 
+    java:
+      java_required: 
+      java_required_with_version: 
+    latex_required: 
     ruby_requirement:
       ruby_is_required: 
       ruby_version_is_required: 
       version_required: 
+    xcode_install_hint: 
+    xcode_install_hint_lion: 
   sandbox:
     sandbox_profile: 
   software_spec:

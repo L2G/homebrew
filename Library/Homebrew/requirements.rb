@@ -30,20 +30,18 @@ class XcodeDependency < Requirement
   end
 
   def message
-    version = " #{@version}" if @version
-    message = <<-EOS.undent
-      A full installation of Xcode.app#{version} is required to compile this software.
-      Installing just the Command Line Tools is not sufficient.
-    EOS
+    message = if @version
+                t("requirements.full_xcode_required_with_version",
+                  :version => @version)
+              else
+                t("requirements.full_xcode_required")
+              end
     if MacOS.version >= :lion
-      message += <<-EOS.undent
-        Xcode can be installed from the App Store.
-      EOS
+      message += t("requirements.xcode_install_hint_lion")
     else
-      message += <<-EOS.undent
-        Xcode can be installed from https://developer.apple.com/downloads/
-      EOS
+      message += t("requirements.xcode_install_hint")
     end
+    "#{message}\n"
   end
 
   def inspect
@@ -80,12 +78,7 @@ class TeXDependency < Requirement
   satisfy { which('tex') || which('latex') }
 
   def message
-    s = <<-EOS.undent
-      A LaTeX distribution is required for Homebrew to install this formula.
-
-      Make sure that "/usr/texbin", or the location you installed it to, is in
-      your PATH before proceeding.
-    EOS
+    s = t("requirements.latex_required")
     s += super
     s
   end
@@ -107,7 +100,7 @@ class ArchRequirement < Requirement
   end
 
   def message
-    "This formula requires an #{@arch} architecture."
+    t("requirements.architecture_required", :arch => @arch)
   end
 end
 

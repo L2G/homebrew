@@ -1024,10 +1024,28 @@ en:
       To list all files that would be deleted:
         brew link --overwrite --dry-run %{name}
   requirements:
+    architecture_required: |
+      This formula requires an %{arch} architecture.
+    full_xcode_required: |
+      A full installation of Xcode.app is required to compile this software.
+      Installing just the Command Line Tools is not sufficient.
+    full_xcode_required_with_version: |
+      A full installation of Xcode.app %{version} is required to compile this software.
+      Installing just the Command Line Tools is not sufficient.
+    java:
+      java_required: Java is required to install this formula.
+      java_required_with_version: Java %{version} is required to install this formula.
+    latex_required: |
+      A LaTeX distribution is required for Homebrew to install this formula.
+
+      Make sure that "/usr/texbin", or the location you installed it to, is in
+      your PATH before proceeding.
     ruby_requirement:
       ruby_is_required: Ruby is required to install this formula.
       ruby_version_is_required: Ruby %{version} is required to install this formula.
       version_required: RubyRequirement requires a version!
+    xcode_install_hint: Xcode can be installed from https://developer.apple.com/downloads/
+    xcode_install_hint_lion: Xcode can be installed from the App Store.
   sandbox:
     sandbox_profile: 'Sandbox profile:'
   software_spec:

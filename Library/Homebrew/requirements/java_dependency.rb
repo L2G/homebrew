@@ -32,9 +32,12 @@ class JavaDependency < Requirement
   end
 
   def message
-    version_string = " #{@version}" if @version
-
-    s = "Java#{version_string} is required to install this formula."
+    s = if @version
+          t("requirements.java.java_required_with_version",
+            :version => @version)
+        else
+          t("requirements.java.java_required")
+        end
     s += super
     s
   end
