@@ -847,6 +847,13 @@ en:
         one: "%{name} %{versions} is still installed."
         other: "%{name} %{versions} are still installed."
       uninstalling: Uninstalling %{name}... (%{abv})
+    untap:
+      error_no_such_tap: No such tap!
+      error_usage: Usage is `brew untap <tap-name>`
+      untapped_formulae:
+        one: Untapped %{count} formula
+        other: Untapped %{count} formulae
+      untapping: Untapping %{name}... (%{abv})
     update:
       already_up_to_date: Already up-to-date.
       deleted_formulae: Deleted Formulae

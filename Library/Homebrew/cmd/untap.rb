@@ -2,7 +2,7 @@ require 'cmd/tap' # for tap_args
 
 module Homebrew
   def untap
-    raise "Usage is `brew untap <tap-name>`" if ARGV.empty?
+    raise t("cmd.untap.error_usage") if ARGV.empty?
 
     ARGV.each do |tapname|
       user, repo = tap_args(tapname)
@@ -16,15 +16,15 @@ module Homebrew
 
       tapd = HOMEBREW_LIBRARY/"Taps/#{user}/homebrew-#{repo}"
 
-      raise "No such tap!" unless tapd.directory?
-      puts "Untapping #{tapname}... (#{tapd.abv})"
+      raise t("cmd.untap.error_no_such_tap") unless tapd.directory?
+      puts t("cmd.untap.untapping", :name => tapname, :abv => tapd.abv)
 
       files = []
       tapd.find_formula { |file| files << file }
       unlink_tap_formula(files)
       tapd.rmtree
       tapd.dirname.rmdir_if_possible
-      puts "Untapped #{files.length} formula#{plural(files.length, 'e')}"
+      puts t("cmd.untap.untapped_formulae", :count => files.length)
     end
   end
 

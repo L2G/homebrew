@@ -393,6 +393,13 @@ eo:
         one: "%{name} %{versions} estas ankoraŭ instalita."
         other: "%{name} %{versions} estas ankoraŭ instalitaj."
       uninstalling: Malinstalas %{name}... (%{abv})
+    untap:
+      error_no_such_tap: Neniu krano!
+      error_usage: 'Ĝuste: `brew untap <tap-name>`'
+      untapped_formulae:
+        one: Forigis la kranon (%{count} formulon)
+        other: Forigis la kranon (%{count} formulojn)
+      untapping: Forigas la kranon %{name}... (%{abv})
     update:
       already_up_to_date: Jam estas ĝisdata.
       deleted_formulae: Forprenitaj Formuloj
