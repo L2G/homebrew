@@ -196,7 +196,6 @@ eo:
       removing_path_dry_run: 
       skipping_keg_only: 
       skipping_linked_keg: 
-    cleanup_installed_deprecated: 
     commands:
       built_in_commands: 
       external_commands: 

@@ -298,11 +298,6 @@ en-US:
       removing_path_dry_run: 'Would remove: %{path} (%{abv})'
       skipping_keg_only: 'Skipping (old) keg-only: %{name}'
       skipping_linked_keg: Skipping (old) %{name} due to it being linked
-    cleanup_installed_deprecated: |
-      brew cleanup-installed is deprecated and will be removed soon!
-
-      Please consider using the `brew brewdle dump` and `brew brewdle cleanup`
-      commands from https://github.com/Homebrew/homebrew-brewdler
     commands:
       built_in_commands: Built-in commands
       external_commands: External commands
