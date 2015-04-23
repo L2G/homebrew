@@ -1,7 +1,7 @@
 ja:
   blacklist:
     clojure: 
-    distributed_with_os_x: Appleはそれが%{path}にありますOS Xに%{name}を配布しています。
+    distributed_with_os_x: Appleはそれが%{path}にありますOS Xに「%{name}」を配布しています。
     gfortran: 
     google_tool: 
     gsutil: 
@@ -202,26 +202,26 @@ ja:
       external_commands: 
     config:
       comma_join: "、"
-      item_clang: 'Clang: %{value}'
-      item_clt: 'CLT: %{value}'
-      item_gcc_40: 'GCC-4.0: %{value}'
-      item_gcc_42: 'GCC-4.2: %{value}'
+      item_clang: Clang：%{value}
+      item_clt: CLT：%{value}
+      item_gcc_40: GCC-4.0：%{value}
+      item_gcc_42: GCC-4.2：%{value}
       item_hardware: 
-      item_head: 'HEAD: %{value}'
-      item_homebrew_cellar: 'HOMEBREW_CELLAR: %{value}'
-      item_homebrew_prefix: 'HOMEBREW_PREFIX: %{value}'
-      item_homebrew_version: 'HOMEBREW_VERSION: %{value}'
-      item_java: 'Java: %{value}'
-      item_last_commit: 'Last commit: %{value}'
-      item_llvm_gcc: 'LLVM-GCC: build %{llvm}'
-      item_macports_fink: 'MacPorts/Fink: %{value}'
-      item_origin: 'ORIGIN: %{value}'
-      item_os_x: 'OS X: %{version}-%{kernel}'
-      item_perl: 'Perl: %{value}'
-      item_python: 'Python: %{value}'
-      item_ruby: 'Ruby: %{value}'
-      item_system_ruby: 'System Ruby: %{value}'
-      item_x11: 'X11: %{value}'
+      item_head: HEAD：%{value}
+      item_homebrew_cellar: HOMEBREW_CELLAR：%{value}
+      item_homebrew_prefix: HOMEBREW_PREFIX：%{value}
+      item_homebrew_version: HOMEBREW_VERSION：%{value}
+      item_java: Java：%{value}
+      item_last_commit: "最新のコミット：%{value}"
+      item_llvm_gcc: LLVM-GCC：%{llvm}を構築
+      item_macports_fink: MacPorts/Fink：%{value}
+      item_origin: ORIGIN：%{value}
+      item_os_x: OS X：%{version}-%{kernel}
+      item_perl: Perl：%{value}
+      item_python: Python：%{value}
+      item_ruby: Ruby：%{value}
+      item_system_ruby: "システムのRuby：%{value}"
+      item_x11: X11：%{value}
       item_xcode: 'Xcode: %{value}'
       never: 
       none: 
