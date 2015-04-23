@@ -13,7 +13,7 @@ require 'exceptions'
 require 'utils'
 require 'rbconfig'
 require 'tmpdir'
-require 'i18n'
+require 'i18n-wrapper'
 
 TEST_TMPDIR = Dir.mktmpdir("homebrew_tests")
 at_exit { FileUtils.remove_entry(TEST_TMPDIR) }
