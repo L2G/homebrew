@@ -7,7 +7,7 @@ class MultipleVersionsInstalledError < RuntimeError
 
   def initialize name
     @name = name
-    super "#{name} has multiple installed versions"
+    super t("exceptions.multiple_versions_installed_error", :name => @name)
   end
 end
 
@@ -18,7 +18,10 @@ class NoSuchKegError < RuntimeError
 
   def initialize name
     @name = name
-    super "No such keg: #{HOMEBREW_CELLAR}/#{name}"
+    super t("exceptions.no_such_keg_error",
+            :cellar => HOMEBREW_CELLAR,
+            :name => name)
+
   end
 end
 
@@ -27,7 +30,9 @@ class FormulaValidationError < StandardError
 
   def initialize(attr, value)
     @attr = attr
-    super "invalid attribute: #{attr} (#{value.inspect})"
+    super t("exceptions.formula_validation_error",
+            :attr => attr,
+            :value => value.inspect)
   end
 end
 
@@ -41,12 +46,19 @@ class FormulaUnavailableError < RuntimeError
     @name = name
   end
 
+  # TODO (i18n): This is vestigial as far as the translations go, but I'm
+  # leaving it in just in case some hapless outside caller is using it
   def dependent_s
-    "(dependency of #{dependent})" if dependent and dependent != name
   end
 
   def to_s
-    "No available formula for #{name} #{dependent_s}"
+    if dependent and dependent != name
+      t("exceptions.formula_unavailable_error_w_dependent",
+        :name => name,
+        :dependent => dependent)
+    else
+      t("exceptions.formula_unavailable_error", :name => name)
+    end
   end
 end
 
@@ -58,22 +70,25 @@ class TapFormulaUnavailableError < FormulaUnavailableError
     @user, @repo, @shortname = name.split("/", 3)
   end
 
-  def to_s; <<-EOS.undent
-      No available formula for #{shortname} #{dependent_s}
-      Please tap it and then try again: brew tap #{user}/#{repo}
-    EOS
+  def to_s
+    if dependent and dependent != name
+      t("exceptions.tap_formula_unavailable_error_w_dependent",
+        :name => shortname,
+        :dependent => dependent,
+        :user => user,
+        :repo => repo)
+    else
+      t("exceptions.tap_formula_unavailable_error",
+        :name => shortname,
+        :user => user,
+        :repo => repo)
+    end
   end
 end
 
 class OperationInProgressError < RuntimeError
   def initialize name
-    message = <<-EOS.undent
-      Operation already in progress for #{name}
-      Another active Homebrew process is already using #{name}.
-      Please wait for it to finish or terminate it to continue.
-      EOS
-
-    super message
+    super t("exceptions.operation_in_progress_error", :name => name)
   end
 end
 
@@ -81,17 +96,14 @@ class CannotInstallFormulaError < RuntimeError; end
 
 class FormulaInstallationAlreadyAttemptedError < RuntimeError
   def initialize(formula)
-    super "Formula installation already attempted: #{formula.name}"
+    super t("exceptions.formula_installation_already_attempted_error",
+            :name => name)
   end
 end
 
 class UnsatisfiedRequirements < RuntimeError
   def initialize(reqs)
-    if reqs.length == 1
-      super "An unsatisfied requirement failed this build."
-    else
-      super "Unsatisified requirements failed this build."
-    end
+    super t("exceptions.unsatisfied_requirements", :count => reqs.length)
   end
 end
 
