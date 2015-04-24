@@ -903,6 +903,21 @@ en-US:
     unknown_download_strategy_spec: Unknown download strategy specification %{name}
     updating: Updating %{path}
   exceptions:
+    formula_conflict_error: |
+      %{error_intro}
+      %{conflict_list}
+
+      Please `brew unlink %{conflicts}` before continuing.
+
+      Unlinking removes a formula's symlinks from %{homebrew_prefix}. You can
+      link the formula again after the install finishes. You can --force this
+      install, but the build may fail or cause obscure side-effects in the
+      resulting software.
+    formula_conflict_error_intro:
+      one: Cannot install %{name} because a conflicting formula is installed.
+      other: Cannot install %{name} because conflicting formulae are installed.
+    formula_conflict_error_line_item: "  %{name}"
+    formula_conflict_error_line_item_w_reason: "  %{name}: because %{reason}"
     formula_installation_already_attempted_error: 'Formula installation already attempted: %{name}'
     formula_unavailable_error: No available formula for %{name}
     formula_unavailable_error_w_dependent: No available formula for %{name} (dependency of %{dependent})
@@ -916,8 +931,8 @@ en-US:
     tap_formula_unavailable_error: |
       No available formula for %{name}
       Please tap it and then try again: brew tap %{user}/%{repo}
-    tap_formula_unavailable_error_w_dependent: |
-      No available formula for %{name} (dependent of %{dependent})
+    tap_formula_unavailable_error_w_dependent: |-
+      No available formula for %{name} (dependency of %{dependent})
       Please tap it and then try again: brew tap %{user}/%{repo}
     unsatisfied_requirements:
       one: An unsatisfied requirement failed this build.
