@@ -1,10 +1,10 @@
-eo:
+it:
   blacklist:
     clojure: 
-    distributed_with_os_x: 'Apple disdonas "%{name}" kun OS X. Vi povas trovi ĝin ĉe: %{path}'
+    distributed_with_os_x: 
     gfortran: 
     google_tool: 
-    gsutil: 'Instalu "gsutil" jene: `pip install gsutil`'
+    gsutil: 
     haskell_platform: 
     libiconv: 
     lzma: 
@@ -18,15 +18,15 @@ eo:
     xcode_app_store: 
     xcode_download: 
   brew:
-    bad_sudo: Malkuraĝe rifuzas plenumi `sudo brew %{cmd}`
+    bad_sudo: 
     bad_sudo_2: 
     bad_xcode_path: 
     formula_unspecified: 
-    homebrew_version: Homebrew %{version}
-    invalid_usage: Nevalida uzado
+    homebrew_version: 
+    invalid_usage: 
     keg_unspecified: 
     no_tiger_support: 
-    no_working_dir: La kuranta dosierujo ne existas. Ne povas procedi.
+    no_working_dir: 
     please_report_bug: 
     refuse_root_or_usr: 
     unknown_command: 
@@ -54,25 +54,27 @@ eo:
     rmdir_empty: 
   cmd:
     audit:
-      add_test_do: 
-      alias_should_be: 
-      audit_problems: 
-      audit_problems_formula: 
-      audit_problems_list_item: 
-      cant_find_conflicting: 
-      cant_find_dependency: 
-      caveats_no_setuid: 
-      checksum_empty: 
-      checksum_invalid_chars: 
-      checksum_should_be_lowercase: 
-      checksum_should_be_n_chars: 
-      class_inheritance_space: 
-      comment_cmake_found: 
-      comment_remove_default: 
-      commented_out_dep: 
-      data_without_end: 
-      debian_patch_use_https: 
-      define_method_in_class_body: 
+      add_test_do: "È necessario aggiungere un blocco di test `test do`"
+      alias_should_be: La dipendenza '%{alias_name}' è un alias; utilizza il nome canonico '%{canonical_name}'.
+      audit_problems: problemi alla verifica
+      audit_problems_formula: "%{name}:"
+      audit_problems_list_item: "* %{item}"
+      cant_find_conflicting: Impossibile trovare la formula in conflitto %{name}.
+      cant_find_dependency: Impossibile trovare la dipendenza %{name}.
+      caveats_no_setuid: Non raccomandare setuid nelle precisazioni, suggerisci sudo invece.
+      checksum_empty: "%{checksum_type} è vuoto"
+      checksum_invalid_chars: "%{checksum_type} contiene caratteri invalidi"
+      checksum_should_be_lowercase: "%{checksum_type} dovrebbe essere in minuscolo"
+      checksum_should_be_n_chars: "%{checksum_type} dovrebbe contenere %{count} caratteri"
+      class_inheritance_space: 'Usa uno spazio nella specializzazione delle classi: class Foo < %{superclass}'
+      comment_cmake_found: Trovata una chiamata commentata a cmake
+      comment_remove_default: Rimuovere i commenti di default del template
+      commented_out_dep: Dipendenza commentata %{dep}
+      data_without_end: "'DATA' trovato, ma '__END__' è mancante"
+      debian_patch_use_https: |-
+        Le patch da Debian dovrebbero essere https://, non http:
+        %{url}
+      define_method_in_class_body: Definire il metodo %{method} nel corpo della classe, non al top-level
       dependency_has_no_option: 
       depends_on_takes_classes: 
       devel_older_than_stable: 
@@ -200,32 +202,32 @@ eo:
       built_in_commands: 
       external_commands: 
     config:
-      comma_join: ", "
-      item_clang: 'Clang: %{value}'
-      item_clt: 'CLT: %{value}'
-      item_gcc_40: 'GCC-4.0: %{value}'
-      item_gcc_42: 'GCC-4.2: %{value}'
+      comma_join: 
+      item_clang: 
+      item_clt: 
+      item_gcc_40: 
+      item_gcc_42: 
       item_hardware: 
-      item_head: 'HEAD: %{value}'
-      item_homebrew_cellar: 'HOMEBREW_CELLAR: %{value}'
-      item_homebrew_prefix: 'HOMEBREW_PREFIX: %{value}'
-      item_homebrew_version: 'HOMEBREW_VERSION: %{value}'
-      item_java: 'Java: %{value}'
-      item_last_commit: 'Last commit: %{value}'
-      item_llvm_gcc: 'LLVM-GCC: build %{llvm}'
-      item_macports_fink: 'MacPorts/Fink: %{value}'
-      item_origin: 'ORIGIN: %{value}'
-      item_os_x: 'OS X: %{version}-%{kernel}'
-      item_perl: 'Perl: %{value}'
-      item_python: 'Python: %{value}'
-      item_ruby: 'Ruby: %{value}'
-      item_system_ruby: 'System Ruby: %{value}'
-      item_x11: 'X11: %{value}'
-      item_xcode: 'Xcode: %{value}'
+      item_head: 
+      item_homebrew_cellar: 
+      item_homebrew_prefix: 
+      item_homebrew_version: 
+      item_java: 
+      item_last_commit: 
+      item_llvm_gcc: 
+      item_macports_fink: 
+      item_origin: 
+      item_os_x: 
+      item_perl: 
+      item_python: 
+      item_ruby: 
+      item_system_ruby: 
+      item_x11: 
+      item_xcode: 
       never: 
       none: 
       not_applicable: 
-      pair_with_arrow: "%{from} => %{to}"
+      pair_with_arrow: 
     create:
       error_already_aliased: 
       error_blacklisted: 
@@ -237,19 +239,14 @@ eo:
     doctor:
       autoconf_xcode: 
       bad_install_name_tool: 
-      broken_symlinks: |
-        Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
-          %{broken_symlinks}
+      broken_symlinks: 
       cellar_and_temp_not_same_vol: 
       dyld_vars_are_set: 
       dyld_vars_are_set_2: 
       dyld_vars_have_go_conflict: 
       enthought_python_in_path: 
       external_commands_conflict: 
-      filesystem_case_sensitive: |
-        La dosiersistemo ĉe %{paths} aspektas usklecodistinga.
-        La dosiersistemo de OS X kutime estas ne-usklecodistinga.
-        Bonvolu raporti iujn ajn ŝajnajn zorgojn.
+      filesystem_case_sensitive: 
       found_command_here: 
       git_autocrlf_settings: 
       git_not_found: 
@@ -322,8 +319,8 @@ eo:
       xquartz_is_outdated: 
     edit:
       changes_will_be_lost: 
-    help: |
-      Ekzemploj de la uzado:
+    help: |-
+      Esempio d'uso:
         brew [info | home | options ] [FORMULA...]
         brew install FORMULA...
         brew uninstall FORMULA...
@@ -333,17 +330,17 @@ eo:
         brew upgrade [FORMULA...]
         brew pin/unpin [FORMULA...]
 
-      Diagnozi ĝenaĵojn:
+      Risoluzione dei problemi:
         brew doctor
         brew install -vd FORMULA
         brew [--env | config]
 
-      Fermenti:
+      "Brewing":
         brew create [URL [--no-fetch]]
         brew edit [FORMULA...]
-        open https://github.com/Homebrew/homebrew/wiki/Formula-Cookbook
+        open https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
 
-      Pluaj helpoj:
+      Aiuto:
         man brew
         brew home
     install:
@@ -363,9 +360,9 @@ eo:
       searching_taps: 
       unsupported_arch: 
     list:
-      files: "%{path}/ (%{count} dosieroj)"
-      other_files: "%{path}/ (%{count} kromaj dosieroj)"
-      symlink: "%{symlink} → %{target}"
+      files: 
+      other_files: 
+      symlink: 
     search:
       failed_to_search_tap: 
       if_you_meant_precisely: 
@@ -374,68 +371,54 @@ eo:
       suggest_regex_2: 
     tap:
       could_not_create_link: 
-      invalid_name: Nevalida nomo de krano
+      invalid_name: 
       private_repo_tapped: 
-      pruned_formulae:
-        one: Tondis %{count} malvivan formulon
-        other: Tondis %{count} malvivajn formulojn
-      tapped_formulae:
-        one: Spilis %{count} formulon
-        other: Spilis %{count} formulojn
-      tapped_formulae_abv:
-        one: Aldonis kranon de %{count} formulon (%{abv})
-        other: Aldonis kranon de  %{count} formulojn (%{abv})
+      pruned_formulae: 
+      tapped_formulae: 
+      tapped_formulae_abv: 
     uninstall:
-      comma: ", "
+      comma: 
       must_remove_all: 
-      remove_all: Malinstalas ĉiujn per `brew uninstall --force %{name}`.
-      still_installed:
-        one: "%{name} %{versions} estas ankoraŭ instalita."
-        other: "%{name} %{versions} estas ankoraŭ instalitaj."
-      uninstalling: Malinstalas %{name}... (%{abv})
+      remove_all: 
+      still_installed: 
+      uninstalling: 
     untap:
-      error_no_such_tap: Neniu krano!
-      error_usage: 'Ĝuste: `brew untap <tap-name>`'
-      untapped_formulae:
-        one: Forigis la kranon (%{count} formulon)
-        other: Forigis la kranon (%{count} formulojn)
-      untapping: Forigas la kranon %{name}... (%{abv})
+      error_no_such_tap: 
+      error_usage: 
+      untapped_formulae: 
+      untapping: 
     update:
-      already_up_to_date: Jam estas ĝisdata.
-      deleted_formulae: Forprenitaj Formuloj
+      already_up_to_date: 
+      deleted_formulae: 
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
       homebrew_tap_structure_3: 
-      new_formulae: Novaj Formuloj
-      no_formula_names: |
-        Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
-        nomojn.  Uzu `brew upgrade <formula>`.
+      new_formulae: 
+      no_formula_names: 
       update_tap_failed: 
-      updated_formulae: "Ĝisdatigitaj Formuloj"
-      updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
+      updated_formulae: 
+      updated_homebrew: 
     upgrade:
       formula_already_installed: 
-      formula_name_and_version: "%{name} %{version}"
+      formula_name_and_version: 
       formula_version_already_installed: 
-      list_join: ", "
+      list_join: 
       no_pkgs_to_upgrade: 
       not_upgrading_pinned_pkg: 
-      upgrading_formula: Promocias %{name}
-      upgrading_outdated_pkg:
-        one: 'Promocias %{count} malaktualan pakon, rezultate:'
-        other: 'Promocias %{count} malaktualajn pakojn, rezultate:'
+      upgrading_formula: 
+      upgrading_outdated_pkg: 
   download_strategy:
-    already_downloaded: 'Jam estas elŝutita: %{path}'
+    already_downloaded: 
     aws_creds_missing: 
     bad_s3_url: 
     best_mirror: 
     checking_out: 
     cloning: 
     couldnt_determine_mirror: 
-    downloading: Elŝutas %{url}
+    downloading: 
     empty_archive: 
     install_aws_sdk: 
-    pouring: Verŝas %{name}
+    pouring: 
     removing_invalid_repo: 
     trying_full_download: 
     trying_mirror: 
@@ -470,9 +453,9 @@ eo:
       no_fc_flags: 
       unsupported: 
     pathname:
-      does_not_exist: ne ekzistas %{path}
+      does_not_exist: 
       exec_scripts_empty_targets: 
-      files: "%{count} dosieroj, "
+      files: 
       same_file: 
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 
@@ -486,16 +469,14 @@ eo:
     tap_action_installing: 
   formula_installer:
     all_deps_satisfied: 
-    already_installed_unlink: |
-      %{name}-%{linked_name} jam estas instalita
-      Por instali ĉi tiun eldonon, unue rulu `brew unlink %{name}'
+    already_installed_unlink: 
     bottle_install_fail: 
     brew_link_error_1: 
     brew_link_error_2: 
-    brew_link_not_complete: La paŝo `brew link` ne estas sukcese kompletita
+    brew_link_not_complete: 
     brew_link_possible_conflict: 
     brew_link_try_again_with: 
-    caveats: Admonoj
+    caveats: 
     cellar_bottle: 
     cleaning: 
     cleaning_not_complete_1: 
@@ -508,7 +489,7 @@ eo:
     finishing_up: 
     fix_install_names_fail_1: 
     fix_install_names_fail_2: 
-    install_badge: "\U0001F37A"
+    install_badge: 
     install_plist_failed: 
     installing: 
     installing_dep_for: 
@@ -522,9 +503,9 @@ eo:
     nothing_installed_to: 
     postinstall_fail_1: 
     postinstall_fail_2: 
-    summary: "%{path}: %{path_info}"
-    summary_title: Resumo
-    summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
+    summary: 
+    summary_title: 
+    summary_with_build_time: 
     unrecognized_bottle_arch: 
   keg:
     already_exists: 
@@ -557,37 +538,33 @@ eo:
     cxx11: 
     thirty_two_bit: 
     universal: 
-    with: Konstrui kun apogo de %{name}
-    without: Konstrui sen apogo de %{name}
+    with: 
+    without: 
   tab:
     built_from_source: 
     path_or_url: 
-    poured_from_bottle: Verŝita el botelo
+    poured_from_bottle: 
   utils:
     authentication_failed: 
-    cleaning_up: Unu sekundo, nun purigas
+    cleaning_up: 
     closed_pull_requests: 
-    error_1: Eraro
+    error_1: 
     failed_to_connect: 
     failed_to_parse_json: 
     gem_installed_but_exec_not_in_path: 
     interactive_shell_abort: 
     item_with_star: 
-    message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
-    message_w_intro_colored: "%{intro_color}%{intro}%{reset_color}: %{message}"
-    minutes:
-      one: "%{count} minuto"
-      other: "%{count} minutoj"
-    not_executable: "%{path} ne estas plenumebla"
+    message_colored_w_arrow_colored: 
+    message_w_intro_colored: 
+    minutes: 
+    not_executable: 
     open_pull_requests: 
     path_component_invalid: 
     plural_called: 
     pull_request_with_url: 
     rate_limit_exceeded: 
-    rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
+    rate_limit_time_m_s: 
     searching_pull_requests: 
-    seconds:
-      one: "%{count} sekundo"
-      other: "%{count} sekundoj"
+    seconds: 
     using_editor_as_fallback: 
-    warning: Averto
+    warning: 

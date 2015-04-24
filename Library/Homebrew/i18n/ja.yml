@@ -401,6 +401,17 @@ ja:
     unknown_download_strategy: 
     unknown_download_strategy_spec: 
     updating: 
+  exceptions:
+    formula_installation_already_attempted_error: 
+    formula_unavailable_error: 
+    formula_unavailable_error_w_dependent: 
+    formula_validation_error: 
+    multiple_versions_installed_error: 
+    no_such_keg_error: 
+    operation_in_progress_error: 
+    tap_formula_unavailable_error: 
+    tap_formula_unavailable_error_w_dependent: 
+    unsatisfied_requirements: 
   extend:
     argv:
       multiple_kegs: 

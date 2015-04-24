@@ -902,6 +902,26 @@ en-US:
     unknown_download_strategy: Unknown download strategy %{name} was requested.
     unknown_download_strategy_spec: Unknown download strategy specification %{name}
     updating: Updating %{path}
+  exceptions:
+    formula_installation_already_attempted_error: 'Formula installation already attempted: %{name}'
+    formula_unavailable_error: No available formula for %{name}
+    formula_unavailable_error_w_dependent: No available formula for %{name} (dependency of %{dependent})
+    formula_validation_error: 'invalid attribute: %{attr} (%{value})'
+    multiple_versions_installed_error: "%{name} has multiple installed versions"
+    no_such_keg_error: 'No such keg: %{cellar}/%{name}'
+    operation_in_progress_error: |
+      Operation already in progress for %{name}
+      Another active Homebrew process is already using %{name}.
+      Please wait for it to finish or terminate it to continue.
+    tap_formula_unavailable_error: |
+      No available formula for %{name}
+      Please tap it and then try again: brew tap %{user}/%{repo}
+    tap_formula_unavailable_error_w_dependent: |
+      No available formula for %{name} (dependent of %{dependent})
+      Please tap it and then try again: brew tap %{user}/%{repo}
+    unsatisfied_requirements:
+      one: An unsatisfied requirement failed this build.
+      other: Unsatisfied requirements failed this build.
   extend:
     argv:
       multiple_kegs: |
