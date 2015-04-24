@@ -117,25 +117,23 @@ class FormulaConflictError < RuntimeError
   end
 
   def conflict_message(conflict)
-    message = []
-    message << "  #{conflict.name}"
-    message << ": because #{conflict.reason}" if conflict.reason
-    message.join
+    # XXX (i18n): I predict we will have to do this a different way...
+    if conflict.reason
+      t("exceptions.formula_conflict_error_line_item_w_reason",
+        :name => conflict.name,
+        :reason => conflict.reason)
+    else
+      t("exceptions.formula_conflict_error_line_item", :name => conflict.name)
+    end
   end
 
   def message
-    message = []
-    message << "Cannot install #{formula.name} because conflicting formulae are installed.\n"
-    message.concat conflicts.map { |c| conflict_message(c) } << ""
-    message << <<-EOS.undent
-      Please `brew unlink #{conflicts.map(&:name)*' '}` before continuing.
-
-      Unlinking removes a formula's symlinks from #{HOMEBREW_PREFIX}. You can
-      link the formula again after the install finishes. You can --force this
-      install, but the build may fail or cause obscure side-effects in the
-      resulting software.
-      EOS
-    message.join("\n")
+    t("exceptions.formula_conflict_error",
+      :error_intro => t("exceptions.formula_conflict_error_intro",
+                        :name => formula.name,
+                        :count => conflicts.length),
+      :conflict_list => conflicts.map { |c| conflict_message(c) }.join("\n") + "\n",
+      :homebrew_prefix => HOMEBREW_PREFIX)
   end
 end
 
