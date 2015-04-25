@@ -455,9 +455,9 @@ ja:
       no_fc_flags: 
       unsupported: 
     pathname:
+      abv: "%{count}枚のファイル、%{size}"
       does_not_exist: 
       exec_scripts_empty_targets: 
-      files: "%{count}枚のファイル、"
       same_file: 
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 

@@ -1007,11 +1007,11 @@ en:
         warning.
       unsupported: This is unsupported.
     pathname:
+      abv:
+        one: "%{count} file, %{size}"
+        other: "%{count} files, %{size}"
       does_not_exist: "%{path} does not exist"
       exec_scripts_empty_targets: tried to write exec scripts to %{path} for an empty list of targets
-      files:
-        one: "%{count} file,"
-        other: "%{count} files,"
       same_file: "%{path} is the same file as %{other}"
       tried_to_install_empty_array_to: tried to install empty array to %{path}
       tried_to_install_empty_hash_to: tried to install empty hash to %{path}

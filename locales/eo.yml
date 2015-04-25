@@ -497,9 +497,11 @@ eo:
       no_fc_flags: 
       unsupported: 
     pathname:
+      abv:
+        one: "%{count} dosiero, %{size}"
+        other: "%{count} dosieroj, %{size}"
       does_not_exist: ne ekzistas %{path}
       exec_scripts_empty_targets: 
-      files: "%{count} dosieroj, "
       same_file: 
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 

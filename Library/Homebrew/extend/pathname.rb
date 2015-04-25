@@ -403,11 +403,18 @@ class Pathname
   end
 
   def abv
-    out = ""
-    n = Utils.popen_read("find", expand_path.to_s, "-type", "f", "!", "-name", ".DS_Store").split("\n").size
-    out << t('extend.pathname.files', :count => n) if n > 1
-    out << Utils.popen_read("/usr/bin/du", "-hs", expand_path.to_s).split("\t")[0].strip
-    out
+    count = Utils.popen_read(
+                    "find", expand_path.to_s, "-type", "f", "!", "-name",
+                    ".DS_Store"
+                  ).split("\n").size
+    size = Utils.popen_read(
+                   "/usr/bin/du", "-hs", expand_path.to_s
+                 ).split("\t")[0].strip
+    if count > 1
+      t("extend.pathname.abv", :count => count, :size => size)
+    else
+      size
+    end
   end
 
   # We redefine these private methods in order to add the /o modifier to

@@ -480,9 +480,9 @@ it:
       no_fc_flags: 
       unsupported: 
     pathname:
+      abv: 
       does_not_exist: 
       exec_scripts_empty_targets: 
-      files: 
       same_file: 
       tried_to_install_empty_array_to: 
       tried_to_install_empty_hash_to: 
