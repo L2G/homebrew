@@ -571,7 +571,7 @@ it:
     architecture_required: 
     full_xcode_required: 
     full_xcode_required_with_version: 
-    java:
+    java_dependency:
       java_required: 
       java_required_with_version: 
     latex_required: 

@@ -1146,7 +1146,7 @@ en-US:
     full_xcode_required_with_version: |
       A full installation of Xcode.app %{version} is required to compile this software.
       Installing just the Command Line Tools is not sufficient.
-    java:
+    java_dependency:
       java_required: Java is required to install this formula.
       java_required_with_version: Java %{version} is required to install this formula.
     latex_required: |

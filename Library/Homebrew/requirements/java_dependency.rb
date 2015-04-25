@@ -33,10 +33,10 @@ class JavaDependency < Requirement
 
   def message
     s = if @version
-          t("requirements.java.java_required_with_version",
+          t("requirements.java_dependency.java_required_with_version",
             :version => @version)
         else
-          t("requirements.java.java_required")
+          t("requirements.java_dependency.java_required")
         end
     s += super
     s
