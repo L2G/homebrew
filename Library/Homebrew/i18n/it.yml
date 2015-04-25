@@ -436,8 +436,8 @@ it:
       dump_tap: 
       failed_executing: 
       formula_did_not_build: 
-      issues_line_item: 
-      logs_line_item: 
+      issues_line_item: "%{title} (%{url})"
+      logs_line_item: "     %{log_entry}"
       moved_to_boneyard: 
       read_this: 
       refer_to_issues: 

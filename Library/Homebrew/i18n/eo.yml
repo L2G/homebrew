@@ -447,16 +447,16 @@ eo:
     build_error:
       dump_heading_configuration: 
       dump_heading_env: 
-      dump_heading_formula: 
-      dump_heading_logs: 
-      dump_path: 
-      dump_tap: 
-      failed_executing: 
+      dump_heading_formula: Formulo
+      dump_heading_logs: 'Protokolo:'
+      dump_path: 'Dosierindiko: %{path}'
+      dump_tap: 'Krano: %{tap}'
+      failed_executing: 'Misfino plenumi: %{cmd} %{args}'
       formula_did_not_build: 
-      issues_line_item: 
-      logs_line_item: 
+      issues_line_item: "%{title} (%{url})"
+      logs_line_item: "     %{log_entry}"
       moved_to_boneyard: 
-      read_this: 
+      read_this: "%{read_this_color}LEGU ĈI TIUN%{reset_color}: %{url_color}%{url}%{reset_color}"
       refer_to_issues: 
       report_tap_issue: 
     checksum_mismatch_error: 
