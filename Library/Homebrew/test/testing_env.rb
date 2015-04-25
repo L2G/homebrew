@@ -2,6 +2,7 @@
 
 $:.push(File.expand_path(__FILE__+'/../..'))
 
+require 'vendor/i18n'
 require 'extend/module'
 require 'extend/fileutils'
 require 'extend/pathname'
@@ -13,7 +14,6 @@ require 'exceptions'
 require 'utils'
 require 'rbconfig'
 require 'tmpdir'
-require 'i18n-wrapper'
 
 TEST_TMPDIR = Dir.mktmpdir("homebrew_tests")
 at_exit { FileUtils.remove_entry(TEST_TMPDIR) }

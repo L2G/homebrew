@@ -1,4 +1,4 @@
-require 'i18n-wrapper'
+require 'vendor/i18n'
 require 'extend/module'
 require 'extend/fileutils'
 require 'extend/pathname'
