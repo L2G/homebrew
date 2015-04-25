@@ -492,6 +492,7 @@ it:
     cannot_override_brew_method: 
     failed_to_import: 
     python_method_deprecated: 
+    tap_action_catchall: 
     tap_action_fetching: 
     tap_action_installing: 
   formula_installer:

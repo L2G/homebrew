@@ -1021,6 +1021,7 @@ en:
     cannot_override_brew_method: You cannot override Formula#brew in class %{name}
     failed_to_import: 'Failed to import: %{name}'
     python_method_deprecated: Formula#python is deprecated and will go away shortly.
+    tap_action_catchall: Performing action "%{verb}" on %{name} from %{tap}
     tap_action_fetching: Fetching %{name} from %{tap}
     tap_action_installing: Installing %{name} from %{tap}
   formula_installer:

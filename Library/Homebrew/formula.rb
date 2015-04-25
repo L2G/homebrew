@@ -644,9 +644,18 @@ class Formula
   end
 
   def print_tap_action options={}
+    i18n_args = {:name => name, :tap => tap}
+    verb = options[:verb] || :installing
     if tap?
-      verb = options[:verb].to_s || "installing"
-      t("formula.tap_action_#{verb}", :name => name, :tap => tap)
+      case verb
+      when :fetching
+        t("formula.tap_action_fetching", i18n_args)
+      when :installing
+        t("formula.tap_action_installing", i18n_args)
+      else
+        i18n_args[:verb] = verb
+        t("formula.tap_action_catchall", i18n_args)
+      end
     end
   end
 
