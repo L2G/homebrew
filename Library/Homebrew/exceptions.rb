@@ -144,7 +144,9 @@ class BuildError < RuntimeError
     @formula = formula
     @env = env
     args = args.map{ |arg| arg.to_s.gsub " ", "\\ " }.join(" ")
-    super "Failed executing: #{cmd} #{args}"
+    super t("exceptions.build_error.failed_executing",
+            :cmd => cmd,
+            :args => args)
   end
 
   def issues
@@ -160,40 +162,55 @@ class BuildError < RuntimeError
 
   def dump
     if not ARGV.verbose?
-      puts
-      puts "#{Tty.red}READ THIS#{Tty.reset}: #{Tty.em}#{OS::ISSUES_URL}#{Tty.reset}"
+      puts t("exceptions.build_error.read_this",
+             :read_this_color => Tty.red,
+             :url => OS::ISSUES_URL,
+             :url_color => Tty.em,
+             :reset_color => Tty.reset)
       if formula.tap?
         case formula.tap
         when "homebrew/homebrew-boneyard"
-          puts "#{formula} was moved to homebrew-boneyard because it has unfixable issues."
-          puts "Please do not file any issues about this. Sorry!"
+          puts t("exceptions.build_error.moved_to_boneyard",
+                 :formula => formula)
         else
-          puts "If reporting this issue please do so at (not Homebrew/homebrew):"
-          puts "  https://github.com/#{formula.tap}/issues"
+          puts t("exceptions.build_error.report_tap_issue",
+                 :tap => formula.tap)
         end
       end
     else
       require 'cmd/config'
       require 'cmd/--env'
 
-      ohai "Formula"
-      puts "Tap: #{formula.tap}" if formula.tap?
-      puts "Path: #{formula.path}"
-      ohai "Configuration"
+      ohai t("exceptions.build_error.dump_heading_formula")
+      puts t("exceptions.build_error.dump_tap", :tap => formula.tap) if formula.tap?
+      puts t("exceptions.build_error.dump_path", :path => formula.path)
+
+      ohai t("exceptions.build_error.dump_heading_configuration")
       Homebrew.dump_verbose_config
-      ohai "ENV"
+
+      ohai t("exceptions.build_error.dump_heading_env")
       Homebrew.dump_build_env(env)
       puts
-      onoe "#{formula.name} #{formula.version} did not build"
+
+      onoe t("exceptions.build_error.formula_did_not_build",
+             :name => formula.name,
+             :version => formula.version)
       unless (logs = Dir["#{HOMEBREW_LOGS}/#{formula.name}/*"]).empty?
-        puts "Logs:"
-        puts logs.map{|fn| "     #{fn}"}.join("\n")
+        puts t("exceptions.build_error.dump_heading_logs")
+        logs.each do |log_entry|
+          puts t("exceptions.build_error.logs_line_item",
+                 :log_entry => log_entry)
+        end
       end
     end
     puts
     unless RUBY_VERSION < "1.8.7" || issues.empty?
-      puts "These open issues may also help:"
-      puts issues.map{ |i| "#{i['title']} (#{i['html_url']})" }.join("\n")
+      puts t("exceptions.build_error.refer_to_issues")
+      issues.each do |i|
+        puts t("exceptions.build_error.issues_line_item", 
+               :title => i['title'],
+               :url => i['html_url'])
+      end
     end
   end
 end
@@ -202,21 +219,16 @@ end
 # the compilers available on the user's system
 class CompilerSelectionError < RuntimeError
   def initialize(formula)
-    super <<-EOS.undent
-      #{formula.name} cannot be built with any available compilers.
-      To install this formula, you may need to:
-        brew install gcc
-      EOS
+    super t("exceptions.compiler_selection_error", :name => formula.name)
   end
 end
 
 # Raised in Resource.fetch
 class DownloadError < RuntimeError
   def initialize(resource, cause)
-    super <<-EOS.undent
-      Failed to download resource #{resource.download_name.inspect}
-      #{cause.message}
-      EOS
+    super t("exceptions.download_error",
+            :resource => resource.download_name.inspect,
+            :message => cause.message)
     set_backtrace(cause.backtrace)
   end
 end
@@ -226,9 +238,9 @@ class CurlDownloadStrategyError < RuntimeError
   def initialize(url)
     case url
     when %r[^file://(.+)]
-      super "File does not exist: #{$1}"
+      super t("exceptions.curl_download_strategy_error_local_file", :file => $1)
     else
-      super "Download failed: #{url}"
+      super t("exceptions.curl_download_strategy_error_remote_url", :url => url)
     end
   end
 end
@@ -237,7 +249,7 @@ end
 class ErrorDuringExecution < RuntimeError
   def initialize(cmd, args=[])
     args = args.map { |a| a.to_s.gsub " ", "\\ " }.join(" ")
-    super "Failure while executing: #{cmd} #{args}"
+    super t("exceptions.error_during_execution", :cmd => cmd, :args => args)
   end
 end
 
@@ -252,24 +264,24 @@ class ChecksumMismatchError < RuntimeError
     @expected = expected
     @hash_type = expected.hash_type.to_s.upcase
 
-    super <<-EOS.undent
-      #{@hash_type} mismatch
-      Expected: #{expected}
-      Actual: #{actual}
-      Archive: #{fn}
-      To retry an incomplete download, remove the file above.
-      EOS
+    super t("exceptions.checksum_mismatch_error",
+            :hash_type => @hash_type,
+            :expected => expected,
+            :actual => actual,
+            :file => fn)
   end
 end
 
 class ResourceMissingError < ArgumentError
   def initialize(formula, resource)
-    super "#{formula.name} does not define resource #{resource.inspect}"
+    super t("exceptions.resource_missing_error",
+            :formula => formula.name,
+            :resource => resource.inspect)
   end
 end
 
 class DuplicateResourceError < ArgumentError
   def initialize(resource)
-    super "Resource #{resource.inspect} is defined more than once"
+    super t("exceptions.duplicate_resource_error", :resource => resource.inspect)
   end
 end
