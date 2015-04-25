@@ -363,6 +363,9 @@ it:
       files: 
       other_files: 
       symlink: 
+    options:
+      install_devel_version: 
+      install_head_version: 
     search:
       failed_to_search_tap: 
       if_you_meant_precisely: 

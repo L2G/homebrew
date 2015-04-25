@@ -366,6 +366,9 @@ eo:
       files: "%{path}/ (%{count} dosieroj)"
       other_files: "%{path}/ (%{count} kromaj dosieroj)"
       symlink: "%{symlink} → %{target}"
+    options:
+      install_devel_version: 
+      install_head_version: Instali la version HEAD
     search:
       failed_to_search_tap: 
       if_you_meant_precisely: 

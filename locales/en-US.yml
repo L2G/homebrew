@@ -811,6 +811,9 @@ en-US:
       files: "%{path}/ (%{count} files)"
       other_files: "%{path}/ (%{count} other files)"
       symlink: "%{symlink} -> %{target}"
+    options:
+      install_devel_version: Install development version %{version}
+      install_head_version: Install HEAD version
     search:
       failed_to_search_tap: 'Failed to search tap: %{user}/%{repo}. Please run `brew update`'
       if_you_meant_precisely: '"If you meant %{term} precisely:"'

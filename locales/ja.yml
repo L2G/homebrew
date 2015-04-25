@@ -338,6 +338,9 @@ ja:
       files: "%{path}/ （%{count}枚のファイル）"
       other_files: "%{path}/ （%{count}枚の追加ファイル）"
       symlink: 
+    options:
+      install_devel_version: 
+      install_head_version: 
     search:
       failed_to_search_tap: 
       if_you_meant_precisely: 

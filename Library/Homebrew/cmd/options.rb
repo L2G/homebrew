@@ -29,7 +29,12 @@ module Homebrew
     f.options.sort_by(&:flag).each do |opt|
       puts "#{opt.flag}\n\t#{opt.description}"
     end
-    puts "--devel\n\tInstall development version #{f.devel.version}" if f.devel
-    puts "--HEAD\n\tInstall HEAD version" if f.head
+    if f.devel
+      puts "--devel\n\t" + t("cmd.options.install_devel_version",
+                             :version => f.devel.version)
+    end
+    if f.head
+      puts "--HEAD\n\t" + t("cmd.options.install_head_version")
+    end
   end
 end
