@@ -1077,6 +1077,38 @@ en:
     summary_title: Summary
     summary_with_build_time: "%{path}: %{path_info}, built in %{build_time}"
     unrecognized_bottle_arch: 'Unrecognized architecture for --bottle-arch: %{arch}'
+  formulae:
+    git:
+      caveats: |
+        The OS X keychain credential helper has been installed to:
+          %{credential_helper_path}
+
+        The "contrib" directory has been installed to:
+          %{contrib_path}
+      options:
+        with-blk-sha1: Compile with the block-optimized SHA1 implementation
+        with-brewed-curl: Use Homebrew's version of cURL library
+        with-brewed-openssl: Build with Homebrew OpenSSL instead of the system version
+        with-brewed-svn: Use Homebrew's version of Subversion
+        with-persistent-https: Build git-remote-persistent-https from 'contrib' directory
+        without-completions: Disable bash/zsh completions from 'contrib' directory
+    node:
+      caveats:
+        with-icu4c: |
+          Please note `icu4c` is built with a newer deployment target than Node and
+          this may cause issues in certain usage. Node itself is built against the
+          outdated `libstdc++` target, which is the root cause. For more information see:
+            https://github.com/joyent/node/issues/7919
+
+          If this is an issue for you, do `brew install node --without-icu4c`.
+        without-npm: |
+          Homebrew has NOT installed npm. If you later install it, you should supplement
+          your NODE_PATH with the npm module folder:
+            %{path}
+      options:
+        with-debug: Build with debugger hooks
+        without-completion: npm bash completion will not be installed
+        without-npm: npm will not be installed
   keg:
     already_exists: |-
       Target %{target} already exists. You may want to remove it:

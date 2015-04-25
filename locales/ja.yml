@@ -513,6 +513,24 @@ ja:
     summary_title: "結語"
     summary_with_build_time: 
     unrecognized_bottle_arch: 
+  formulae:
+    git:
+      caveats: 
+      options:
+        with-blk-sha1: 
+        with-brewed-curl: 
+        with-brewed-openssl: 
+        with-brewed-svn: 
+        with-persistent-https: 
+        without-completions: 
+    node:
+      caveats:
+        with-icu4c: 
+        without-npm: 
+      options:
+        with-debug: 
+        without-completion: 
+        without-npm: 
   keg:
     already_exists: 
     cannot_link: 

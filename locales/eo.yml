@@ -559,6 +559,24 @@ eo:
     summary_title: Resumo
     summary_with_build_time: "%{path}: %{path_info}, konstruita dum %{build_time}"
     unrecognized_bottle_arch: 
+  formulae:
+    git:
+      caveats: 
+      options:
+        with-blk-sha1: 
+        with-brewed-curl: 
+        with-brewed-openssl: 
+        with-brewed-svn: 
+        with-persistent-https: 
+        without-completions: 
+    node:
+      caveats:
+        with-icu4c: 
+        without-npm: 
+      options:
+        with-debug: 
+        without-completion: 
+        without-npm: 
   keg:
     already_exists: 
     cannot_link: 
@@ -590,8 +608,8 @@ eo:
     cxx11: 
     thirty_two_bit: 
     universal: 
-    with: Konstrui kun apogo de %{name}
-    without: Konstrui sen apogo de %{name}
+    with: Konstrui kun apogo por %{name}
+    without: Konstrui sen apogo por %{name}
   tab:
     built_from_source: 
     path_or_url: 
