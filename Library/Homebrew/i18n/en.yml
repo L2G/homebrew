@@ -902,6 +902,42 @@ en:
     unknown_download_strategy_spec: Unknown download strategy specification %{name}
     updating: Updating %{path}
   exceptions:
+    build_error:
+      dump_heading_configuration: Configuration
+      dump_heading_env: ENV
+      dump_heading_formula: Formula
+      dump_heading_logs: 'Logs:'
+      dump_path: 'Path: %{path}'
+      dump_tap: 'Tap: %{tap}'
+      failed_executing: 'Failed executing: %{cmd} %{args}'
+      formula_did_not_build: "%{name} %{version} did not build"
+      issues_line_item: "%{title} (%{url})"
+      logs_line_item: "     %{log_entry}"
+      moved_to_boneyard: |-
+        %{formula} was moved to homebrew-boneyard because it has unfixable issues.
+        Please do not file any issues about this. Sorry!
+      read_this: "%{read_this_color}READ THIS%{reset_color}: %{url_color}%{url}%{reset_color}"
+      refer_to_issues: 'These open issues may also help:'
+      report_tap_issue: |
+        If reporting this issue please do so at (not Homebrew/homebrew):
+          https://github.com/%{tap}/issues
+    checksum_mismatch_error: |-
+      %{hash_type} mismatch
+      Expected: %{expected}
+      Actual: %{actual}
+      Archive: %{file}
+      To retry an incomplete download, remove the file above.
+    compiler_selection_error: |-
+      %{name} cannot be built with any available compilers.
+      To install this formula, you may need to:
+        brew install gcc
+    curl_download_strategy_error_local_file: 'File does not exist: %{file}'
+    curl_download_strategy_error_remote_url: 'Download failed: %{url}'
+    download_error: |-
+      Failed to download resource %{resource}
+      %{message}
+    duplicate_resource_error: Resource %{resource} is defined more than once
+    error_during_execution: 'Failure while executing: %{cmd} %{args}'
     formula_conflict_error: |
       %{error_intro}
       %{conflict_list}
@@ -927,6 +963,7 @@ en:
       Operation already in progress for %{name}
       Another active Homebrew process is already using %{name}.
       Please wait for it to finish or terminate it to continue.
+    resource_missing_error: "%{formula} does not define resource %{resource}"
     tap_formula_unavailable_error: |
       No available formula for %{name}
       Please tap it and then try again: brew tap %{user}/%{repo}

@@ -427,6 +427,28 @@ it:
     unknown_download_strategy_spec: 
     updating: 
   exceptions:
+    build_error:
+      dump_heading_configuration: 
+      dump_heading_env: 
+      dump_heading_formula: 
+      dump_heading_logs: 
+      dump_path: 
+      dump_tap: 
+      failed_executing: 
+      formula_did_not_build: 
+      issues_line_item: 
+      logs_line_item: 
+      moved_to_boneyard: 
+      read_this: 
+      refer_to_issues: 
+      report_tap_issue: 
+    checksum_mismatch_error: 
+    compiler_selection_error: 
+    curl_download_strategy_error_local_file: 
+    curl_download_strategy_error_remote_url: 
+    download_error: 
+    duplicate_resource_error: 
+    error_during_execution: 
     formula_conflict_error: 
     formula_conflict_error_intro: 
     formula_conflict_error_line_item: 
@@ -438,6 +460,7 @@ it:
     multiple_versions_installed_error: 
     no_such_keg_error: 
     operation_in_progress_error: 
+    resource_missing_error: 
     tap_formula_unavailable_error: 
     tap_formula_unavailable_error_w_dependent: 
     unsatisfied_requirements: 
