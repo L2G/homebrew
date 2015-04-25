@@ -1,7 +1,7 @@
 $LOAD_PATH << File.expand_path('vendor/i18n/lib', File.dirname(__FILE__))
 
 require 'i18n'
-I18n.load_path << Dir[File.expand_path('i18n/*.yml', File.dirname(__FILE__))]
+I18n.load_path << Dir[File.expand_path('../../locales/*.yml', File.dirname(__FILE__))]
 
 module Homebrew
   module I18n
