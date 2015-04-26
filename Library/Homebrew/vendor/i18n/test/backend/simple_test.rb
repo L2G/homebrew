@@ -2,7 +2,6 @@ require 'test_helper'
 
 class I18nBackendSimpleTest < I18n::TestCase
   def setup
-    super
     I18n.backend = I18n::Backend::Simple.new
     I18n.load_path = [locales_dir + '/en.yml']
   end
@@ -79,6 +78,6 @@ class I18nBackendSimpleTest < I18n::TestCase
 
   test "simple reload_translations: uninitializes the backend" do
     I18n.backend.reload!
-    assert_equal false, I18n.backend.initialized?
+    assert_equal I18n.backend.initialized?, false
   end
 end

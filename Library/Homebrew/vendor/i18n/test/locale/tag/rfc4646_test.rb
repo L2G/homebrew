@@ -35,7 +35,6 @@ class I18nLocaleTagSubtagsTest < I18n::TestCase
   include I18n::Locale
 
   def setup
-    super
     subtags = %w(de Latn DE variant a-ext x-phonebk i-klingon)
     @tag = Tag::Rfc4646.new(*subtags)
   end

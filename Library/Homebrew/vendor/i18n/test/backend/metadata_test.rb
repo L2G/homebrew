@@ -6,7 +6,6 @@ class I18nBackendMetadataTest < I18n::TestCase
   end
 
   def setup
-    super
     I18n.backend = Backend.new
     store_translations(:en, :foo => 'Hi %{name}')
   end

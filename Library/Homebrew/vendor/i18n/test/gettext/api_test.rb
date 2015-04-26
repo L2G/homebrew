@@ -6,7 +6,6 @@ include I18n::Gettext::Helpers
 
 class I18nGettextApiTest < I18n::TestCase
   def setup
-    super
     I18n.locale = :en
     I18n.backend.store_translations :de, {
       'Hi Gettext!' => 'Hallo Gettext!',

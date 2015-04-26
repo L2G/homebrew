@@ -3,6 +3,10 @@ require 'test_helper'
 include I18n::Locale
 
 class I18nFallbacksDefaultsTest < I18n::TestCase
+  def teardown
+    I18n.default_locale = :en
+  end
+
   test "defaults reflect the I18n.default_locale if no default has been set manually" do
     I18n.default_locale = :'en-US'
     fallbacks = Fallbacks.new
@@ -24,7 +28,6 @@ end
 
 class I18nFallbacksComputationTest < I18n::TestCase
   def setup
-    super
     @fallbacks = Fallbacks.new(:'en-US')
   end
 

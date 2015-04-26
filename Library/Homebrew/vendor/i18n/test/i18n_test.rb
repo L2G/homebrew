@@ -3,7 +3,6 @@ require 'test_helper'
 
 class I18nTest < I18n::TestCase
   def setup
-    super
     store_translations(:en, :currency => { :format => { :separator => '.', :delimiter => ',', } })
     store_translations(:nl, :currency => { :format => { :separator => ',', :delimiter => '.', } })
   end
@@ -38,10 +37,6 @@ class I18nTest < I18n::TestCase
     end
   end
 
-  test "default_locale= doesn't ignore junk" do
-    assert_raise(NoMethodError) { I18n.default_locale = Class }
-  end
-
   test "raises an I18n::InvalidLocale exception when setting an unavailable default locale" do
     begin
       I18n.config.enforce_available_locales = true
@@ -60,10 +55,6 @@ class I18nTest < I18n::TestCase
     assert_equal :de, I18n.locale
     assert_equal :de, Thread.current[:i18n_config].locale
     I18n.locale = :en
-  end
-
-  test "locale= doesn't ignore junk" do
-    assert_raise(NoMethodError) { I18n.locale = Class }
   end
 
   test "raises an I18n::InvalidLocale exception when setting an unavailable locale" do
@@ -386,44 +377,6 @@ class I18nTest < I18n::TestCase
       assert_equal false, I18n.config.enforce_available_locales
     ensure
       I18n.config.enforce_available_locales = false
-    end
-  end
-  
-  test 'I18n.reload! reloads the set of locales that are enforced' do
-    begin
-      # Clear the backend that affects the available locales and somehow can remain
-      # set from the last running test.
-      # For instance, it contains enough translations to cause a false positive with
-      # this test when ran with --seed=50992
-      I18n.backend = I18n::Backend::Simple.new
-      
-      assert !I18n.available_locales.include?(:de), "Available locales should not include :de at this point"
-      
-      I18n.enforce_available_locales = true
-
-      assert_raise(I18n::InvalidLocale) { I18n.default_locale = :de }
-      assert_raise(I18n::InvalidLocale) { I18n.locale = :de }
-
-      store_translations(:de, :foo => 'Foo in :de')
-
-      assert_raise(I18n::InvalidLocale) { I18n.default_locale = :de }
-      assert_raise(I18n::InvalidLocale) { I18n.locale = :de }
-
-      I18n.reload!
-
-      store_translations(:en, :foo => 'Foo in :en')
-      store_translations(:de, :foo => 'Foo in :de')
-      store_translations(:pl, :foo => 'Foo in :pl')
-      
-      assert I18n.available_locales.include?(:de), ":de should now be allowed"
-      assert I18n.available_locales.include?(:en), ":en should now be allowed"
-      assert I18n.available_locales.include?(:pl), ":pl should now be allowed"
-      
-      assert_nothing_raised { I18n.default_locale = I18n.locale = :en }
-      assert_nothing_raised { I18n.default_locale = I18n.locale = :de }
-      assert_nothing_raised { I18n.default_locale = I18n.locale = :pl }
-    ensure
-      I18n.enforce_available_locales = false
     end
   end
 end

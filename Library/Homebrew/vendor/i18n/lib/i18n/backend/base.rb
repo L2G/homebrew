@@ -81,6 +81,7 @@ module I18n
       end
 
       def reload!
+        @skip_syntax_deprecation = false
       end
 
       protected

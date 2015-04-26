@@ -6,7 +6,6 @@ class I18nBackendFallbacksTranslateTest < I18n::TestCase
   end
 
   def setup
-    super
     I18n.backend = Backend.new
     store_translations(:en, :foo => 'Foo in :en', :bar => 'Bar in :en', :buz => 'Buz in :en')
     store_translations(:de, :bar => 'Bar in :de', :baz => 'Baz in :de')
@@ -93,7 +92,6 @@ class I18nBackendFallbacksLocalizeTest < I18n::TestCase
   end
 
   def setup
-    super
     I18n.backend = Backend.new
     store_translations(:en, :date => { :formats => { :en => 'en' }, :day_names => %w(Sunday) })
     store_translations(:de, :date => { :formats => { :de => 'de' } })
@@ -125,16 +123,12 @@ class I18nBackendFallbacksWithChainTest < I18n::TestCase
     include I18n::Backend::Fallbacks
   end
 
-  class Chain < I18n::Backend::Chain
-    include I18n::Backend::Fallbacks
-  end
-
   def setup
-    super
     backend = Backend.new
     backend.store_translations(:de, :foo => 'FOO')
     backend.store_translations(:'pt-BR', :foo => 'Baz in :pt-BR')
-    I18n.backend = Chain.new(I18n::Backend::Simple.new, backend)
+    I18n.backend = I18n::Backend::Chain.new(I18n::Backend::Simple.new, backend)
+    I18n.backend.class.send(:include, I18n::Backend::Fallbacks)
   end
 
   test "falls back from de-DE to de when there is no translation for de-DE available" do

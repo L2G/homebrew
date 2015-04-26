@@ -11,18 +11,21 @@ module Homebrew
     class << self
       # Determine the desired locale based on the Darwin locale set in the LANG
       # and LC_ALL environment variables, and return a Ruby symbol that can be
-      # given to I18n.default_locale=
+      # given to I18n.default_locale=.
       def locale_from_env
         locale = nil
-        env_locale = (ENV['LANG'] || ENV['LC_ALL']).gsub('_', '-')
-        available_locales = ::I18n.available_locales.map {|loc_sym| loc_sym.to_s}
-        locales_to_try(env_locale).each do |try_locale|
-          if available_locales.include?(try_locale)
-            locale = try_locale
-            break
+        env_locale = ENV['LANG'] || ENV['LC_ALL']
+        if env_locale
+          env_locale = env_locale.gsub('_', '-')
+          available_locales = ::I18n.available_locales.map {|loc_sym| loc_sym.to_s}
+          locales_to_try(env_locale).each do |try_locale|
+            if available_locales.include?(try_locale)
+              locale = try_locale
+              break
+            end
           end
+          locale.to_sym if locale
         end
-        locale.to_sym if locale
       end
 
       # Given a locale of the form xx-XX-XX.xxxx, return a list of locales to
@@ -48,7 +51,8 @@ module Homebrew
   end
 end
 
-::I18n.default_locale = Homebrew::I18n::locale_from_env
+::I18n.default_locale = Homebrew::I18n::locale_from_env || :'en-US'
+::I18n.enforce_available_locales = false
 
 def t(*args); I18n.t(*args); end
 def l(*args); I18n.l(*args); end
