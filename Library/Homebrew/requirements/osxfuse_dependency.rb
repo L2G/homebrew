@@ -22,9 +22,6 @@ class ConflictsWithBinaryOsxfuse < Requirement
   satisfy { HOMEBREW_PREFIX.to_s != "/usr/local" || !OsxfuseDependency.binary_osxfuse_installed? }
 
   def message
-    <<-EOS.undent
-      osxfuse is already installed from the binary distribution and
-      conflicts with this formula.
-    EOS
+    t("requirements.osxfuse_dependency.already_installed")
   end
 end

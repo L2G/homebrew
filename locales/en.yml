@@ -1145,15 +1145,33 @@ en:
     java_dependency:
       java_required: Java is required to install this formula.
       java_required_with_version: Java %{version} is required to install this formula.
+    language_module_dependency:
+      unsatisfied: |
+        Unsatisfied dependency: %{module_name}
+        Homebrew does not provide %{language} dependencies; install with:
+          %{command}
     latex_required: |
       A LaTeX distribution is required for Homebrew to install this formula.
 
       Make sure that "/usr/texbin", or the location you installed it to, is in
       your PATH before proceeding.
+    maximum_macos_requirement: OS X %{version} or older is required.
+    minimum_macos_requirement: OS X %{version} or newer is required.
+    osxfuse_dependency:
+      already_installed: |
+        osxfuse is already installed from the binary distribution and
+        conflicts with this formula.
     ruby_requirement:
       ruby_is_required: Ruby is required to install this formula.
       ruby_version_is_required: Ruby %{version} is required to install this formula.
       version_required: RubyRequirement requires a version!
+    unsigned_kext_requirement:
+      forbidden_by_yosemite: |
+        Building this formula from source isn't possible due to OS X
+        Yosemite and above's strict unsigned kext ban.
+    x11_dependency:
+      xquartz_required: XQuartz is required to install this formula.
+      xquartz_version_required: XQuartz %{version} is required to install this formula.
     xcode_install_hint: Xcode can be installed from https://developer.apple.com/downloads/
     xcode_install_hint_lion: Xcode can be installed from the App Store.
   sandbox:

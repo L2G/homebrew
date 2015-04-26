@@ -6,11 +6,7 @@ class UnsignedKextRequirement < Requirement
   satisfy { MacOS.version < :yosemite }
 
   def message
-    s = <<-EOS.undent
-      Building this formula from source isn't possible due to OS X
-      Yosemite and above's strict unsigned kext ban.
-    EOS
-    s += super
-    s
+    [t("requirements.unsigned_kext_requirement.forbidden_by_yosemite"),
+     super, ''].join("\n")
   end
 end

@@ -549,11 +549,22 @@ ja:
     java_dependency:
       java_required: 
       java_required_with_version: 
+    language_module_dependency:
+      unsatisfied: 
     latex_required: 
+    maximum_macos_requirement: 
+    minimum_macos_requirement: 
+    osxfuse_dependency:
+      already_installed: 
     ruby_requirement:
       ruby_is_required: 
       ruby_version_is_required: 
       version_required: 
+    unsigned_kext_requirement:
+      forbidden_by_yosemite: 
+    x11_dependency:
+      xquartz_required: 
+      xquartz_version_required: 
     xcode_install_hint: 
     xcode_install_hint_lion: 
   sandbox:

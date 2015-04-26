@@ -27,9 +27,13 @@ class X11Dependency < Requirement
   end
 
   def message
-    s = "XQuartz#{@min_version_string} is required to install this formula."
-    s += super
-    s
+    s = if @min_version > Version.new("0.0.0")
+          t("requirements.x11_dependency.xquartz_version_required",
+            :version => @min_version)
+        else
+          t("requirements.x11_dependency.xquartz_required")
+        end
+    [s, super, ""].join("\n")
   end
 
   def <=> other

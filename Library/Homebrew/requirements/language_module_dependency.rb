@@ -12,11 +12,11 @@ class LanguageModuleDependency < Requirement
 
   satisfy(:build_env => false) { quiet_system(*the_test) }
 
-  def message; <<-EOS.undent
-    Unsatisfied dependency: #{@module_name}
-    Homebrew does not provide #{@language.to_s.capitalize} dependencies; install with:
-      #{command_line} #{@module_name}
-    EOS
+  def message
+    t("requirements.language_module_dependency.unsatisfied",
+      :module_name => @module_name,
+      :language => @language.to_s.capitalize,
+      :command => "#{command_line} #{@module_name}")
   end
 
   def the_test
