@@ -376,7 +376,11 @@ eo:
       suggest_regex_1: 
       suggest_regex_2: 
     tap:
-      could_not_create_link: 
+      could_not_create_link: |
+        Ne povis krei dosierujanon por %{highlight_color}%{path}%{reset_color} ĉar ĝi
+        konfliktus kun %{highlight_color}%{to_path}%{reset_color}. Vi bezonos uzi la
+        plenan vojnomon kiam indiki ĉi tiun formulon, ekz.
+          brew install %{path}
       invalid_name: Nevalida nomo de krano
       private_repo_tapped: 
       pruned_formulae:

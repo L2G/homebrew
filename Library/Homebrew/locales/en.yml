@@ -823,7 +823,7 @@ en:
       could_not_create_link: |
         Could not create link for %{highlight_color}%{path}%{reset_color}, as it
         conflicts with %{highlight_color}%{to_path}%{reset_color}. You will need to use the
-        fully-qualified name when referring this formula, e.g.
+        fully-qualified name when referring to this formula, e.g.
           brew install %{path}
       invalid_name: Invalid tap name
       private_repo_tapped: |
