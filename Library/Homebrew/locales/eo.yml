@@ -417,6 +417,8 @@ eo:
       updated_formulae: "Ĝisdatigitaj Formuloj"
       updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
     upgrade:
+      argument_required: 
+      changing_behaviour_soon: 
       formula_already_installed: 
       formula_name_and_version: "%{name} %{version}"
       formula_version_already_installed: 

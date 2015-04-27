@@ -377,6 +377,8 @@ ja:
       updated_formulae: 
       updated_homebrew: 
     upgrade:
+      argument_required: 
+      changing_behaviour_soon: 
       formula_already_installed: 
       formula_name_and_version: 
       formula_version_already_installed: 
