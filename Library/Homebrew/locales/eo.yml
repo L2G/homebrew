@@ -427,6 +427,12 @@ eo:
       upgrading_outdated_pkg:
         one: 'Promocias %{count} malaktualan pakon, rezultate:'
         other: 'Promocias %{count} malaktualajn pakojn, rezultate:'
+  debrew:
+    choose_an_action: 
+    multiple_options_match: 
+    no_such_option: 
+    when_you_exit_irb: 
+    when_you_exit_shell: 
   download_strategy:
     already_downloaded: 'Jam estas elŝutita: %{path}'
     aws_creds_missing: 

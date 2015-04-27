@@ -410,6 +410,12 @@ it:
       not_upgrading_pinned_pkg: 
       upgrading_formula: 
       upgrading_outdated_pkg: 
+  debrew:
+    choose_an_action: 
+    multiple_options_match: 
+    no_such_option: 
+    when_you_exit_irb: 
+    when_you_exit_shell: 
   download_strategy:
     already_downloaded: 
     aws_creds_missing: 

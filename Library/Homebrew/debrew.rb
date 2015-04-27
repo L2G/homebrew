@@ -63,9 +63,10 @@ module Debrew
           possible = menu.entries.find_all { |e| e.name.start_with?(input) }
 
           case possible.size
-          when 0 then puts "No such option"
+          when 0 then puts t("debrew.no_such_option")
           when 1 then choice = possible.first
-          else puts "Multiple options match: #{possible.map(&:name).join(" ")}"
+          else puts t("debrew.multiple_options_match",
+                      :matches => possible.map(&:name).join(" "))
           end
         end
       end
@@ -115,14 +116,14 @@ module Debrew
 
       loop do
         Menu.choose do |menu|
-          menu.prompt = "Choose an action: "
+          menu.prompt = t("debrew.choose_an_action")
 
           menu.choice(:raise) { original_raise(e) }
           menu.choice(:ignore) { return :ignore } if Ignorable === e
           menu.choice(:backtrace) { puts e.backtrace }
 
           menu.choice(:irb) do
-            puts "When you exit this IRB session, execution will continue."
+            puts t("debrew.when_you_exit_irb")
             set_trace_func proc { |event, _, _, id, binding, klass|
               if klass == Raise && id == :raise && event == "return"
                 set_trace_func(nil)
@@ -134,7 +135,7 @@ module Debrew
           end if Ignorable === e
 
           menu.choice(:shell) do
-            puts "When you exit this shell, you will return to the menu."
+            puts t("debrew.when_you_exit_shell")
             interactive_shell
           end
         end

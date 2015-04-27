@@ -883,6 +883,12 @@ en:
       upgrading_outdated_pkg:
         one: 'Upgrading %{count} outdated package, with result:'
         other: 'Upgrading %{count} outdated packages, with result:'
+  debrew:
+    choose_an_action: 'Choose an action: '
+    multiple_options_match: 'Multiple options match: %{matches}'
+    no_such_option: No such option
+    when_you_exit_irb: When you exit this IRB session, execution will continue.
+    when_you_exit_shell: When you exit this shell, you will return to the menu.
   download_strategy:
     already_downloaded: 'Already downloaded: %{path}'
     aws_creds_missing: AWS credentials missing, trying public URL instead.
