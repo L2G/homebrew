@@ -191,11 +191,10 @@ class BuildError < RuntimeError
       ohai t("exceptions.build_error.dump_heading_env")
       Homebrew.dump_build_env(env)
       puts
-
       onoe t("exceptions.build_error.formula_did_not_build",
              :name => formula.name,
              :version => formula.version)
-      unless (logs = Dir["#{HOMEBREW_LOGS}/#{formula.name}/*"]).empty?
+      unless (logs = Dir["#{formula.logs}/*"]).empty?
         puts t("exceptions.build_error.dump_heading_logs")
         logs.each do |log_entry|
           puts t("exceptions.build_error.logs_line_item",
