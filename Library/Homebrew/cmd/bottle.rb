@@ -38,13 +38,20 @@ module Homebrew
 
     def print_filename string, filename
       unless @put_string_exists_header
-        opoo "String '#{string}' still exists in these files:"
+        opoo t("cmd.bottle.string_still_exists", :string => string)
         @put_string_exists_header = true
       end
 
       @put_filenames ||= []
       unless @put_filenames.include? filename
-        puts "#{Tty.red}#{filename}#{Tty.reset}"
+        # TODO (i18n): symbols like :Tty_red and :Tty_reset should be
+        # implemented in our i18n wrapper. Different locales may associate
+        # different colors with certain meanings, so specifying them in the
+        # translations is entirely appropriate.
+        puts t("cmd.bottle.highlighted_filename",
+               :filename => filename,
+               :Tty_red => Tty.red,
+               :Tty_reset => Tty.reset)
         @put_filenames << filename
       end
     end
@@ -65,7 +72,12 @@ module Homebrew
       if ARGV.verbose?
         print_filename(string, file) if linked_libraries.any?
         linked_libraries.each do |lib|
-          puts " #{Tty.gray}-->#{Tty.reset} links to #{lib}"
+          # TODO (i18n): symbols like :Tty_grey and :Tty_reset should be
+          # implemented in our i18n wrapper
+          puts t("cmd.bottle.links_to",
+                 :lib => lib,
+                 :Tty_grey => Tty.grey,
+                 :Tty_reset => Tty.reset)
         end
       end
 
@@ -85,7 +97,12 @@ module Homebrew
 
           if ARGV.verbose?
             print_filename string, file
-            puts " #{Tty.gray}-->#{Tty.reset} match '#{match}' at offset #{Tty.em}0x#{offset}#{Tty.reset}"
+            puts t("cmd.bottle.string_match",
+                   :match => match,
+                   :offset => offset,
+                   :Tty_gray => Tty.gray,
+                   :Tty_em => Tty.em,
+                   :Tty_reset => Tty.reset)
           end
         end
       end
@@ -95,8 +112,10 @@ module Homebrew
     keg.find do |pn|
       if pn.symlink? && (link = pn.readlink).absolute?
         if !put_symlink_header && link.to_s.start_with?(string)
-          opoo "Absolute symlink starting with #{string}:"
-          puts "  #{pn} -> #{pn.resolved_path}"
+          opoo t("cmd.bottle.absolute_symlink_1", :string => string)
+          puts t("cmd.bottle.absolute_symlink_2",
+                 :keg => pn,
+                 :resolved_path => pn.resolved_path)
           put_symlink_header = true
         end
 
@@ -114,21 +133,24 @@ module Homebrew
 
   def bottle_formula f
     unless f.installed?
-      return ofail "Formula not installed or up-to-date: #{f.name}"
+      return ofail t("cmd.bottle.formula_not_installed_or_up_to_date",
+                     :name => f.name)
     end
 
     unless built_as_bottle? f
-      return ofail "Formula not installed with '--build-bottle': #{f.name}"
+      return ofail t("cmd.bottle.formula_not_installed_w_build_bottle",
+                     :name => f.name)
     end
 
     unless f.stable
-      return ofail "Formula has no stable version: #{f.name}"
+      return ofail t("cmd.bottle.formula_has_no_stable_version",
+                     :name => f.name)
     end
 
     if ARGV.include? '--no-revision'
       bottle_revision = 0
     else
-      ohai "Determining #{f.name} bottle revision..."
+      ohai t("cmd.bottle.determining_bottle_revision", :name => f.name)
       versions = FormulaVersions.new(f)
       max = versions.bottle_version_map("origin/master")[f.pkg_version].max
       bottle_revision = max ? max + 1 : 0
@@ -137,7 +159,9 @@ module Homebrew
     filename = Bottle::Filename.create(f, bottle_tag, bottle_revision)
 
     if bottle_filename_formula_name(filename).empty?
-      return ofail "Add a new regex to bottle_version.rb to parse #{f.version} from #{filename}"
+      return ofail t("cmd.bottle.add_new_regex_to_bottle_version",
+                     :version => f.version,
+                     :filename => filename)
     end
 
     bottle_path = Pathname.pwd/filename
@@ -145,7 +169,7 @@ module Homebrew
     prefix = HOMEBREW_PREFIX.to_s
     cellar = HOMEBREW_CELLAR.to_s
 
-    ohai "Bottling #{filename}..."
+    ohai t("cmd.bottle.bottling", :filename => filename)
 
     keg = Keg.new(f.prefix)
     relocatable = false
@@ -163,7 +187,7 @@ module Homebrew
         end
 
         if bottle_path.size > 1*1024*1024
-          ohai "Detecting if #{filename} is relocatable..."
+          ohai t("cmd.bottle.detecting_relocatability", :filename => filename)
         end
 
         if prefix == '/usr/local'
@@ -250,7 +274,7 @@ module Homebrew
           if s.include? 'bottle do'
             update_or_add = 'update'
             string = s.sub!(/  bottle do.+?end\n/m, output)
-            odie 'Bottle block update failed!' unless string
+            odie t("cmd.bottle.bottle_block_update_failed") unless string
           else
             update_or_add = 'add'
             if s.include? 'stable do'
@@ -270,7 +294,7 @@ module Homebrew
                                )+
                               /mx, '\0' + output + "\n")
             end
-            odie 'Bottle block addition failed!' unless string
+            odie t("cmd.bottle.bottle_block_addition_failed") unless string
           end
         end
 

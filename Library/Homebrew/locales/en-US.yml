@@ -292,6 +292,22 @@ en-US:
       version_symbol_deprecated: '"%{symbol}" is deprecated, use a comparison to MacOS.version instead'
       xcodebuild_args: use "xcodebuild *args" instead of "system 'xcodebuild', *args"
       xcodebuild_symroot: xcodebuild should be passed an explicit "SYMROOT"
+    bottle:
+      absolute_symlink_1: 'Absolute symlink starting with %{string}:'
+      absolute_symlink_2: "  %{keg} -> %{resolved_path}"
+      add_new_regex_to_bottle_version: Add a new regex to bottle_version.rb to parse %{version} from %{filename}
+      bottle_block_addition_failed: Bottle block addition failed!
+      bottle_block_update_failed: Bottle block update failed!
+      bottling: Bottling %{filename}...
+      detecting_relocatability: Detecting if %{filename} is relocatable...
+      determining_bottle_revision: Determining %{name} bottle revision...
+      formula_has_no_stable_version: 'Formula has no stable version: %{name}'
+      formula_not_installed_or_up_to_date: 'Formula not installed or up-to-date: %{name}'
+      formula_not_installed_w_build_bottle: 'Formula not installed with ''--build-bottle'': %{name}'
+      highlighted_filename: "%{Tty_red}%{filename}%{Tty_reset}"
+      links_to: " %{Tty_gray}-->%{Tty_reset} links to %{lib}"
+      string_match: " %{Tty_gray}-->%{Tty_reset} match '%{match}' at offset %{Tty_em}0x%{offset}%{Tty_reset}"
+      string_still_exists: 'String ''%{string}'' still exists in these files:'
     cleanup:
       only_one_version: 'Skipping %{name}: most recent version %{version} not installed'
       removing_path: 'Removing: %{path}... (%{abv})'

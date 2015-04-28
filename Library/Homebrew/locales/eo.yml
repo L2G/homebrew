@@ -190,6 +190,22 @@ eo:
       version_symbol_deprecated: 
       xcodebuild_args: 
       xcodebuild_symroot: 
+    bottle:
+      absolute_symlink_1: 
+      absolute_symlink_2: "  %{keg} -> %{resolved_path}"
+      add_new_regex_to_bottle_version: 
+      bottle_block_addition_failed: 
+      bottle_block_update_failed: 
+      bottling: Boteligas %{filename}...
+      detecting_relocatability: 
+      determining_bottle_revision: 
+      formula_has_no_stable_version: 
+      formula_not_installed_or_up_to_date: 
+      formula_not_installed_w_build_bottle: 
+      highlighted_filename: "%{Tty_red}%{filename}%{Tty_reset}"
+      links_to: " %{Tty_gray}-->%{Tty_reset} ligas al %{lib}"
+      string_match: 
+      string_still_exists: 'La ĉeno ''%{string}'' ankoraŭ ekzistas en ĉi tiuj dosieroj:'
     cleanup:
       only_one_version: 
       removing_path: 
