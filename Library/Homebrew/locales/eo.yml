@@ -637,6 +637,10 @@ eo:
     built_from_source: 
     path_or_url: 
     poured_from_bottle: Verŝita el botelo
+  test:
+    basic: 
+    interpolation: 
+    pluralisation: 
   utils:
     authentication_failed: 
     cleaning_up: Unu sekundo, nun purigas

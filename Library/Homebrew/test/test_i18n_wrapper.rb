@@ -4,20 +4,22 @@ require 'testing_env'
 # everything it's expected to do, especially in 1.8.x Rubies that aren't
 # officially supported by it anymore.
 #
-# TODO: Make some translation keys especially for these tests, in case these
-# values get changed by someone unaware of these tests.
-#
 class I18nWrapperTests < Homebrew::TestCase
   def test_standard_lookup
-    assert_equal "Closed pull requests:", t("utils.closed_pull_requests")
+    assert_equal "This is a placeholder for Homebrew tests.", t("test.basic")
   end
 
   def test_basic_interpolation
-    assert_equal "/bin/fnord is not executable", t("utils.not_executable", :path => "/bin/fnord")
+    assert_equal "Homebrew tests are in Library/Homebrew/test",
+                 t("test.interpolation", :path => "Library/Homebrew/test")
   end
 
   def test_interpolation_and_pluralization
-    assert_equal "1 second", t("utils.seconds", :count => 1)
-    assert_equal "2 seconds", t("utils.seconds", :count => 2)
+    assert_equal "There are 99 bottles of beer on the wall.",
+                 t("test.pluralisation", :count => 99)
+    assert_equal "There are 2 bottles of beer on the wall.",
+                 t("test.pluralisation", :count => 2)
+    assert_equal "There is 1 bottle of beer on the wall.",
+                 t("test.pluralisation", :count => 1)
   end
 end

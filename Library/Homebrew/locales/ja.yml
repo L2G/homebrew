@@ -587,6 +587,10 @@ ja:
     built_from_source: 
     path_or_url: 
     poured_from_bottle: 
+  test:
+    basic: 
+    interpolation: 
+    pluralisation: 
   utils:
     authentication_failed: 
     cleaning_up: 

@@ -1201,6 +1201,12 @@ en-US:
     built_from_source: Built from source
     path_or_url: path or URL
     poured_from_bottle: Poured from bottle
+  test:
+    basic: This is a placeholder for Homebrew tests.
+    interpolation: Homebrew tests are in %{path}
+    pluralisation:
+      one: There is %{count} bottle of beer on the wall.
+      other: There are %{count} bottles of beer on the wall.
   utils:
     authentication_failed: |
       GitHub %{error}
