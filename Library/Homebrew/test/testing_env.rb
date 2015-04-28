@@ -2,7 +2,7 @@
 
 $:.push(File.expand_path(__FILE__+'/../..'))
 
-require 'vendor/i18n'
+require 'i18n_wrapper'
 require 'extend/module'
 require 'extend/fileutils'
 require 'extend/pathname'
