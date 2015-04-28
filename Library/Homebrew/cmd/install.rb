@@ -67,11 +67,11 @@ module Homebrew
           if f.linked_keg.symlink? or f.keg_only?
             opoo t("cmd.install.already_installed",
                    :name => f.name,
-                   :version => :f.installed_version)
+                   :version => f.installed_version)
           else
             opoo t("cmd.install.already_installed_not_linked",
                    :name => f.name,
-                   :version => :f.installed_version)
+                   :version => f.installed_version)
           end
         else
           formulae << f
