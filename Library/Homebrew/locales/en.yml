@@ -1248,11 +1248,11 @@ en:
     path_component_invalid: 'The following PATH component is invalid: %{path}'
     plural_called: plural() was called; Y U NO I18N ;-)
     pull_request_with_url: "%{title} (%{html_url})"
-    rate_limit_exceeded: |-
+    rate_limit_exceeded: |
       GitHub %{error}
-      Try again in %{duration}, or create an API token:
-        https://github.com/settings/applications
-      and then set HOMEBREW_GITHUB_API_TOKEN.
+      Try again in %{duration}, or create a personal access token:
+        https://github.com/settings/tokens
+      and then set it as HOMEBREW_GITHUB_API_TOKEN.
     rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
     searching_pull_requests: Searching pull requests...
     seconds:
