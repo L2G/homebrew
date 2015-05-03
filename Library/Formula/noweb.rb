@@ -6,6 +6,8 @@ class Noweb < Formula
 
   depends_on "icon"
 
+  patch :DATA
+
   def install
     cd "src" do
       system "bash", "awkname", "awk"
@@ -31,3 +33,14 @@ class Noweb < Formula
     end
   end
 end
+__END__
+diff --git a/src/shell/htmltoc b/src/shell/htmltoc
+index db2606e..4600057 100755
+--- a/src/shell/htmltoc
++++ b/src/shell/htmltoc
+@@ -1,3 +1,4 @@
++#!/usr/bin/env perl
+ eval 'exec perl -S $0 ${1+"$@"}'
+      if 0;
+       
+
