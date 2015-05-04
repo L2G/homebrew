@@ -133,8 +133,68 @@ module Homebrew
     HOMEBREW_REPOSITORY.cd { `git rev-parse --verify -q HEAD 2>/dev/null`.chuzzle }
   end
 
-  def self.git_last_commit
-    HOMEBREW_REPOSITORY.cd { `git show -s --format="%cr" HEAD 2>/dev/null`.chuzzle }
+  # Return a string the way `git show -s --format="%cr"` would, e.g. "3 months
+  # ago".  The time argument is only needed for testing.
+  #
+  # Git source reference:
+  # https://github.com/git/git/blob/1e6f5b22ad318446500fbd3b94b733eddd5b6414/date.c#L89
+  def self.git_last_commit(time = nil)
+    HOMEBREW_REPOSITORY.cd do
+      last_commit_time = time ||
+        Time.at(`git show -s --format="%ct" HEAD 2>/dev/null`.to_i)
+      diff = Time.now - last_commit_time
+
+      return t("utils.in_the_future") if diff < 0
+
+      return t("utils.how_long_ago",
+               :how_long => t("utils.seconds", :count => diff.to_i)) if diff < 90
+
+      diff = (diff + 30) / 60
+      return t("utils.how_long_ago",
+               :how_long => t("utils.minutes", :count => diff.to_i)) if diff < 90
+
+      diff = (diff + 30) / 60
+      return t("utils.how_long_ago",
+               :how_long => t("utils.hours", :count => diff.to_i)) if diff < 36
+
+      diff = ((diff + 12) / 24).to_i
+      return t("utils.how_long_ago",
+               :how_long => t("utils.days", :count => diff)) if diff < 14
+
+      if diff < 70
+        return t("utils.how_long_ago",
+                 :how_long => t("utils.weeks", :count => (diff + 3) / 7))
+        # No fallthrough
+      end
+
+      if diff < 365
+        return t("utils.how_long_ago",
+                 :how_long => t("utils.months", :count => (diff + 15) / 30))
+        # No fallthrough
+      end
+
+      total_months = (diff * 12 * 2 + 365) / (365 * 2)
+      years = total_months / 12
+
+      if diff < 1825
+        months = total_months % 12
+        if months == 0
+          return t("utils.how_long_ago",
+                   :how_long => t("utils.years", :count => years))
+        else
+          return t("utils.how_long_ago",
+                   :how_long =>
+                     t("utils.years_with_months",
+                       :n_years => t("utils.years", :count => years),
+                       :n_months => t("utils.months", :count => months))
+                  )
+        end
+        # No fallthrough
+      end
+
+      return t("utils.last_commit_how_long_ago",
+               :how_long => t("utils.years", :count => years))
+    end
   end
 
   def self.install_gem_setup_path! gem, executable=gem

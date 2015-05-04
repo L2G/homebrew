@@ -661,10 +661,18 @@ eo:
     authentication_failed: 
     cleaning_up: Unu sekundo, nun purigas
     closed_pull_requests: 
+    days:
+      one: "%{count} tago"
+      other: "%{count} tagoj"
     error_1: Eraro
     failed_to_connect: 
     failed_to_parse_json: 
     gem_installed_but_exec_not_in_path: 
+    hours:
+      one: "%{count} horo"
+      other: "%{count} horoj"
+    how_long_ago: antaŭ %{how_long}
+    in_the_future: estonte
     interactive_shell_abort: 
     item_with_star: 
     message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
@@ -672,6 +680,9 @@ eo:
     minutes:
       one: "%{count} minuto"
       other: "%{count} minutoj"
+    months:
+      one: "%{count} monato"
+      other: "%{count} monatoj"
     not_executable: "%{path} ne estas plenumebla"
     open_pull_requests: 
     path_component_invalid: 
@@ -685,3 +696,10 @@ eo:
       other: "%{count} sekundoj"
     using_editor_as_fallback: 
     warning: Averto
+    weeks:
+      one: "%{count} semajno"
+      other: "%{count} semajnoj"
+    years:
+      one: "%{count} jaro"
+      other: "%{count} jaroj"
+    years_with_months: "%{n_years} %{n_months}"
