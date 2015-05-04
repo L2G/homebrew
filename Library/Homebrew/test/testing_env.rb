@@ -1,6 +1,14 @@
 $:.unshift File.expand_path("../..", __FILE__)
 $:.unshift File.expand_path("../lib", __FILE__)
 
+require "simplecov"
+SimpleCov.start do
+  filters.clear
+  add_filter { |source_file| !%r{Library/Homebrew/}.match(source_file.filename) }
+  add_filter "test"
+  add_filter "vendor"
+end
+
 require "global"
 
 # Test environment setup
