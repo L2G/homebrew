@@ -385,6 +385,8 @@ class FormulaAuditor
     end
 
     # Check for Google Code download urls, https:// is preferred
+    # Intentionally not extending this to SVN repositories due to certificate
+    # issues.
     urls.grep(%r[^http://.*\.googlecode\.com/files.*]) do |u|
       problem t('cmd.audit.url_googlecode_use_https', :url => u)
     end
@@ -608,6 +610,10 @@ class FormulaAuditor
       problem t('cmd.audit.path_should_be',
                 :bad_path => $1,
                 :good_path => "\#{#{$2}}")
+    end
+
+    if line =~ %r[depends_on :(automake|autoconf|libtool)]
+      problem ":#{$1} is deprecated. Usage should be \"#{$1}\""
     end
 
     # Commented-out depends_on
