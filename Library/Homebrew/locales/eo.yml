@@ -438,7 +438,10 @@ eo:
       updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
     upgrade:
       argument_required: 
-      changing_behaviour_soon: 
+      changing_behaviour_soon: |-
+        `brew upgrade` sen argumentoj ŝanĝos la konduton frue!
+        Nune ĝi ĝisdatigis ĉiujn formulojn, sed baldaŭ ĉi tiu ŝanĝos al postuli `--all`.
+        Bonvolu ĝisdatigi iujn ajn fluojn de laboro, dokumentadon kaj skriptojn!
       formula_already_installed: 
       formula_name_and_version: "%{name} %{version}"
       formula_version_already_installed: 
