@@ -611,6 +611,7 @@ ja:
     authentication_failed: 
     cleaning_up: 
     closed_pull_requests: 
+    days: "%{count}日"
     error_1: "エラー"
     failed_to_connect: |-
       %{url}：への接続に失敗しました
@@ -619,6 +620,9 @@ ja:
       JSONレスポンスの解析に失敗しました
       %{message}
     gem_installed_but_exec_not_in_path: 
+    hours: "%{count}時"
+    how_long_ago: "%{how_long}前"
+    in_the_future: "将来"
     interactive_shell_abort: 
     item_with_star: "%{item}*"
     message_colored_w_arrow_colored: "%{arrow_color}⥤%{message_color}%{message}%{reset_color}"
@@ -626,6 +630,7 @@ ja:
     minutes:
       one: "%{count}分"
       other: "%{count}分"
+    months: "%{count}ヶ月"
     not_executable: 
     open_pull_requests: 
     path_component_invalid: 
@@ -639,3 +644,6 @@ ja:
       other: "%{count}秒"
     using_editor_as_fallback: 
     warning: 
+    weeks: "%{count}週"
+    years: "%{count}年"
+    years_with_months: "%{n_years}%{n_months}"

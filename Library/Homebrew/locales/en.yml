@@ -1226,6 +1226,9 @@ en:
         https://github.com/settings/tokens
     cleaning_up: One sec, just cleaning up
     closed_pull_requests: 'Closed pull requests:'
+    days:
+      one: "%{count} day"
+      other: "%{count} days"
     error_1: Error
     failed_to_connect: |-
       Failed to connect to: %{url}
@@ -1236,6 +1239,11 @@ en:
     gem_installed_but_exec_not_in_path: |-
       The '%{gem}' gem is installed but couldn't find '%{executable}' in the PATH:
       %{path}
+    hours:
+      one: "%{count} hour"
+      other: "%{count} hours"
+    how_long_ago: "%{how_long} ago"
+    in_the_future: in the future
     interactive_shell_abort: Aborting due to non-zero exit status
     item_with_star: "%{item}*"
     message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
@@ -1243,6 +1251,9 @@ en:
     minutes:
       one: "%{count} minute"
       other: "%{count} minutes"
+    months:
+      one: "%{count} month"
+      other: "%{count} months"
     not_executable: "%{path} is not executable"
     open_pull_requests: 'Open pull requests:'
     path_component_invalid: 'The following PATH component is invalid: %{path}'
@@ -1263,3 +1274,10 @@ en:
       This may change in the future, so we recommend setting EDITOR, VISUAL,
       or HOMEBREW_EDITOR to your preferred text editor.
     warning: Warning
+    weeks:
+      one: "%{count} week"
+      other: "%{count} weeks"
+    years:
+      one: "%{count} year"
+      other: "%{count} years"
+    years_with_months: "%{n_years}, %{n_months}"
