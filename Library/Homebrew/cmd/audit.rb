@@ -218,6 +218,9 @@ class FormulaAuditor
     formula.conflicts.each do |c|
       begin
         Formulary.factory(c.name)
+      rescue TapFormulaUnavailableError
+        # Don't complain about missing cross-tap conflicts.
+        next
       rescue FormulaUnavailableError
         problem t('cmd.audit.cant_find_conflicting', :name => c.name.inspect)
       end

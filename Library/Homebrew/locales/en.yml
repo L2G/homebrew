@@ -1223,7 +1223,7 @@ en:
     authentication_failed: |-
       GitHub %{error}
       HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
-        https://github.com/settings/applications
+        https://github.com/settings/tokens
     cleaning_up: One sec, just cleaning up
     closed_pull_requests: 'Closed pull requests:'
     error_1: Error
