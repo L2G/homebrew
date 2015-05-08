@@ -145,6 +145,7 @@ ja:
       url_bintray_https: 
       url_code_google_com_https: 
       url_code_google_com_https_2: 
+      url_duped_mirror: 
       url_fossies_https: 
       url_ftp_gnu_org_https: 
       url_github_no_zips: 
@@ -152,6 +153,7 @@ ja:
       url_github_use_https: 
       url_gitorious_use_https: 
       url_googlecode_use_https: 
+      url_metacpan: 
       url_mirrors_kernel_org_https: 
       url_sourceforge_geoloc: 
       url_sourceforge_no_download: 

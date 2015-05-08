@@ -240,6 +240,7 @@ en:
       url_bintray_https: Bintray urls should be https://, not http (url is %{url}).
       url_code_google_com_https: code.google.com urls should be https://, not http (url is %{url}).
       url_code_google_com_https_2: Use https:// URLs for downloads from code.google (url is %{url}).
+      url_duped_mirror: 'URL should not be duplicated as a mirror: %{url}'
       url_fossies_https: Fossies urls should be https://, not http (url is %{url}).
       url_ftp_gnu_org_https: ftp.gnu.org urls should be https://, not http:// (url is %{url}).
       url_github_no_zips: Use GitHub tarballs rather than zipballs (url is %{url}).
@@ -247,6 +248,7 @@ en:
       url_github_use_https: Use https:// URLs for accessing GitHub repositories (url is %{url}).
       url_gitorious_use_https: Use https:// URLs for accessing Gitorious repositories (url is %{url}).
       url_googlecode_use_https: Use https:// URLs for downloads from Google Code (url is %{url}).
+      url_metacpan: MetaCPAN url should be `https://cpan.metacpan.org/%{url_part}` (url is %{url}).
       url_mirrors_kernel_org_https: mirrors.kernel urls should be https://, not http (url is %{url}).
       url_sourceforge_geoloc: Use http://downloads.sourceforge.net to get geolocation (url is %{url}).
       url_sourceforge_no_download: Don't use /download in SourceForge urls (url is %{url}).
