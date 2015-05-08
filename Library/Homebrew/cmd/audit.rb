@@ -873,7 +873,7 @@ class ResourceAuditor
   def audit_urls
     # Check GNU urls; doesn't apply to mirrors
     if url =~ %r[^(?:https?|ftp)://(?!alpha).+/gnu/]
-      problem "\"http://ftpmirror.gnu.org\" is preferred for GNU software (url is #{url})."
+      problem t("cmd.audit.homepage_gnu_ftpmirror", :url => url)
     end
 
     if mirrors.include?(url)
@@ -890,19 +890,19 @@ class ResourceAuditor
 
       case p
       when %r[^http://ftp\.gnu\.org/]
-        problem "ftp.gnu.org urls should be https://, not http:// (url is #{p})."
+        problem t("cmd.audit.url_ftp_gnu_org_https", :url => p)
       when %r[^http://[^/]*\.apache\.org/]
-        problem "Apache urls should be https://, not http (url is #{p})."
+        problem t("cmd.audit.url_apache_https", :url => p)
       when %r[^http://code\.google\.com/]
-        problem "code.google.com urls should be https://, not http (url is #{p})."
+        problem t("cmd.audit.url_code_google_com_https", :url => p)
       when %r[^http://fossies\.org/]
-        problem "Fossies urls should be https://, not http (url is #{p})."
+        problem t("cmd.audit.url_fossies_https", :url => p)
       when %r[^http://mirrors\.kernel\.org/]
-        problem "mirrors.kernel urls should be https://, not http (url is #{p})."
+        problem t("cmd.audit.url_mirrors_kernel_org_https", :url => p)
       when %r[^http://([^/]*\.|)bintray\.com/]
-        problem "Bintray urls should be https://, not http (url is #{p})."
+        problem t("cmd.audit.url_bintray_https", :url => p)
       when %r[^http://tools\.ietf\.org/]
-        problem "ietf urls should be https://, not http (url is #{p})."
+        problem t("cmd.audit.url_tools_ietf_org_https", :url => p)
       end
     end
 
@@ -916,28 +916,29 @@ class ResourceAuditor
       next unless p =~ %r[^https?://.*\b(sourceforge|sf)\.(com|net)]
 
       if p =~ /(\?|&)use_mirror=/
-        problem "Don't use #{$1}use_mirror in SourceForge urls (url is #{p})."
+        problem t("cmd.audit.url_sourceforge_no_mirror",
+                  :url_query_part => $1,
+                  :url => p)
       end
 
       if p =~ /\/download$/
-        problem "Don't use /download in SourceForge urls (url is #{p})."
+        problem t("cmd.audit.url_sourceforge_no_download", :url => p)
       end
 
       if p =~ %r[^https?://sourceforge\.]
-        problem "Use http://downloads.sourceforge.net to get geolocation (url is #{p})."
+        problem t("cmd.audit.url_sourceforge_geoloc", :url => p)
       end
 
       if p =~ %r[^https?://prdownloads\.]
-        problem "Don't use prdownloads in SourceForge urls (url is #{p}).\n" +
-                "\tSee: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/"
+        problem t("cmd.audit.url_sourceforge_no_prdown", :url => p)
       end
 
       if p =~ %r[^http://\w+\.dl\.]
-        problem "Don't use specific dl mirrors in SourceForge urls (url is #{p})."
+        problem t("cmd.audit.url_sourceforge_no_specific", :url => p)
       end
 
       if p.start_with? "http://downloads"
-        problem "Use https:// URLs for downloads from SourceForge (url is #{p})."
+        problem t("cmd.audit.url_sourceforge_use_https", :url => p)
       end
     end
 
@@ -945,37 +946,37 @@ class ResourceAuditor
     # Intentionally not extending this to SVN repositories due to certificate
     # issues.
     urls.grep(%r[^http://.*\.googlecode\.com/files.*]) do |u|
-      problem "Use https:// URLs for downloads from Google Code (url is #{u})."
+      problem t("cmd.audit.url_googlecode_use_https", :url => u)
     end
 
     # Check for new-url Google Code download urls, https:// is preferred
     urls.grep(%r[^http://code\.google\.com/]) do |u|
-      problem "Use https:// URLs for downloads from code.google (url is #{u})."
+      problem t("cmd.audit.url_code_google_com_https_2", :url => u)
     end
 
     # Check for git:// GitHub repo urls, https:// is preferred.
     urls.grep(%r[^git://[^/]*github\.com/]) do |u|
-      problem "Use https:// URLs for accessing GitHub repositories (url is #{u})."
+      problem t("cmd.audit.url_github_use_https", :url => u)
     end
 
     # Check for git:// Gitorious repo urls, https:// is preferred.
     urls.grep(%r[^git://[^/]*gitorious\.org/]) do |u|
-      problem "Use https:// URLs for accessing Gitorious repositories (url is #{u})."
+      problem t("cmd.audit.url_gitorious_use_https", :url => u)
     end
 
     # Check for http:// GitHub repo urls, https:// is preferred.
     urls.grep(%r[^http://github\.com/.*\.git$]) do |u|
-      problem "Use https:// URLs for accessing GitHub repositories (url is #{u})."
+      problem t("cmd.audit.url_github_use_https", :url => u)
     end
 
     # Use new-style archive downloads
     urls.select { |u| u =~ %r[https://.*github.*/(?:tar|zip)ball/] && u !~ %r[\.git$] }.each do |u|
-      problem "Use /archive/ URLs for GitHub tarballs (url is #{u})."
+      problem t("cmd.audit.url_github_tarballs", :url => u)
     end
 
     # Don't use GitHub .zip files
     urls.select { |u| u =~ %r[https://.*github.*/(archive|releases)/.*\.zip$] && u !~ %r[releases/download] }.each do |u|
-      problem "Use GitHub tarballs rather than zipballs (url is #{u})."
+      problem t("cmd.audit.url_github_no_zips", :url => u)
     end
   end
 
