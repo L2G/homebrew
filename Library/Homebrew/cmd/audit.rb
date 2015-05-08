@@ -877,7 +877,7 @@ class ResourceAuditor
     end
 
     if mirrors.include?(url)
-      problem "URL should not be duplicated as a mirror: #{url}"
+      problem t("cmd.audit.url_duped_mirror", :url => url)
     end
 
     urls = [url] + mirrors
@@ -903,6 +903,8 @@ class ResourceAuditor
         problem t("cmd.audit.url_bintray_https", :url => p)
       when %r[^http://tools\.ietf\.org/]
         problem t("cmd.audit.url_tools_ietf_org_https", :url => p)
+      when %r[^http://search\.mcpan\.org/CPAN/(.*)]i
+        problem t("cmd.audit.url_metacpan", :url => p, :url_path => $1)
       end
     end
 
