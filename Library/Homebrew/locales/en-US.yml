@@ -773,7 +773,7 @@ en-US:
         Changes will be lost!
         The first time you `brew update', all local changes will be lost, you should
         thus `brew update' before you `brew edit'!
-    help: |
+    help: |-
       Example usage:
         brew [info | home | options ] [FORMULA...]
         brew install FORMULA...
@@ -781,7 +781,7 @@ en-US:
         brew search [foo]
         brew list [FORMULA...]
         brew update
-        brew upgrade [FORMULA...]
+        brew upgrade [--all | FORMULA...]
         brew pin/unpin [FORMULA...]
 
       Troubleshooting:
@@ -891,7 +891,7 @@ en-US:
       argument_required: Either --all or one or more formulae must be specified!
       changing_behaviour_soon: |-
         brew upgrade with no arguments will change behavior soon!
-        It currently upgrades all formula but this will soon change to require `--all`.
+        It currently upgrades all formulae but this will soon change to require `--all`.
         Please update any workflows, documentation and scripts!
       formula_already_installed: "%{name} already installed"
       formula_name_and_version: "%{name} %{version}"
