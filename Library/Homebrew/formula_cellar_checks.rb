@@ -10,32 +10,23 @@ module FormulaCellarChecks
     prefix_bin = prefix_bin.realpath
     return if ORIGINAL_PATHS.include? prefix_bin
 
-    <<-EOS.undent
-      #{prefix_bin} is not in your PATH
-      You can amend this by altering your #{shell_profile} file
-    EOS
+    t("formula_cellar_checks.prefix_bin_not_in_path",
+      :prefix_bin => prefix_bin,
+      :shell_profile => shell_profile)
   end
 
   def check_manpages
     # Check for man pages that aren't in share/man
     return unless (formula.prefix+'man').directory?
 
-    <<-EOS.undent
-      A top-level "man" directory was found
-      Homebrew requires that man pages live under share.
-      This can often be fixed by passing "--mandir=\#{man}" to configure.
-    EOS
+    t("formula_cellar_checks.top_level_man_dir")
   end
 
   def check_infopages
     # Check for info pages that aren't in share/info
     return unless (formula.prefix+'info').directory?
 
-    <<-EOS.undent
-      A top-level "info" directory was found
-      Homebrew suggests that info pages live under share.
-      This can often be fixed by passing "--infodir=\#{info}" to configure.
-    EOS
+    t("formula_cellar_checks.top_level_info_dir")
   end
 
   def check_jars
@@ -43,15 +34,8 @@ module FormulaCellarChecks
     jars = formula.lib.children.select { |g| g.extname == ".jar" }
     return if jars.empty?
 
-    <<-EOS.undent
-      JARs were installed to "#{formula.lib}"
-      Installing JARs to "lib" can cause conflicts between packages.
-      For Java software, it is typically better for the formula to
-      install to "libexec" and then symlink or wrap binaries into "bin".
-      See "activemq", "jruby", etc. for examples.
-      The offending files are:
-        #{jars * "\n        "}
-    EOS
+    t("formula_cellar_checks.jars_found_in_lib", :path => formula.lib) +
+      (jars * "\n        ")
   end
 
   def check_non_libraries
@@ -65,12 +49,9 @@ module FormulaCellarChecks
     end
     return if non_libraries.empty?
 
-    <<-EOS.undent
-      Non-libraries were installed to "#{formula.lib}"
-      Installing non-libraries to "lib" is discouraged.
-      The offending files are:
-        #{non_libraries * "\n        "}
-    EOS
+    t("formula_cellar_checks.non_libraries_found_in_lib",
+      :path => formula.lib) +
+      (non_libraries * "\n        ")
   end
 
   def check_non_executables bin
@@ -79,11 +60,8 @@ module FormulaCellarChecks
     non_exes = bin.children.select { |g| g.directory? or not g.executable? }
     return if non_exes.empty?
 
-    <<-EOS.undent
-      Non-executables were installed to "#{bin}"
-      The offending files are:
-        #{non_exes * "\n        "}
-    EOS
+    t("formula_cellar_checks.non_execs_found_in_bin", :path => bin) +
+      (non_exes * "\n        ")
   end
 
   def check_generic_executables bin
@@ -92,15 +70,8 @@ module FormulaCellarChecks
     generics = bin.children.select { |g| generic_names.include? g.basename.to_s }
     return if generics.empty?
 
-    <<-EOS.undent
-      Generic binaries were installed to "#{bin}"
-      Binaries with generic names are likely to conflict with other software,
-      and suggest that this software should be installed to "libexec" and then
-      symlinked as needed.
-
-      The offending files are:
-        #{generics * "\n        "}
-    EOS
+    t("formula_cellar_checks.generics_found_in_bin", :path => bin) +
+      (generics * "\n        ")
   end
 
   def check_shadowed_headers
@@ -119,24 +90,17 @@ module FormulaCellarChecks
 
     return if files.empty?
 
-    <<-EOS.undent
-      Header files that shadow system header files were installed to "#{formula.include}"
-      The offending files are:
-        #{files * "\n        "}
-    EOS
+    t("formula_cellar_checks.shadowed_headers_found_in_include",
+      :path => formula.include) +
+      (files * "\n        ")
   end
 
   def check_easy_install_pth lib
     pth_found = Dir["#{lib}/python{2.7,3}*/site-packages/easy-install.pth"].map { |f| File.dirname(f) }
     return if pth_found.empty?
 
-    <<-EOS.undent
-      easy-install.pth files were found
-      These .pth files are likely to cause link conflicts. Please invoke
-      setup.py using Language::Python.setup_install_args.
-      The offending files are
-        #{pth_found * "\n        "}
-    EOS
+    t("formula_cellar_checks.easy_install_pth_files_found") +
+      (pth_found * "\n        ")
   end
 
   def check_openssl_links
@@ -148,12 +112,8 @@ module FormulaCellarChecks
     end
     return if system_openssl.empty?
 
-    <<-EOS.undent
-      object files were linked against system openssl
-      These object files were linked against the deprecated system OpenSSL.
-      Adding `depends_on "openssl"` to the formula may help.
-        #{system_openssl  * "\n        "}
-    EOS
+    t("formula_cellar_checks.obj_linked_against_system_openssl") +
+      (system_openssl  * "\n        ")
   end
 
   def check_python_framework_links lib
@@ -164,13 +124,8 @@ module FormulaCellarChecks
     end
     return if framework_links.empty?
 
-    <<-EOS.undent
-      python modules have explicit framework links
-      These python extension modules were linked directly to a Python
-      framework binary. They should be linked with -undefined dynamic_lookup
-      instead of -lpython or -framework Python.
-        #{framework_links * "\n        "}
-    EOS
+    t("formula_cellar_checks.python_explicit_frameworks") +
+      (framework_links * "\n        ")
   end
 
   def audit_installed

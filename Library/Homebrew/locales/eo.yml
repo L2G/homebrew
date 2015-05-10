@@ -550,6 +550,18 @@ eo:
     tap_action_catchall: 
     tap_action_fetching: 
     tap_action_installing: 
+  formula_cellar_checks:
+    easy_install_pth_files_found: 
+    generics_found_in_bin: 
+    jars_found_in_lib: 
+    non_execs_found_in_bin: 
+    non_libraries_found_in_lib: 
+    obj_linked_against_system_openssl: 
+    prefix_bin_not_in_path: 
+    python_explicit_frameworks: 
+    shadowed_headers_found_in_include: 
+    top_level_info_dir: 
+    top_level_man_dir: 
   formula_installer:
     all_deps_satisfied: 
     already_installed_unlink: |
