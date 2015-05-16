@@ -387,6 +387,22 @@ eo:
     options:
       install_devel_version: 
       install_head_version: Instali la version HEAD
+    pull:
+      argument_required: 
+      can_only_bump_one_changed_formula: 
+      current_branch_not_master: 
+      has_bottle: 
+      installing: 
+      must_set_bintray_creds: 
+      new_bump_commit_subject: 
+      no_pull_request_detected: 
+      not_github_pull_request: 
+      patch_changed: 
+      patch_closes_issue_number: 
+      patch_failed_to_apply: 
+      patch_failure_abort: 
+      publishing_on_bintray: 
+      you_meant_git_pull_rebase: 
     search:
       failed_to_search_tap: 
       if_you_meant_precisely: 

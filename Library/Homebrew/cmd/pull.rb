@@ -38,10 +38,10 @@ module Homebrew
       safe_system 'git', 'am', *patch_args
     rescue ErrorDuringExecution
       if ARGV.include? "--resolve"
-        odie "Patch failed to apply: try to resolve it."
+        odie t("cmd.pull.patch_failed_to_apply")
       else
         system 'git', 'am', '--abort'
-        odie 'Patch failed to apply: aborted.'
+        odie t("cmd.pull.patch_failure_abort")
       end
     ensure
       patchpath.unlink
@@ -50,11 +50,11 @@ module Homebrew
 
   def pull
     if ARGV.empty?
-      odie 'This command requires at least one argument containing a URL or pull request number'
+      odie t("cmd.pull.argument_required")
     end
 
     if ARGV[0] == '--rebase'
-      odie 'You meant `git pull --rebase`.'
+      odie t("cmd.pull.you_meant_git_pull_rebase")
     end
 
     ARGV.named.each do |arg|
@@ -68,14 +68,14 @@ module Homebrew
         end
 
         url_match = arg.match HOMEBREW_PULL_OR_COMMIT_URL_REGEX
-        odie "Not a GitHub pull request or commit: #{arg}" unless url_match
+        odie t("cmd.pull.not_github_pull_request", :arg => arg) unless url_match
 
         url = url_match[0]
         issue = url_match[3]
       end
 
       if ARGV.include?("--bottle") && issue.nil?
-        raise "No pull request detected!"
+        raise t("cmd.pull.no_pull_request_detected")
       end
 
       if tap_name = tap(url)
@@ -95,7 +95,7 @@ module Homebrew
       branch = `git symbolic-ref --short HEAD`.strip
 
       unless branch == "master"
-        opoo "Current branch is #{branch}: do you need to pull inside master?"
+        opoo t("cmd.pull.current_branch_not_master", :branch => branch)
       end
 
       pull_url url
@@ -125,19 +125,22 @@ module Homebrew
       unless ARGV.include? '--bottle'
         changed_formulae.each do |f|
           next unless f.bottle
-          opoo "#{f.name} has a bottle: do you need to update it with --bottle?"
+          opoo t("cmd.pull.has_bottle", :name => name)
         end
       end
 
+      # i18n: Careful, the value of message should be in English since it will
+      # be the log message of the GitHub commit
+
       if issue && !ARGV.include?('--clean')
-        ohai "Patch closes issue ##{issue}"
+        ohai t("cmd.pull.patch_closes_issue_number", :issue => issue)
         message = `git log HEAD^.. --format=%B`
 
         if ARGV.include? '--bump'
-          odie 'Can only bump one changed formula' unless changed_formulae.length == 1
+          odie t("cmd.pull.can_only_bump_one_changed_formula") unless changed_formulae.length == 1
           formula = changed_formulae.first
           subject = "#{formula.name} #{formula.version}"
-          ohai "New bump commit subject: #{subject}"
+          ohai t("cmd.pull.new_bump_commit_subject", :subject => subject)
           system "/bin/echo -n #{subject} | pbcopy"
           message = "#{subject}\n\n#{message}"
         end
@@ -172,7 +175,7 @@ module Homebrew
         if bintray_user && bintray_key
           repo = Bintray.repository(tap_name)
           changed_formulae.each do |f|
-            ohai "Publishing on Bintray:"
+            ohai t("cmd.pull.publishing_on_bintray")
             package = Bintray.package f.name
             version = f.pkg_version
             curl "--silent", "--fail",
@@ -183,16 +186,16 @@ module Homebrew
             safe_system "brew", "fetch", "--retry", "--force-bottle", f.name
           end
         else
-          opoo "You must set BINTRAY_USER and BINTRAY_KEY to add or update bottles on Bintray!"
+          opoo t("cmd.pull.must_set_bintray_creds")
         end
       end
 
-      ohai 'Patch changed:'
+      ohai t("cmd.pull.patch_changed")
       safe_system "git", "diff-tree", "-r", "--stat", revision, "HEAD"
 
       if ARGV.include? '--install'
         changed_formulae.each do |f|
-          ohai "Installing #{f.name}"
+          ohai t("cmd.pull.installing", :name => f.name)
           install = f.installed? ? 'upgrade' : 'install'
           safe_system 'brew', install, '--debug', f.name
         end

@@ -834,6 +834,22 @@ en-US:
     options:
       install_devel_version: Install development version %{version}
       install_head_version: Install HEAD version
+    pull:
+      argument_required: This command requires at least one argument containing a URL or pull request number
+      can_only_bump_one_changed_formula: Can only bump one changed formula
+      current_branch_not_master: 'Current branch is %{branch}: do you need to pull inside master?'
+      has_bottle: "%{name} has a bottle: do you need to update it with --bottle?"
+      installing: Installing %{name}
+      must_set_bintray_creds: You must set BINTRAY_USER and BINTRAY_KEY to add or update bottles on Bintray!
+      new_bump_commit_subject: 'New bump commit subject: %{subject}'
+      no_pull_request_detected: No pull request detected!
+      not_github_pull_request: 'Not a GitHub pull request or commit: %{arg}'
+      patch_changed: 'Patch changed:'
+      patch_closes_issue_number: 'Patch closes issue #%{issue}'
+      patch_failed_to_apply: 'Patch failed to apply: try to resolve it.'
+      patch_failure_abort: 'Patch failed to apply: aborted.'
+      publishing_on_bintray: 'Publishing on Bintray:'
+      you_meant_git_pull_rebase: You meant `git pull --rebase`.
     search:
       failed_to_search_tap: 'Failed to search tap: %{user}/%{repo}. Please run `brew update`'
       if_you_meant_precisely: '"If you meant %{term} precisely:"'
