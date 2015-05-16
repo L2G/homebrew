@@ -636,6 +636,9 @@ en-US:
         cause problems when two formula install to locations that are mapped on top of each
         other during the linking step.
       tmpdir_doesnt_exist: TMPDIR %{path} doesn't exist.
+      tmpdir_needs_sticky_bit: |-
+        %{path} is world-writable but does not have the sticky bit set.
+        Please run "Repair Disk Permissions" in Disk Utility.
       trailing_slashes: |
         Some directories in your path end in a slash.
         Directories in your path should not end in a slash. This can break other

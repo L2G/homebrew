@@ -308,6 +308,7 @@ it:
       stray_static_libs: 
       symlinked_cellar_found: 
       tmpdir_doesnt_exist: 
+      tmpdir_needs_sticky_bit: 
       trailing_slashes: 
       uncommitted_mods: 
       unlinked_kegs_in_cellar: 
