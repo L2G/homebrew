@@ -7,7 +7,7 @@ class MultipleVersionsInstalledError < RuntimeError
 
   def initialize name
     @name = name
-    super t("exceptions.multiple_versions_installed_error", :name => @name)
+    super t("exceptions.multiple_versions_installed_error", :name => name)
   end
 end
 
@@ -97,7 +97,7 @@ class CannotInstallFormulaError < RuntimeError; end
 class FormulaInstallationAlreadyAttemptedError < RuntimeError
   def initialize(formula)
     super t("exceptions.formula_installation_already_attempted_error",
-            :name => name)
+            :name => formula.name)
   end
 end
 
@@ -206,7 +206,7 @@ class BuildError < RuntimeError
     unless RUBY_VERSION < "1.8.7" || issues.empty?
       puts t("exceptions.build_error.refer_to_issues")
       issues.each do |i|
-        puts t("exceptions.build_error.issues_line_item", 
+        puts t("exceptions.build_error.issues_line_item",
                :title => i['title'],
                :url => i['html_url'])
       end
