@@ -256,7 +256,7 @@ Note that these flags should only appear after a command.
     If no <formulae> are provided, all of them will have their .apps symlinked.
 
     If provided, `--local` will move them into the user's `~/Applications`
-    folder instead of the system folder. It may need to be created, first.
+    directory instead of the system directory. It may need to be created, first.
 
   * `ls, list [--unbrewed] [--versions [--multiple]] [--pinned]` [<formulae>]:
     Without any arguments, list all installed formulae.
@@ -345,10 +345,12 @@ Note that these flags should only appear after a command.
   * `switch` <name> <version>:
     Symlink all of the specific <version> of <name>'s install to Homebrew prefix.
 
-  * `tap` [<tap>]:
+  * `tap` [--full] [<tap>]:
     Tap a new formula repository from GitHub, or list existing taps.
 
     <tap> is of the form <user>/<repo>, e.g. `brew tap homebrew/dupes`.
+
+    If `--full` is passed, a full clone will be used.
 
   * `tap --repair`:
     Ensure all tapped formulae are symlinked into Library/Formula and prune dead
@@ -559,6 +561,9 @@ can take several different forms:
     greater number of API requests. See
     <https://developer.github.com/v3/#rate-limiting> for more information.
     Homebrew uses the GitHub API for features such as `brew search`.
+
+  * HOMEBREW\_LOGS:
+    If set, Homebrew will use the given directory to store log files.
 
   * HOMEBREW\_MAKE\_JOBS:
     If set, instructs Homebrew to use the value of `HOMEBREW_MAKE_JOBS` as

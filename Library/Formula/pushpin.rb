@@ -1,14 +1,15 @@
 class Pushpin < Formula
   homepage "http://pushpin.org"
-  url "http://packages.fanout.io/source/pushpin-1.1.1.tar.bz2"
-  sha256 "ac1bb0d8becb98c3ee396fddf185cdac5d34f06d154fe3d78c9ff769f6f88e32"
+  url "http://packages.fanout.io/source/pushpin-1.2.0.tar.bz2"
+  sha256 "10156a5c3a5e956569fe25d5e467e3e452fc2b6b0b63c7894fc7f6aee6c7c414"
+  revision 1
 
   head "https://github.com/fanout/pushpin.git"
 
   bottle do
-    sha256 "8e71804d2734c4b16d02aca9ebed5fff3d46e92f79d029558381260c1a26998f" => :yosemite
-    sha256 "72e5c82ff7bc36c8526210d8e11d68c14e057cc0096e3d693c4d088308b3d62e" => :mavericks
-    sha256 "a7ebf771f8c2588830e743afbb95fe42fa48401130b2d09640fff25e13d16652" => :mountain_lion
+    sha256 "e3e375fb96a6e558e27c300e18d3cd6b1535530f6ea32345554e2d2def627c6f" => :yosemite
+    sha256 "31be58a8024be381ceaddc7a2c682b2f7ee5ca952d02964abdfc2cc222224d66" => :mavericks
+    sha256 "02f82c337c06c3373fbdfb69f4066d897413e2e35011a53725331b799e0378c3" => :mountain_lion
   end
 
   depends_on "pkg-config" => :build
@@ -57,7 +58,7 @@ class Pushpin < Formula
     system "make", "install", "prefix=#{prefix}", "varprefix=#{var}"
 
     pyenv = { :PYTHONPATH => ENV["PYTHONPATH"] }
-    %w[pushpin pushpin-handler].each do |f|
+    %w[pushpin pushpin-handler pushpin-publish].each do |f|
       (libexec/"bin").install bin/f
       (bin/f).write_env_script libexec/"bin/#{f}", pyenv
     end

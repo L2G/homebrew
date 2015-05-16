@@ -293,7 +293,7 @@ module Superenv
     when "clang"
       append 'HOMEBREW_CCCFG', "x", ''
       append 'HOMEBREW_CCCFG', "g", ''
-    when /gcc-4\.(8|9)/
+    when /gcc-(4\.(8|9)|5)/
       append 'HOMEBREW_CCCFG', "x", ''
     else
       raise t('extend.env.cxx11_not_supported', :name => homebrew_cc)

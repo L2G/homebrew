@@ -1,13 +1,13 @@
 class Sslmate < Formula
   homepage "https://sslmate.com"
-  url "https://packages.sslmate.com/other/sslmate-1.0.1.tar.gz"
-  sha256 "33178a73142a7be4bdd6d916901c596525f1a4aa25f2821758cd558808d1dd3d"
+  url "https://packages.sslmate.com/other/sslmate-1.1.1.tar.gz"
+  sha256 "019eb13200ab6a4a0cf2cef6c022928c3eaace767951f37dd80e1ad92ebf30ef"
 
   bottle do
     cellar :any
-    sha256 "d0765b1db21b52b69f13c31330a6023a8017184b64486dcb3d606fb37e943b7a" => :yosemite
-    sha256 "a0fd044d43399e24282b1266c9fc8f0ff835cb733ad5ca5fb4777261a44c8cad" => :mavericks
-    sha256 "ede8379abb216166470f013682c1b9ce5efed9876f91e48800d40c584cd8978d" => :mountain_lion
+    sha256 "69660457af355c53fba98283b3b72bdbb0e3c919e3e330454004ca7833845e27" => :yosemite
+    sha256 "7682d82301ffcda80b861b50977c1bd952915109a812508e8c0a3d66353c8acc" => :mavericks
+    sha256 "799696962067c31cb41527cf259dea5c43e8e64431c2e10373599c7e79c40b21" => :mountain_lion
   end
 
   option "without-route53", "Disable support for Route 53 DNS approval"
@@ -19,7 +19,7 @@ class Sslmate < Formula
     resource "URI" do
       url "http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/URI-1.64.tar.gz"
       mirror "https://cpan.metacpan.org/authors/id/E/ET/ETHER/URI-1.64.tar.gz"
-      sha1 "ab7f5fbc80da4ed9c46d63ed956c68a09e83dae30f20c2778c3e056d41883f9d"
+      sha256 "ab7f5fbc80da4ed9c46d63ed956c68a09e83dae30f20c2778c3e056d41883f9d"
     end
 
     resource "Term::ReadKey" do
@@ -42,7 +42,7 @@ class Sslmate < Formula
 
     resource "boto" do
       url "https://pypi.python.org/packages/source/b/boto/boto-2.34.0.tar.gz"
-      sha1 "e19d252b58054a7711fae910324e26b2b551a44d"
+      sha256 "33baab022ecb803414ad0d6cf4041d010cfc2755ff8acc3bea7b32e77ba98be0"
     end
   end
 

@@ -265,7 +265,7 @@ class FormulaAuditor
     end
 
     # Savannah has full SSL/TLS support but no auto-redirect.
-    # Doesn't apply to the download links (boo), only the homepage.
+    # Doesn't apply to the download URLs, only the homepage.
     if homepage =~ %r[^http://savannah\.nongnu\.org/]
       problem t('cmd.audit.homepage_savannah_https', :url => homepage)
     end
@@ -312,7 +312,7 @@ class FormulaAuditor
     end
 
     # There's an auto-redirect here, but this mistake is incredibly common too.
-    # Only applies to the homepage and subdomains for now, not the FTP links.
+    # Only applies to the homepage and subdomains for now, not the FTP URLs.
     if homepage =~ %r[^http://((?:build|cloud|developer|download|extensions|git|glade|help|library|live|nagios|news|people|projects|rt|static|wiki|www)\.)?gnome\.org]
       problem t('cmd.audit.homepage_gnome_https', :url => homepage)
     end
@@ -362,8 +362,9 @@ class FormulaAuditor
     end
 
     stable = formula.stable
-    if stable && stable.url =~ /#{Regexp.escape("ftp.gnome.org/pub/GNOME/sources")}/i
-      minor_version = stable.version.to_s[/\d\.(\d+)/, 1].to_i
+    case stable && stable.url
+    when %r{download\.gnome\.org/sources}, %r{ftp\.gnome\.org/pub/GNOME/sources}i
+      minor_version = Version.parse(stable.url).to_s.split(".", 3)[1].to_i
 
       if minor_version.odd?
         problem t('cmd.audit.version_is_devel', :version => stable.version)
@@ -392,8 +393,6 @@ class FormulaAuditor
       problem t('cmd.audit.macports_patch_use_https', :url => patch.url)
     when %r[^http://bugs\.debian\.org]
       problem t('cmd.audit.debian_patch_use_https', :url => patch.url)
-    when %r[^https?://github\.com/.*commit.*\.patch$]
-      problem t('cmd.audit.github_patch_use_dot_diff')
     end
   end
 
@@ -882,7 +881,7 @@ class ResourceAuditor
 
     urls = [url] + mirrors
 
-    # Check a variety of SSL/TLS links that don't consistently auto-redirect
+    # Check a variety of SSL/TLS URLs that don't consistently auto-redirect
     # or are overly common errors that need to be reduced & fixed over time.
     urls.each do |p|
       # Skip the main url link, as it can't be made SSL/TLS yet.

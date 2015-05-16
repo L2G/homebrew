@@ -36,8 +36,8 @@ case HOMEBREW_PREFIX.to_s when '/', '/usr'
   # it may work, but I only see pain this route and don't want to support it
   abort t('brew.refuse_root_or_usr', :path => HOMEBREW_PREFIX)
 end
-if OS.mac? and MacOS.version < "10.5"
-  abort t('brew.no_tiger_support')
+if OS.mac? and MacOS.version < "10.6"
+  abort t('brew.snow_leopard_required')
 end
 
 # Many Pathname operations use getwd when they shouldn't, and then throw

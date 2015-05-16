@@ -25,10 +25,10 @@ it:
     homebrew_version: 
     invalid_usage: 
     keg_unspecified: 
-    no_tiger_support: 
     no_working_dir: 
     please_report_bug: 
     refuse_root_or_usr: 
+    snow_leopard_required: 
     unknown_command: 
   build:
     git: 
@@ -92,7 +92,6 @@ it:
       git_specify_revision_with_tag: 
       github_patch_macports: 
       github_patch_needs_rev: 
-      github_patch_use_dot_diff: 
       head_only: 
       homepage_apache_https: 
       homepage_debian_https: 

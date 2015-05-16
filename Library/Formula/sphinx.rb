@@ -2,15 +2,15 @@ require 'formula'
 
 class Sphinx < Formula
   homepage 'http://www.sphinxsearch.com'
-  url 'http://sphinxsearch.com/files/sphinx-2.2.6-release.tar.gz'
-  sha1 '9c458ed999a3e771d417a704e12c469e06423e4a'
+  url 'http://sphinxsearch.com/files/sphinx-2.2.9-release.tar.gz'
+  sha1 '7ddde51bb1d428406acb278c615a2c2fda819daf'
 
   head 'http://sphinxsearch.googlecode.com/svn/trunk/'
 
   bottle do
-    sha1 "96a941abefc28d95a3db766311ee222435fbdc4b" => :yosemite
-    sha1 "087eda561408cc38e1bb1b86b32c441d169245f0" => :mavericks
-    sha1 "780a6615a3ca764461810c88720dd71bafb3b37b" => :mountain_lion
+    sha256 "306dce352302755160f39c9826deb5e2e6273cfb6e5ab95e4a98c0ff2157a44b" => :yosemite
+    sha256 "9556e1329b095ff1621a5ea73872de3706a8c6fc0c75fa9d14a9884b60fa60fd" => :mavericks
+    sha256 "a71c292f774b8e449cf8775d21e7a6f41a85497e178ea6ba678b80a2f33b4ebd" => :mountain_lion
   end
 
   option 'mysql', 'Force compiling against MySQL'

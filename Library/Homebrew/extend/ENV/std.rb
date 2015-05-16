@@ -130,7 +130,7 @@ module Stdenv
   alias_method :gcc_4_2, :gcc
 
   GNU_GCC_VERSIONS.each do |n|
-    define_method(:"gcc-4.#{n}") do
+    define_method(:"gcc-#{n}") do
       super()
       set_cpu_cflags
     end
@@ -275,7 +275,7 @@ module Stdenv
     if compiler == :clang
       append 'CXX', '-std=c++11'
       append 'CXX', '-stdlib=libc++'
-    elsif compiler =~ /gcc-4\.(8|9)/
+    elsif compiler =~ /gcc-(4\.(8|9)|5)/
       append 'CXX', '-std=c++11'
     else
       raise t('extend.env.cxx11_not_supported', :name => compiler)
