@@ -9,4 +9,9 @@ class Jerm < Formula
     bin.install "jerm", "tiocdtr"
     man1.install Dir["*.1"]
   end
+
+  test do
+    output = shell_output("#{bin}/jerm 2>&1", 1)
+    assert_match /^Jerminal v#{version} /, output
+  end
 end
