@@ -6,7 +6,7 @@ class Ee < Formula
 
   def install
     system "make", "localmake"
-    system "make", "all"
+    system "make", "-f", "make.local"
 
     # Install manually
     bin.install "ee"
