@@ -127,6 +127,7 @@ en:
     audit:
       add_test_do: A `test do` test block should be added
       alias_should_be: Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name}'.
+      ambiguous_conflict: Ambiguous conflicting formula %{name}.
       audit_problems: audit problems
       audit_problems_formula: "%{name}:"
       audit_problems_list_item: " * %{item}"
@@ -173,18 +174,19 @@ en:
       head_only: Head-only (no stable download)
       homepage_apache_https: Apache homepages should be https:// URLs (URL is %{url}).
       homepage_debian_https: Debian homepage should be https:// URLs (URL is %{url}).
-      homepage_freedesktop_https_project: The url should be styled `https://wiki.freedesktop.org/project_name`, not %{url}.
-      homepage_freedesktop_https_software_project: The url should be styled `https://wiki.freedesktop.org/www/Software/project_name`, not %{url}.
+      homepage_freedesktop_https_project: "%{url} should be styled `https://wiki.freedesktop.org/project_name`"
+      homepage_freedesktop_https_software_project: "%{url} should be styled `https://wiki.freedesktop.org/www/Software/project_name`"
       homepage_freedesktop_https_wiki: Freedesktop's Wiki subdomain should be https:// (URL is %{url}).
       homepage_github_https: Use https:// URLs for homepages on GitHub (URL is %{url}).
       homepage_github_io_https: Github Pages URLs should be https:// (URL is %{url}).
       homepage_gnome_https: Gnome homepages should be https:// URLs (URL is %{url}).
-      homepage_gnu_ftpmirror: '"http://ftpmirror.gnu.org" is preferred for GNU software (url is %{url}).'
+      homepage_gnu_ftpmirror: Please use "http://ftpmirror.gnu.org" instead of %{url}.
       homepage_gnu_https: GNU homepages should be https:// URLs (URL is %{url}).
       homepage_gnupg_https: GnuPG homepages should be https:// URLs (URL is %{url}).
-      homepage_googlecode_end_slash: Google Code homepage should end with a slash (URL is %{url}).
+      homepage_googlecode_end_slash: "%{url} should end with a slash"
       homepage_googlecode_https: Google Code homepages should be https:// URLs (URL is %{url}).
       homepage_ietf_https: ietf homepages should be https:// URLs (URL is %{url}).
+      homepage_please_use_https: Please use https:// for %{url}
       homepage_savannah_https: Savannah homepages should be https:// URLs (URL is %{url}).
       homepage_should_be_http: The homepage should start with http or https (URL is %{url}).
       inreplace_block_var: '"inreplace <filenames> do |s|" is preferred over "|%{block_var}|".'
@@ -239,6 +241,7 @@ en:
       url_bintray_https: Bintray urls should be https://, not http (url is %{url}).
       url_code_google_com_https: code.google.com urls should be https://, not http (url is %{url}).
       url_code_google_com_https_2: Use https:// URLs for downloads from code.google (url is %{url}).
+      url_download_gnome_org: "%{url} should be `https://download.gnome.org/%{url_path}`"
       url_duped_mirror: 'URL should not be duplicated as a mirror: %{url}'
       url_fossies_https: Fossies urls should be https://, not http (url is %{url}).
       url_ftp_gnu_org_https: ftp.gnu.org mirrors should be https://, not http:// (mirror is %{url}).
@@ -247,9 +250,9 @@ en:
       url_github_use_https: Use https:// URLs for accessing GitHub repositories (url is %{url}).
       url_gitorious_use_https: Use https:// URLs for accessing Gitorious repositories (url is %{url}).
       url_googlecode_use_https: Use https:// URLs for downloads from Google Code (url is %{url}).
-      url_metacpan: MetaCPAN url should be `https://cpan.metacpan.org/%{url_part}` (url is %{url}).
+      url_metacpan: "%{url} should be `https://cpan.metacpan.org/%{url_path}`"
       url_mirrors_kernel_org_https: mirrors.kernel urls should be https://, not http (url is %{url}).
-      url_sourceforge_geoloc: Use http://downloads.sourceforge.net to get geolocation (url is %{url}).
+      url_sourceforge_geoloc: Use https://downloads.sourceforge.net to get geolocation (url is %{url}).
       url_sourceforge_no_download: Don't use /download in SourceForge urls (url is %{url}).
       url_sourceforge_no_mirror: Don't use %{url_query_part}use_mirror in SourceForge urls (url is %{url}).
       url_sourceforge_no_prdown: |

@@ -56,6 +56,7 @@ it:
     audit:
       add_test_do: "È necessario aggiungere un blocco di test `test do`"
       alias_should_be: La dipendenza '%{alias_name}' è un alias; utilizza il nome canonico '%{canonical_name}'.
+      ambiguous_conflict: 
       audit_problems: problemi alla verifica
       audit_problems_formula: "%{name}:"
       audit_problems_list_item: "* %{item}"
@@ -107,6 +108,7 @@ it:
       homepage_googlecode_end_slash: 
       homepage_googlecode_https: 
       homepage_ietf_https: 
+      homepage_please_use_https: 
       homepage_savannah_https: 
       homepage_should_be_http: 
       inreplace_block_var: 
@@ -146,6 +148,7 @@ it:
       url_bintray_https: 
       url_code_google_com_https: 
       url_code_google_com_https_2: 
+      url_download_gnome_org: 
       url_duped_mirror: 
       url_fossies_https: 
       url_ftp_gnu_org_https: 

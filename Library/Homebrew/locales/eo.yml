@@ -56,6 +56,7 @@ eo:
     audit:
       add_test_do: 
       alias_should_be: 
+      ambiguous_conflict: 
       audit_problems: 
       audit_problems_formula: 
       audit_problems_list_item: 
@@ -105,6 +106,7 @@ eo:
       homepage_googlecode_end_slash: 
       homepage_googlecode_https: 
       homepage_ietf_https: 
+      homepage_please_use_https: Bonvolu uzi https:// por %{url}
       homepage_savannah_https: 
       homepage_should_be_http: 
       inreplace_block_var: 
@@ -144,6 +146,7 @@ eo:
       url_bintray_https: 
       url_code_google_com_https: 
       url_code_google_com_https_2: 
+      url_download_gnome_org: 
       url_duped_mirror: 
       url_fossies_https: 
       url_ftp_gnu_org_https: 
@@ -392,7 +395,7 @@ eo:
       can_only_bump_one_changed_formula: 
       current_branch_not_master: 
       has_bottle: 
-      installing: 
+      installing: Instalas %{name}
       must_set_bintray_creds: 
       new_bump_commit_subject: 
       no_pull_request_detected: 

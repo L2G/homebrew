@@ -56,6 +56,7 @@ ja:
     audit:
       add_test_do: 
       alias_should_be: 
+      ambiguous_conflict: 
       audit_problems: 
       audit_problems_formula: 
       audit_problems_list_item: 
@@ -105,6 +106,7 @@ ja:
       homepage_googlecode_end_slash: 
       homepage_googlecode_https: 
       homepage_ietf_https: 
+      homepage_please_use_https: 
       homepage_savannah_https: 
       homepage_should_be_http: 
       inreplace_block_var: 
@@ -144,6 +146,7 @@ ja:
       url_bintray_https: 
       url_code_google_com_https: 
       url_code_google_com_https_2: 
+      url_download_gnome_org: 
       url_duped_mirror: 
       url_fossies_https: 
       url_ftp_gnu_org_https: 
