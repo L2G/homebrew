@@ -29,7 +29,7 @@ eo:
     please_report_bug: 
     refuse_root_or_usr: 
     snow_leopard_required: 
-    unknown_command: 
+    unknown_command: 'Nekonata komando: %{cmd}'
   build:
     git: 
     interactive:
@@ -581,7 +581,7 @@ eo:
     keg_only_2: 
     keg_only_cppflags: 
     keg_only_ldflags: 
-    must_link_deps: 
+    must_link_deps: Vi devas plenumi `brew link %{deps}' antaŭ %{name} estos instaligebla
     nothing_installed_to: 
     postinstall_fail_1: 
     postinstall_fail_2: 
