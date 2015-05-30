@@ -1189,7 +1189,7 @@ en:
     fname_alias_deprecated: Keg#fname is a deprecated alias for Keg#name and will be removed soon
     is_symlink: |-
       Target %{target} is a symlink belonging to %{conflict_name}. You can unlink it:
-        brew unlink %{name}
+        brew unlink %{conflict_name}
     not_directory: "%{path} is not a directory"
     not_inside_keg: "%{path} is not inside a keg"
     not_valid_keg: "%{path} is not a valid keg"
