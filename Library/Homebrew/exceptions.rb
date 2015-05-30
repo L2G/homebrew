@@ -86,6 +86,25 @@ class TapFormulaUnavailableError < FormulaUnavailableError
   end
 end
 
+class TapFormulaAmbiguityError < RuntimeError
+  attr_reader :name, :paths, :formulae
+
+  def initialize name, paths
+    @name = name
+    @paths = paths
+    @formulae = paths.map do |path|
+      path.to_s =~ HOMEBREW_TAP_PATH_REGEX
+      "#{$1}/#{$2.sub("homebrew-", "")}/#{path.basename(".rb")}"
+    end
+
+    super <<-EOS.undent
+      Formulae found in multiple taps: #{formulae.map { |f| "\n       * #{f}" }.join}
+
+      Please use the fully-qualified name e.g. #{formulae.first} to refer the formula.
+    EOS
+  end
+end
+
 class OperationInProgressError < RuntimeError
   def initialize name
     super t("exceptions.operation_in_progress_error", :name => name)
@@ -97,7 +116,7 @@ class CannotInstallFormulaError < RuntimeError; end
 class FormulaInstallationAlreadyAttemptedError < RuntimeError
   def initialize(formula)
     super t("exceptions.formula_installation_already_attempted_error",
-            :name => formula.name)
+            :name => formula.full_name)
   end
 end
 
@@ -130,7 +149,7 @@ class FormulaConflictError < RuntimeError
   def message
     t("exceptions.formula_conflict_error",
       :error_intro => t("exceptions.formula_conflict_error_intro",
-                        :name => formula.name,
+                        :name => formula.full_name,
                         :count => conflicts.length),
       :conflict_list => conflicts.map { |c| conflict_message(c) }.join("\n") + "\n",
       :homebrew_prefix => HOMEBREW_PREFIX)
@@ -192,7 +211,7 @@ class BuildError < RuntimeError
       Homebrew.dump_build_env(env)
       puts
       onoe t("exceptions.build_error.formula_did_not_build",
-             :name => formula.name,
+             :name => formula.full_name,
              :version => formula.version)
       unless (logs = Dir["#{formula.logs}/*"]).empty?
         puts t("exceptions.build_error.dump_heading_logs")
@@ -218,7 +237,7 @@ end
 # the compilers available on the user's system
 class CompilerSelectionError < RuntimeError
   def initialize(formula)
-    super t("exceptions.compiler_selection_error", :name => formula.name)
+    super t("exceptions.compiler_selection_error", :name => formula.full_name)
   end
 end
 
@@ -274,7 +293,7 @@ end
 class ResourceMissingError < ArgumentError
   def initialize(formula, resource)
     super t("exceptions.resource_missing_error",
-            :formula => formula.name,
+            :formula => formula.full_name,
             :resource => resource.inspect)
   end
 end

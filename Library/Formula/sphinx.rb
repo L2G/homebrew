@@ -2,24 +2,38 @@ require 'formula'
 
 class Sphinx < Formula
   homepage 'http://www.sphinxsearch.com'
-  url 'http://sphinxsearch.com/files/sphinx-2.2.9-release.tar.gz'
-  sha1 '7ddde51bb1d428406acb278c615a2c2fda819daf'
+  revision 1
+
+  stable do
+    url 'http://sphinxsearch.com/files/sphinx-2.2.9-release.tar.gz'
+    sha1 '7ddde51bb1d428406acb278c615a2c2fda819daf'
+  end
+
+  devel do
+    url 'http://sphinxsearch.com/files/sphinx-2.3.1-beta.tar.gz'
+    sha1 '4717be87a38c9635aaebf062fa1fcf7d33593709'
+  end
 
   head 'http://sphinxsearch.googlecode.com/svn/trunk/'
 
   bottle do
-    sha256 "306dce352302755160f39c9826deb5e2e6273cfb6e5ab95e4a98c0ff2157a44b" => :yosemite
-    sha256 "9556e1329b095ff1621a5ea73872de3706a8c6fc0c75fa9d14a9884b60fa60fd" => :mavericks
-    sha256 "a71c292f774b8e449cf8775d21e7a6f41a85497e178ea6ba678b80a2f33b4ebd" => :mountain_lion
+    sha256 "c9cdc77ed228f264c3f93293215cdb621129f52b90c49e157ac69ecf85027b16" => :yosemite
+    sha256 "b46915db19659083d4a6428a704dac03a4c4d4a2b0d88ad32902c5c739715714" => :mavericks
+    sha256 "419d876d846d9ad280be6f8ffdde5962cc6cb5accb32688e8af44f8c4e50989d" => :mountain_lion
   end
 
-  option 'mysql', 'Force compiling against MySQL'
-  option 'pgsql', 'Force compiling against PostgreSQL'
-  option 'id64',  'Force compiling with 64-bit ID support'
+  option 'with-mysql',      'Force compiling against MySQL'
+  option 'with-postgresql', 'Force compiling against PostgreSQL'
+  option 'with-id64',       'Force compiling with 64-bit ID support'
+
+  deprecated_option 'mysql' => 'with-mysql'
+  deprecated_option 'pgsql' => 'with-postgresql'
+  deprecated_option 'id64'  => 'with-id64'
 
   depends_on "re2" => :optional
-  depends_on :mysql if build.include? 'mysql'
-  depends_on :postgresql if build.include? 'pgsql'
+  depends_on :mysql => :optional
+  depends_on :postgresql => :optional
+  depends_on 'openssl' if build.with?('mysql')
 
   resource 'stemmer' do
     url "https://github.com/snowballstem/snowball.git",
@@ -47,15 +61,19 @@ class Sphinx < Formula
               --localstatedir=#{var}
               --with-libstemmer]
 
-    args << "--enable-id64" if build.include? 'id64'
+    args << "--enable-id64" if build.with? 'id64'
     args << "--with-re2" if build.with? 're2'
 
-    %w{mysql pgsql}.each do |db|
-      if build.include? db
-        args << "--with-#{db}"
-      else
-        args << "--without-#{db}"
-      end
+    if build.with? 'mysql'
+      args << '--with-mysql'
+    else
+      args << '--without-mysql'
+    end
+
+    if build.with? 'postgresql'
+      args << '--with-pgsql'
+    else
+      args << '--without-pgsql'
     end
 
     system "./configure", *args

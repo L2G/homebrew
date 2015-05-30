@@ -41,36 +41,36 @@ module Homebrew
       ARGV.formulae.each do |f|
         # head-only without --HEAD is an error
         if not ARGV.build_head? and f.stable.nil? and f.devel.nil?
-          raise t("cmd.install.head_only_formula", :name => f.name)
+          raise t("cmd.install.head_only_formula", :name => f.full_name)
         end
 
         # devel-only without --devel is an error
         if not ARGV.build_devel? and f.stable.nil? and f.head.nil?
-          raise t("cmd.install.devel_only_formula", :name => f.name)
+          raise t("cmd.install.devel_only_formula", :name => f.full_name)
         end
 
         if ARGV.build_stable? and f.stable.nil?
-          raise t("cmd.install.no_stable_download", :name => f.name)
+          raise t("cmd.install.no_stable_download", :name => f.full_name)
         end
 
         # --HEAD, fail with no head defined
         if ARGV.build_head? and f.head.nil?
-          raise t("cmd.install.no_head_defined", :name => f.name)
+          raise t("cmd.install.no_head_defined", :name => f.full_name)
         end
 
         # --devel, fail with no devel defined
         if ARGV.build_devel? and f.devel.nil?
-          raise t("cmd.install.no_devel_defined", :name => f.name)
+          raise t("cmd.install.no_devel_defined", :name => f.full_name)
         end
 
         if f.installed?
           if f.linked_keg.symlink? or f.keg_only?
             opoo t("cmd.install.already_installed",
-                   :name => f.name,
+                   :name => f.full_name,
                    :version => f.installed_version)
           else
             opoo t("cmd.install.already_installed_not_linked",
-                   :name => f.name,
+                   :name => f.full_name,
                    :version => f.installed_version)
           end
         else

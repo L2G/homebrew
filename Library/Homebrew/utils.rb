@@ -101,7 +101,7 @@ end
 def interactive_shell f=nil
   unless f.nil?
     ENV['HOMEBREW_DEBUG_PREFIX'] = f.prefix
-    ENV['HOMEBREW_DEBUG_INSTALL'] = f.name
+    ENV['HOMEBREW_DEBUG_INSTALL'] = f.full_name
   end
 
   Process.wait fork { exec ENV['SHELL'] }
@@ -224,6 +224,15 @@ def with_system_path
   yield
 ensure
   ENV['PATH'] = old_path
+end
+
+def run_as_not_developer(&block)
+  begin
+    old = ENV.delete "HOMEBREW_DEVELOPER"
+    yield
+  ensure
+    ENV["HOMEBREW_DEVELOPER"] = old
+  end
 end
 
 # Kernel.system but with exceptions

@@ -12,16 +12,16 @@ module Homebrew
       outdated = Homebrew.outdated_brews(Formula.installed)
       exit 0 if outdated.empty?
     elsif ARGV.named.any?
-      outdated = Homebrew.outdated_brews(ARGV.formulae)
+      outdated = Homebrew.outdated_brews(ARGV.resolved_formulae)
 
-      (ARGV.formulae - outdated).each do |f|
+      (ARGV.resolved_formulae - outdated).each do |f|
         if f.rack.directory?
           version = f.rack.subdirs.map { |d| Keg.new(d).version }.max
           onoe t('cmd.upgrade.formula_version_already_installed',
-                 :name => f.name,
+                 :name => f.full_name,
                  :version => version)
         else
-          onoe t('cmd.upgrade.formula_already_installed', :name => f.name)
+          onoe t('cmd.upgrade.formula_already_installed', :name => f.full_name)
         end
       end
       exit 1 if outdated.empty?
@@ -41,7 +41,7 @@ module Homebrew
       oh1 t('cmd.upgrade.upgrading_outdated_pkg', :count => outdated.length)
       puts outdated.map { |f|
         t('cmd.upgrade.formula_name_and_version',
-          :name => f.name,
+          :name => f.full_name,
           :version => f.pkg_version)
       }.join(t('cmd.upgrade.list_join'))
     else
@@ -52,7 +52,7 @@ module Homebrew
       oh1 t('cmd.upgrade.not_upgrading_pinned_pkg', :count => pinned.length)
       puts pinned.map do |f|
         t('cmd.upgrade.formula_name_and_version',
-          :name => f.name,
+          :name => f.full_name,
           :version => f.pkg_version)
       end.join(t('cmd.upgrade.list_join'))
     end
@@ -77,7 +77,7 @@ module Homebrew
     fi.debug               = ARGV.debug?
     fi.prelude
 
-    oh1 t('cmd.upgrade.upgrading_formula', :name => f.name)
+    oh1 t('cmd.upgrade.upgrading_formula', :name => f.full_name)
 
     # first we unlink the currently active keg for this formula otherwise it is
     # possible for the existing build to interfere with the build we are about to

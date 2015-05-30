@@ -11,9 +11,8 @@ module Homebrew
           puts t('cmd.uninstall.uninstalling', :name => keg, :abv => keg.abv)
           keg.unlink
           keg.uninstall
-          rm_pin keg.name
-
-          rack = keg/".."
+          rack = keg.rack
+          rm_pin rack
           if rack.directory?
             versions = rack.subdirs.map(&:basename)
             puts t('cmd.uninstall.still_installed',
@@ -38,7 +37,7 @@ module Homebrew
           end
         end
 
-        rm_pin name
+        rm_pin rack
       end
     end
   rescue MultipleVersionsInstalledError => e
@@ -46,7 +45,7 @@ module Homebrew
     puts t('cmd.uninstall.must_remove_all', :name => e.name)
   end
 
-  def rm_pin name
-    Formulary.factory(name).unpin rescue nil
+  def rm_pin rack
+    Formulary.from_rack(rack).unpin rescue nil
   end
 end

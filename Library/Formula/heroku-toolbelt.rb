@@ -1,7 +1,7 @@
 class HerokuToolbelt < Formula
   homepage "https://toolbelt.heroku.com/other"
-  url "https://s3.amazonaws.com/assets.heroku.com/heroku-client/heroku-client-3.36.7.tgz"
-  sha256 "008393132b6422982221245f50cf28792f9f7a298d0ae13e34273d80976e0e77"
+  url "https://s3.amazonaws.com/assets.heroku.com/heroku-client/heroku-client-3.37.1.tgz"
+  sha256 "a9d7ecface5363a945498b3d274533c4436c6f6529852939a0835620a415d420"
   head "https://github.com/heroku/heroku.git"
 
   depends_on :ruby => "1.9"
