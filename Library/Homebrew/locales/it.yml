@@ -94,22 +94,11 @@ it:
       github_patch_macports: 
       github_patch_needs_rev: 
       head_only: 
-      homepage_apache_https: 
-      homepage_debian_https: 
       homepage_freedesktop_https_project: 
       homepage_freedesktop_https_software_project: 
-      homepage_freedesktop_https_wiki: 
-      homepage_github_https: 
-      homepage_github_io_https: 
-      homepage_gnome_https: 
       homepage_gnu_ftpmirror: 
-      homepage_gnu_https: 
-      homepage_gnupg_https: 
       homepage_googlecode_end_slash: 
-      homepage_googlecode_https: 
-      homepage_ietf_https: 
       homepage_please_use_https: 
-      homepage_savannah_https: 
       homepage_should_be_http: 
       inreplace_block_var: 
       installation_empty: 
@@ -144,28 +133,16 @@ it:
       string_concat_in_interpolation: 
       trailing_whitespace: 
       unnecessary: 
-      url_apache_https: 
-      url_bintray_https: 
-      url_code_google_com_https: 
-      url_code_google_com_https_2: 
       url_download_gnome_org: 
       url_duped_mirror: 
-      url_fossies_https: 
-      url_ftp_gnu_org_https: 
       url_github_no_zips: 
       url_github_tarballs: 
-      url_github_use_https: 
-      url_gitorious_use_https: 
-      url_googlecode_use_https: 
       url_metacpan: 
-      url_mirrors_kernel_org_https: 
       url_sourceforge_geoloc: 
       url_sourceforge_no_download: 
       url_sourceforge_no_mirror: 
       url_sourceforge_no_prdown: 
       url_sourceforge_no_specific: 
-      url_sourceforge_use_https: 
-      url_tools_ietf_org_https: 
       url_using_redundant: 
       use_build_head: 
       use_build_instead_of_argv: 
@@ -410,11 +387,8 @@ it:
       suggest_regex_1: 
       suggest_regex_2: 
     tap:
-      could_not_create_link: 
       invalid_name: 
       private_repo_tapped: 
-      pruned_formulae: 
-      tapped_formulae: 
       tapped_formulae_abv: 
     uninstall:
       comma: 
@@ -639,7 +613,6 @@ it:
     osxfuse_dependency:
       already_installed: 
     ruby_requirement:
-      ruby_is_required: 
       ruby_version_is_required: 
       version_required: 
     unsigned_kext_requirement:

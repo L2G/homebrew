@@ -172,22 +172,11 @@ en:
         GitHub/Gist patches should specify a revision:
         %{url}
       head_only: Head-only (no stable download)
-      homepage_apache_https: Apache homepages should be https:// URLs (URL is %{url}).
-      homepage_debian_https: Debian homepage should be https:// URLs (URL is %{url}).
       homepage_freedesktop_https_project: "%{url} should be styled `https://wiki.freedesktop.org/project_name`"
       homepage_freedesktop_https_software_project: "%{url} should be styled `https://wiki.freedesktop.org/www/Software/project_name`"
-      homepage_freedesktop_https_wiki: Freedesktop's Wiki subdomain should be https:// (URL is %{url}).
-      homepage_github_https: Use https:// URLs for homepages on GitHub (URL is %{url}).
-      homepage_github_io_https: Github Pages URLs should be https:// (URL is %{url}).
-      homepage_gnome_https: Gnome homepages should be https:// URLs (URL is %{url}).
       homepage_gnu_ftpmirror: Please use "http://ftpmirror.gnu.org" instead of %{url}.
-      homepage_gnu_https: GNU homepages should be https:// URLs (URL is %{url}).
-      homepage_gnupg_https: GnuPG homepages should be https:// URLs (URL is %{url}).
       homepage_googlecode_end_slash: "%{url} should end with a slash"
-      homepage_googlecode_https: Google Code homepages should be https:// URLs (URL is %{url}).
-      homepage_ietf_https: ietf homepages should be https:// URLs (URL is %{url}).
       homepage_please_use_https: Please use https:// for %{url}
-      homepage_savannah_https: Savannah homepages should be https:// URLs (URL is %{url}).
       homepage_should_be_http: The homepage should start with http or https (URL is %{url}).
       inreplace_block_var: '"inreplace <filenames> do |s|" is preferred over "|%{block_var}|".'
       installation_empty: |
@@ -237,21 +226,11 @@ en:
            %{interpolation}
       trailing_whitespace: "%{line_num}: Trailing whitespace was found"
       unnecessary: "%{dir_with_path} is unnecessary; just use %{path}"
-      url_apache_https: Apache urls should be https://, not http (url is %{url}).
-      url_bintray_https: Bintray urls should be https://, not http (url is %{url}).
-      url_code_google_com_https: code.google.com urls should be https://, not http (url is %{url}).
-      url_code_google_com_https_2: Use https:// URLs for downloads from code.google (url is %{url}).
       url_download_gnome_org: "%{url} should be `https://download.gnome.org/%{url_path}`"
       url_duped_mirror: 'URL should not be duplicated as a mirror: %{url}'
-      url_fossies_https: Fossies urls should be https://, not http (url is %{url}).
-      url_ftp_gnu_org_https: ftp.gnu.org mirrors should be https://, not http:// (mirror is %{url}).
       url_github_no_zips: Use GitHub tarballs rather than zipballs (url is %{url}).
       url_github_tarballs: Use /archive/ URLs for GitHub tarballs (url is %{url}).
-      url_github_use_https: Use https:// URLs for accessing GitHub repositories (url is %{url}).
-      url_gitorious_use_https: Use https:// URLs for accessing Gitorious repositories (url is %{url}).
-      url_googlecode_use_https: Use https:// URLs for downloads from Google Code (url is %{url}).
       url_metacpan: "%{url} should be `https://cpan.metacpan.org/%{url_path}`"
-      url_mirrors_kernel_org_https: mirrors.kernel urls should be https://, not http (url is %{url}).
       url_sourceforge_geoloc: Use https://downloads.sourceforge.net to get geolocation (url is %{url}).
       url_sourceforge_no_download: Don't use /download in SourceForge urls (url is %{url}).
       url_sourceforge_no_mirror: Don't use %{url_query_part}use_mirror in SourceForge urls (url is %{url}).
@@ -259,8 +238,6 @@ en:
         Don't use prdownloads in SourceForge urls (url is %{url}).
             See: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/
       url_sourceforge_no_specific: Don't use specific dl mirrors in SourceForge urls (url is %{url}).
-      url_sourceforge_use_https: Use https:// URLs for downloads from SourceForge (url is %{url}).
-      url_tools_ietf_org_https: ietf urls should be https://, not http (url is %{url}).
       url_using_redundant: Redundant :using value in URL
       use_build_head: Use 'build.head?' instead of inspecting 'version'
       use_build_instead_of_argv: Use build instead of ARGV to check options
@@ -859,11 +836,6 @@ en:
       suggest_regex_1: Did you mean to perform a regular expression search?
       suggest_regex_2: Surround your query with /slashes/ to search by regex.
     tap:
-      could_not_create_link: |
-        Could not create link for %{highlight_color}%{path}%{reset_color}, as it
-        conflicts with %{highlight_color}%{to_path}%{reset_color}. You will need to use the
-        fully-qualified name when referring to this formula, e.g.
-          brew install %{path}
       invalid_name: Invalid tap name
       private_repo_tapped: |
         It looks like you tapped a private repository. To avoid entering your
@@ -872,12 +844,6 @@ en:
 
           cd %{path}
           git remote set-url origin git@github.com:%{repo_user}/homebrew-%{repo}.git
-      pruned_formulae:
-        one: Pruned %{count} dead formula
-        other: Pruned %{count} dead formulae
-      tapped_formulae:
-        one: Tapped %{count} formula
-        other: Tapped %{count} formulae
       tapped_formulae_abv:
         one: Tapped %{count} formula (%{abv})
         other: Tapped %{count} formulae (%{abv})
@@ -1262,7 +1228,6 @@ en:
         osxfuse is already installed from the binary distribution and
         conflicts with this formula.
     ruby_requirement:
-      ruby_is_required: Ruby is required to install this formula.
       ruby_version_is_required: Ruby %{version} is required to install this formula.
       version_required: RubyRequirement requires a version!
     unsigned_kext_requirement:
