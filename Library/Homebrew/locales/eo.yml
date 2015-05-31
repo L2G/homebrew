@@ -189,7 +189,7 @@ eo:
       string_still_exists: 'La ĉeno ''%{string}'' ankoraŭ ekzistas en ĉi tiuj dosieroj:'
     cleanup:
       only_one_version: 
-      removing_path: 
+      removing_path: 'Forprenas: %{path}... (%{abv})'
       removing_path_dry_run: 
       skipping_keg_only: 
       skipping_linked_keg: 
