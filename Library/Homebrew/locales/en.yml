@@ -275,7 +275,6 @@ en:
     bottle:
       absolute_symlink_1: 'Absolute symlink starting with %{string}:'
       absolute_symlink_2: "  %{keg} -> %{resolved_path}"
-      add_new_regex_to_bottle_version: Add a new regex to bottle_version.rb to parse %{version} from %{filename}
       bottle_block_addition_failed: Bottle block addition failed!
       bottle_block_update_failed: Bottle block update failed!
       bottling: Bottling %{filename}...
