@@ -158,13 +158,6 @@ module Homebrew
     end
 
     filename = Bottle::Filename.create(f, bottle_tag, bottle_revision)
-
-    if bottle_filename_formula_name(filename).empty?
-      return ofail t("cmd.bottle.add_new_regex_to_bottle_version",
-                     :version => f.version,
-                     :filename => filename)
-    end
-
     bottle_path = Pathname.pwd/filename
 
     prefix = HOMEBREW_PREFIX.to_s
@@ -233,7 +226,10 @@ module Homebrew
     puts output
 
     if ARGV.include? '--rb'
-      File.open("#{filename.prefix}.bottle.rb", "w") { |file| file.write(output) }
+      File.open("#{filename.prefix}.bottle.rb", "w") do |file|
+        file.write("\# #{f.full_name}\n")
+        file.write(output)
+      end
     end
   end
 
@@ -246,9 +242,9 @@ module Homebrew
   def merge
     merge_hash = {}
     ARGV.named.each do |argument|
-      formula_name = bottle_filename_formula_name argument
+      bottle_block = IO.read(argument)
+      formula_name = bottle_block.lines.first.sub(/^# /,"").chomp
       merge_hash[formula_name] ||= []
-      bottle_block = IO.read argument
       merge_hash[formula_name] << bottle_block
     end
 
@@ -262,13 +258,7 @@ module Homebrew
       puts output
 
       if ARGV.include? '--write'
-        tap = ARGV.value('tap')
-        canonical_formula_name = if tap
-          "#{tap}/#{formula_name}"
-        else
-          formula_name
-        end
-        f = Formulary.factory(canonical_formula_name)
+        f = Formulary.factory(formula_name)
         update_or_add = nil
 
         Utils::Inreplace.inreplace(f.path) do |s|

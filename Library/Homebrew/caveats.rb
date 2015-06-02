@@ -12,6 +12,7 @@ class Caveats
     caveats << f.keg_only_text if f.keg_only? && f.respond_to?(:keg_only_text)
     caveats << bash_completion_caveats
     caveats << zsh_completion_caveats
+    caveats << fish_completion_caveats
     caveats << plist_caveats
     caveats << python_caveats
     caveats << app_caveats
@@ -39,6 +40,14 @@ class Caveats
   def zsh_completion_caveats
     if keg and keg.completion_installed? :zsh
       t('caveats.zsh_completion', :path => "#{HOMEBREW_PREFIX}/share/zsh/site-functions")
+    end
+  end
+
+  def fish_completion_caveats
+    if keg and keg.completion_installed? :fish and which("fish") then <<-EOS.undent
+      fish completion has been installed to:
+        #{HOMEBREW_PREFIX}/share/fish/vendor_completions.d
+      EOS
     end
   end
 
