@@ -837,10 +837,10 @@ en-US:
       suggest_regex_2: Surround your query with /slashes/ to search by regex.
     tap:
       invalid_name: Invalid tap name
-      private_repo_tapped: |
+      private_repo_tapped: |-
         It looks like you tapped a private repository. To avoid entering your
-        credentials each time you update, you can use git HTTP credential caching
-        or issue the following command:
+        credentials each time you update, you can use git HTTP credential
+        caching or issue the following command:
 
           cd %{path}
           git remote set-url origin git@github.com:%{repo_user}/homebrew-%{repo}.git
@@ -876,11 +876,6 @@ en-US:
       updated_formulae: Updated Formulae
       updated_homebrew: Updated Homebrew from %{initial_revision} to %{current_revision}
     upgrade:
-      argument_required: Either --all or one or more formulae must be specified!
-      changing_behaviour_soon: |-
-        brew upgrade with no arguments will change behavior soon!
-        It currently upgrades all formulae but this will soon change to require `--all`.
-        Please update any workflows, documentation and scripts!
       formula_already_installed: "%{name} already installed"
       formula_name_and_version: "%{name} %{version}"
       formula_version_already_installed: "%{name} %{version} already installed"
