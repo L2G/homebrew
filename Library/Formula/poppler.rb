@@ -1,6 +1,7 @@
 require 'formula'
 
 class Poppler < Formula
+  desc "PDF rendering library (based on the xpdf-3.0 code base)"
   homepage 'http://poppler.freedesktop.org'
   url 'http://poppler.freedesktop.org/poppler-0.29.0.tar.xz'
   sha1 'ba3330ab884e6a139ca63dd84d0c1c676f545b5e'
@@ -55,7 +56,6 @@ class Poppler < Formula
       args << "--enable-poppler-qt4"
     elsif build.with? "qt5"
       args << "--enable-poppler-qt5"
-      ENV.append_path "PKG_CONFIG_PATH" , "#{Formula["qt5"].opt_lib}/pkgconfig"
     else
       args << "--disable-poppler-qt4" << "--disable-poppler-qt5"
     end

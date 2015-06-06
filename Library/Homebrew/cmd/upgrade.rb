@@ -5,10 +5,7 @@ module Homebrew
   def upgrade
     Homebrew.perform_preinstall_checks
 
-    if ARGV.include?("--all") || ARGV.named.empty?
-      unless ARGV.include? "--all"
-        opoo t("cmd.upgrade.changing_behaviour_soon")
-      end
+    if ARGV.named.empty?
       outdated = Homebrew.outdated_brews(Formula.installed)
       exit 0 if outdated.empty?
     elsif ARGV.named.any?
@@ -25,11 +22,6 @@ module Homebrew
         end
       end
       exit 1 if outdated.empty?
-    else
-      # This will currently never be reached but is implemented to make the
-      # migration to --all easier in the future (as just the ARGV.named.empty?
-      # will need removed above).
-      odie t("cmd.upgrade.argument_required")
     end
 
     unless upgrade_pinned?

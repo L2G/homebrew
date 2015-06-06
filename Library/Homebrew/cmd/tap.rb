@@ -7,11 +7,13 @@ module Homebrew
     elsif ARGV.first == "--repair"
       migrate_taps :force => true
     else
-      opoo "Already tapped!" unless install_tap(*tap_args)
+      user, repo = tap_args
+      clone_target = ARGV.named[1]
+      opoo "Already tapped!" unless install_tap(user, repo, clone_target)
     end
   end
 
-  def install_tap user, repo
+  def install_tap user, repo, clone_target=nil
     # we special case homebrew so users don't have to shift in a terminal
     repouser = if user == "homebrew" then "Homebrew" else user end
     user = "homebrew" if user == "Homebrew"
@@ -20,7 +22,11 @@ module Homebrew
     tapd = HOMEBREW_LIBRARY/"Taps/#{user.downcase}/homebrew-#{repo.downcase}"
     return false if tapd.directory?
     ohai "Tapping #{repouser}/#{repo}"
-    args = %W[clone https://github.com/#{repouser}/homebrew-#{repo} #{tapd}]
+    if clone_target
+      args = %W[clone #{clone_target} #{tapd}]
+    else
+      args = %W[clone https://github.com/#{repouser}/homebrew-#{repo} #{tapd}]
+    end
     args << "--depth=1" unless ARGV.include?("--full")
     safe_system "git", *args
 
@@ -28,7 +34,7 @@ module Homebrew
     tapd.find_formula { |file| files << file }
     puts t("cmd.tap.tapped_formulae_abv", :count => files.length, :abv => tapd.abv)
 
-    if private_tap?(repouser, repo)
+    if check_private?(clone_target, repouser, repo)
       puts t("cmd.tap.private_repo_tapped",
              :path => tapd,
              :repo => repo,
@@ -72,5 +78,9 @@ module Homebrew
     true
   rescue GitHub::Error
     false
+  end
+
+  def check_private?(clone_target, user, repo)
+    not clone_target && private_tap?(user, repo)
   end
 end
