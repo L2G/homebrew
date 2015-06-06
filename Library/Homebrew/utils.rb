@@ -251,10 +251,13 @@ def quiet_system cmd, *args
 end
 
 def curl *args
-  curl = Pathname.new '/usr/bin/curl'
-  unless curl.exist? and curl.executable?
-    raise t('utils.not_executable', :path => curl)
+  brewed_curl = HOMEBREW_PREFIX/"opt/curl/bin/curl"
+  curl = if MacOS.version <= "10.6" && brewed_curl.exist?
+    brewed_curl
+  else
+    Pathname.new '/usr/bin/curl'
   end
+  raise t('utils.not_executable', :path => curl) unless curl.exist? and curl.executable?
 
   flags = HOMEBREW_CURL_ARGS
   flags = flags.delete("#") if ARGV.verbose?
