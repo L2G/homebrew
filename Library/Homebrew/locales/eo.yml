@@ -57,6 +57,7 @@ eo:
       add_test_do: 
       alias_should_be: 
       ambiguous_conflict: 
+      ambiguous_dependency: 
       audit_problems: 
       audit_problems_formula: 
       audit_problems_list_item: 
@@ -71,11 +72,16 @@ eo:
       comment_cmake_found: 
       comment_remove_default: 
       commented_out_dep: 
+      conflict_with_aliases: 
+      conflict_with_formulae: 
+      conflicts_with_formulae_list: 
       data_without_end: 
       debian_patch_use_https: 
       define_method_in_class_body: 
       dependency_has_no_option: 
       depends_on_takes_classes: 
+      deprecated_symbol: 
+      desc_too_long: 
       devel_older_than_stable: 
       devel_only: 
       dont_need_to_interpolate: 
@@ -88,6 +94,7 @@ eo:
       formula_factory: 
       formula_subclass_deprecated: 
       formulae: 
+      found_non_ascii: 
       git_specify_revision_with_tag: 
       github_patch_macports: 
       github_patch_needs_rev: 
@@ -101,6 +108,7 @@ eo:
       inreplace_block_var: 
       installation_empty: 
       is_now_unnecessary: 
+      list_join: ", "
       macports_patch_use_https: 
       md5_checksums_deprecated: 
       migrate_deprecated_option: 
@@ -115,6 +123,7 @@ eo:
       quoted_dep: 
       redundant_cvs_module: 
       redundant_module_value: 
+      remove_redundant_utf8: 
       replace_with_optional_dep: 
       replace_with_recommended_dep: 
       resource_problem: 
@@ -123,6 +132,7 @@ eo:
       separate_make_calls: 
       sha1_checksums_deprecated: 
       should_be_build_or_run_dependency: 
+      should_have_desc: 
       skip_clean_all_deprecated: 
       specify_cvs_module: 
       ssl3_deprecated: 
@@ -166,9 +176,11 @@ eo:
       use_system_alternative: 
       version_empty_string: 
       version_is_devel: 
+      version_no_digit: 
       version_no_leading_v: 
       version_redundant: 
       version_symbol_deprecated: 
+      version_trailing_underscore_digit: 
       xcodebuild_args: 
       xcodebuild_symroot: 
     bottle:

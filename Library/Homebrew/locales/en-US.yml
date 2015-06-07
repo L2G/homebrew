@@ -129,6 +129,7 @@ en-US:
       add_test_do: A `test do` test block should be added
       alias_should_be: Dependency '%{alias_name}' is an alias; use the canonical name '%{canonical_name}'.
       ambiguous_conflict: Ambiguous conflicting formula %{name}.
+      ambiguous_dependency: Ambiguous dependency %{name}.
       audit_problems: audit problems
       audit_problems_formula: "%{name}:"
       audit_problems_list_item: " * %{item}"
@@ -143,6 +144,9 @@ en-US:
       comment_cmake_found: Commented cmake call found
       comment_remove_default: Please remove default template comments
       commented_out_dep: Commented-out dep %{dep}
+      conflict_with_aliases: Formula name conflicts with existing aliases.
+      conflict_with_formulae: Formula name conflicts with existing formulae.
+      conflicts_with_formulae_list: Formula name conflicts with %{list}
       data_without_end: "'DATA' was found, but no '__END__'"
       debian_patch_use_https: |-
         Patches from Debian should be https://, not http:
@@ -150,6 +154,8 @@ en-US:
       define_method_in_class_body: Define method %{method} in the class body, not at the top-level
       dependency_has_no_option: Dependency %{dependency} does not define option %{option}
       depends_on_takes_classes: "`depends_on` can take requirement classes instead of instances"
+      deprecated_symbol: ':%{name} is deprecated. Usage should be "%{name}"'
+      desc_too_long: 'Description is too long. "name: desc" should be less than 80 characters (currently %{length}).'
       devel_older_than_stable: devel version %{devel} is older than stable version %{stable}
       devel_only: Devel-only (no stable download)
       dont_need_to_interpolate: Don't need to interpolate "%{var}" with %{method}
@@ -165,6 +171,7 @@ en-US:
       formulae:
         one: "%{count} formula"
         other: "%{count} formulae"
+      found_non_ascii: 'Found non-ASCII character: add `# encoding: UTF-8` in the first line'
       git_specify_revision_with_tag: Git should specify :revision when a :tag is specified.
       github_patch_macports: |-
         MacPorts patches should specify a revision instead of trunk:
@@ -185,6 +192,7 @@ en-US:
         is set correctly and expected files are installed.
         The prefix configure/make argument may be case-sensitive.
       is_now_unnecessary: "`%{require_formula}` is now unnecessary"
+      list_join: ", "
       macports_patch_use_https: |-
         Patches from MacPorts Trac should be https://, not http:
         %{url}
@@ -203,6 +211,7 @@ en-US:
       quoted_dep: "'%{dep}'"
       redundant_cvs_module: Redundant CVS module appended to URL
       redundant_module_value: Redundant :module value in URL
+      remove_redundant_utf8: 'Remove the redundant `# encoding: UTF-8`'
       replace_with_optional_dep: Replace %{line} with "depends_on %{dep} => :optional"
       replace_with_recommended_dep: Replace %{line} with "depends_on %{dep} => :recommended"
       resource_problem: "%{name} resource %{resource}: %{problem}"
@@ -215,6 +224,7 @@ en-US:
           depends_on "%{name}" => :build
         Or if it is indeed a runtime denpendency
           depends_on "%{name}" => :run
+      should_have_desc: Formula should have a desc (Description).
       skip_clean_all_deprecated: |
         `skip_clean :all` is deprecated; brew no longer strips symbols
                 Pass explicit paths to prevent Homebrew from removing empty folders.
@@ -268,9 +278,11 @@ en-US:
       use_system_alternative: 'Use `system %{good_system}` instead of `system %{bad_system}` '
       version_empty_string: version is set to an empty string
       version_is_devel: "%{version} is a development release"
+      version_no_digit: "%{name}: version (%{version}) is set to a string without a digit"
       version_no_leading_v: version %{version} should not have a leading 'v'
       version_redundant: version %{version} is redundant with version scanned from URL
       version_symbol_deprecated: '"%{symbol}" is deprecated, use a comparison to MacOS.version instead'
+      version_trailing_underscore_digit: version %{version} should not end with an underline and a number
       xcodebuild_args: use "xcodebuild *args" instead of "system 'xcodebuild', *args"
       xcodebuild_symroot: xcodebuild should be passed an explicit "SYMROOT"
     bottle:

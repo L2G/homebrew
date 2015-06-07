@@ -57,6 +57,7 @@ it:
       add_test_do: "È necessario aggiungere un blocco di test `test do`"
       alias_should_be: La dipendenza '%{alias_name}' è un alias; utilizza il nome canonico '%{canonical_name}'.
       ambiguous_conflict: 
+      ambiguous_dependency: 
       audit_problems: problemi alla verifica
       audit_problems_formula: "%{name}:"
       audit_problems_list_item: "* %{item}"
@@ -71,6 +72,9 @@ it:
       comment_cmake_found: Trovata una chiamata commentata a cmake
       comment_remove_default: Rimuovere i commenti di default del template
       commented_out_dep: Dipendenza commentata %{dep}
+      conflict_with_aliases: 
+      conflict_with_formulae: 
+      conflicts_with_formulae_list: 
       data_without_end: "'DATA' trovato, ma '__END__' è mancante"
       debian_patch_use_https: |-
         Le patch da Debian dovrebbero essere https://, non http:
@@ -78,6 +82,8 @@ it:
       define_method_in_class_body: Definire il metodo %{method} nel corpo della classe, non al top-level
       dependency_has_no_option: 
       depends_on_takes_classes: 
+      deprecated_symbol: 
+      desc_too_long: 
       devel_older_than_stable: 
       devel_only: 
       dont_need_to_interpolate: 
@@ -90,6 +96,7 @@ it:
       formula_factory: 
       formula_subclass_deprecated: 
       formulae: 
+      found_non_ascii: 
       git_specify_revision_with_tag: 
       github_patch_macports: 
       github_patch_needs_rev: 
@@ -103,6 +110,7 @@ it:
       inreplace_block_var: 
       installation_empty: 
       is_now_unnecessary: 
+      list_join: ", "
       macports_patch_use_https: 
       md5_checksums_deprecated: 
       migrate_deprecated_option: 
@@ -117,6 +125,7 @@ it:
       quoted_dep: 
       redundant_cvs_module: 
       redundant_module_value: 
+      remove_redundant_utf8: 
       replace_with_optional_dep: 
       replace_with_recommended_dep: 
       resource_problem: 
@@ -125,6 +134,7 @@ it:
       separate_make_calls: 
       sha1_checksums_deprecated: 
       should_be_build_or_run_dependency: 
+      should_have_desc: 
       skip_clean_all_deprecated: 
       specify_cvs_module: 
       ssl3_deprecated: 
@@ -168,9 +178,11 @@ it:
       use_system_alternative: 
       version_empty_string: 
       version_is_devel: 
+      version_no_digit: 
       version_no_leading_v: 
       version_redundant: 
       version_symbol_deprecated: 
+      version_trailing_underscore_digit: 
       xcodebuild_args: 
       xcodebuild_symroot: 
     bottle:
