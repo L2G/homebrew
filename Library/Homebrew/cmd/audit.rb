@@ -134,11 +134,11 @@ class FormulaAuditor
     end
 
     if text.has_non_ascii_character? and not text.has_encoding_comment?
-      problem "Found non-ASCII character: add `# encoding: UTF-8` in the first line"
+      problem t('cmd.audit.found_non_ascii')
     end
 
     if text.has_encoding_comment? and not text.has_non_ascii_character?
-      problem "Remove the redundant `# encoding: UTF-8`"
+      problem t('cmd.audit.remove_redundant_utf8')
     end
 
     unless text.has_trailing_newline?
@@ -180,12 +180,12 @@ class FormulaAuditor
     full_name = formula.full_name
 
     if @@aliases.include? name
-      problem "Formula name is conflicted with existed aliases."
+      problem t('cmd.audit.conflict_with_aliases')
       return
     end
 
     if !formula.core_formula? && Formula.core_names.include?(name)
-      problem "Formula name is conflicted with existed core formula."
+      problem t('cmd.audit.conflict_with_formulae')
       return
     end
 
@@ -202,7 +202,8 @@ class FormulaAuditor
     same_name_tap_formulae.delete(full_name)
 
     if same_name_tap_formulae.size > 0
-      problem "Formula name is conflicted with #{same_name_tap_formulae.join ", "}"
+      problem t('cmd.audit.conflicts_with_formulae_list',
+                :list => same_name_tap_formulae.join(t('cmd.audit.list_join')))
     end
   end
 
@@ -220,7 +221,7 @@ class FormulaAuditor
           problem t('cmd.audit.cant_find_dependency', :name => dep.name.inspect)
           next
         rescue TapFormulaAmbiguityError
-          problem "Ambiguous dependency #{dep.name.inspect}."
+          problem t('cmd.audit.ambiguous_dependency', :name => dep.name.inspect)
           next
         end
 
@@ -295,14 +296,14 @@ class FormulaAuditor
     desc = formula.desc
 
     unless desc and desc.length > 0
-      problem "Formula should have a desc (Description)."
+      problem t('cmd.audit.should_have_desc')
       return
     end
 
     # Make sure the formula name plus description is no longer than 80 characters
     linelength = formula.full_name.length + ": ".length + desc.length
     if linelength > 80
-      problem "Description is too long. \"name: desc\" should be less than 80 characters (currently #{linelength})."
+      problem t('cmd.audit.desc_too_long', :length => linelength)
     end
 
     if desc =~ %r[[Cc]ommandline]
@@ -413,7 +414,9 @@ class FormulaAuditor
       next unless spec = formula.send(name.downcase)
       version = spec.version
       if version.to_s !~ /\d/
-        problem "#{name}: version (#{version}) is set to a string without a digit"
+        problem t('cmd.audit.version_no_digit',
+                  :name => name,
+                  :version => version)
       end
     end
 
@@ -575,7 +578,7 @@ class FormulaAuditor
     end
 
     if line =~ %r[depends_on :(automake|autoconf|libtool)]
-      problem ":#{$1} is deprecated. Usage should be \"#{$1}\""
+      problem t('cmd.audit.deprecated_symbol', :name => $1)
     end
 
     # Commented-out depends_on
@@ -853,7 +856,8 @@ class ResourceAuditor
     end
 
     if version.to_s =~ /_\d+$/
-      problem "version #{version} should not end with a underline and a number"
+      problem t('cmd.audit.version_trailing_underscore_digit',
+                :version => version)
     end
   end
 
