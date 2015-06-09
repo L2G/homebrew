@@ -59,6 +59,7 @@ end
 class FormulaText
   def initialize path
     @text = path.open("rb", &:read)
+    @lines = @text.lines.to_a
   end
 
   def without_patch
@@ -77,16 +78,13 @@ class FormulaText
     /\Z\n/ =~ @text
   end
 
-  def has_non_ascii_character?
-    /[^\x00-\x7F]/ =~ @text
-  end
-
-  def has_encoding_comment?
-    /^# (en)?coding: utf-8$/i =~ @text
-  end
-
   def =~ regex
     regex =~ @text
+  end
+
+  def line_number regex
+    index = @lines.index { |line| line =~ regex }
+    index ? index + 1 : nil
   end
 end
 
@@ -133,16 +131,39 @@ class FormulaAuditor
       problem t('cmd.audit.end_without_data')
     end
 
-    if text.has_non_ascii_character? and not text.has_encoding_comment?
-      problem t('cmd.audit.found_non_ascii')
-    end
-
-    if text.has_encoding_comment? and not text.has_non_ascii_character?
-      problem t('cmd.audit.remove_redundant_utf8')
-    end
-
     unless text.has_trailing_newline?
       problem t('cmd.audit.needs_ending_newline')
+    end
+
+    return unless @strict
+
+    component_list = [
+      [/^  desc ["'][\S\ ]+["']/,          "desc"          ],
+      [/^  homepage ["'][\S\ ]+["']/,      "homepage"      ],
+      [/^  url ["'][\S\ ]+["']/,           "url"           ],
+      [/^  mirror ["'][\S\ ]+["']/,        "mirror"        ],
+      [/^  version ["'][\S\ ]+["']/,       "version"       ],
+      [/^  (sha1|sha256) ["'][\S\ ]+["']/, "checksum"      ],
+      [/^  head ["'][\S\ ]+["']/,          "head"          ],
+      [/^  stable do/,                     "stable block"  ],
+      [/^  bottle do/,                     "bottle block"  ],
+      [/^  devel do/,                      "devel block"   ],
+      [/^  head do/,                       "head block"    ],
+      [/^  option/,                        "option"        ],
+      [/^  depends_on/,                    "depends_on"    ],
+      [/^  def install/,                   "install method"],
+      [/^  def caveats/,                   "caveats method"],
+      [/^  test do/,                       "test block"    ],
+    ]
+
+    component_list.map do |regex, name|
+      lineno = text.line_number regex
+      next unless lineno
+      [lineno, name]
+    end.compact.each_cons(2) do |c1, c2|
+      unless c1[0] < c2[0]
+        problem "`#{c1[1]}`(line #{c1[0]}) should be put before `#{c2[1]}`(line #{c2[0]})"
+      end
     end
   end
 
