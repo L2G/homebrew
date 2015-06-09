@@ -252,9 +252,9 @@ class Report
   def dump
     # Key Legend: Added (A), Copied (C), Deleted (D), Modified (M), Renamed (R)
 
-    dump_formula_report :A, t('cmd.update.new_formulae')
-    dump_formula_report :M, t('cmd.update.updated_formulae')
-    dump_formula_report :D, t('cmd.update.deleted_formulae')
+    dump_formula_report :A, 'cmd.update.new_formulae'
+    dump_formula_report :M, 'cmd.update.updated_formulae'
+    dump_formula_report :D, 'cmd.update.deleted_formulae'
   end
 
   def select_formula key
@@ -268,10 +268,10 @@ class Report
     end.sort
   end
 
-  def dump_formula_report key, title
+  def dump_formula_report key, title_i18n_key
     formula = select_formula(key)
     unless formula.empty?
-      ohai title
+      ohai t(title_i18n_key, :count => formula.size)
       puts_columns formula
     end
   end

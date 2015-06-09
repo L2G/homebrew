@@ -423,16 +423,22 @@ eo:
       untapping: Forigas la kranon %{name}... (%{abv})
     update:
       already_up_to_date: Jam estas ĝisdata.
-      deleted_formulae: Forprenitaj Formuloj
+      deleted_formulae:
+        one: Forprenita Formulo
+        other: Forprenitaj Formuloj
       homebrew_tap_structure_1: 
       homebrew_tap_structure_2: 
       homebrew_tap_structure_3: 
-      new_formulae: Novaj Formuloj
+      new_formulae:
+        one: Nova Formulo
+        other: Novaj Formuloj
       no_formula_names: |
         Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
         nomojn.  Uzu `brew upgrade <formula>`.
       update_tap_failed: 
-      updated_formulae: "Ĝisdatigitaj Formuloj"
+      updated_formulae:
+        one: "Ĝisdatigita Formulo"
+        other: "Ĝisdatigitaj Formuloj"
       updated_homebrew: "Ĝisdatigis Homebrew-on de %{initial_revision} ĝis %{current_revision}"
     upgrade:
       formula_already_installed: 

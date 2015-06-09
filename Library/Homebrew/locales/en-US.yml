@@ -876,16 +876,22 @@ en-US:
       untapping: Untapping %{name}... (%{abv})
     update:
       already_up_to_date: Already up-to-date.
-      deleted_formulae: Deleted Formulae
+      deleted_formulae:
+        one: Deleted Formula
+        other: Deleted Formulae
       homebrew_tap_structure_1: Homebrew changed the structure of Taps like <someuser>/<sometap>. %{cont}
       homebrew_tap_structure_2: So you may need to rename %{tap_path} manually.
       homebrew_tap_structure_3: "%{tap_name} is incorrect name format. You may need to rename it like <someuser>/<sometap> manually."
-      new_formulae: New Formulae
+      new_formulae:
+        one: New Formula
+        other: New Formulae
       no_formula_names: |
         This command updates brew itself, and does not take formula names.
         Use `brew upgrade <formula>`.
       update_tap_failed: 'Failed to update tap: %{github_user}/%{repo_name}'
-      updated_formulae: Updated Formulae
+      updated_formulae:
+        one: Updated Formula
+        other: Updated Formulae
       updated_homebrew: Updated Homebrew from %{initial_revision} to %{current_revision}
     upgrade:
       formula_already_installed: "%{name} already installed"
