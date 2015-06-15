@@ -144,7 +144,7 @@ en:
       comment_remove_default: Please remove default template comments
       commented_out_dep: Commented-out dep %{dep}
       conflict_with_aliases: Formula name conflicts with existing aliases.
-      conflict_with_formulae: Formula name conflicts with existing formulae.
+      conflict_with_formulae: Formula name conflicts with existing core formula.
       conflicts_with_formulae_list: Formula name conflicts with %{list}
       data_without_end: "'DATA' was found, but no '__END__'"
       debian_patch_use_https: |-
