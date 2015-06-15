@@ -887,7 +887,7 @@ en:
       no_formula_names: |-
         This command updates brew itself, and does not take formula names.
         Use `brew upgrade <formula>`.
-      update_tap_failed: 'Failed to update tap: %{github_user}/%{repo_name}'
+      update_tap_failed: 'Failed to update tap: %{tap}'
       updated_formulae:
         one: Updated Formula
         other: Updated Formulae

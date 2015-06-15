@@ -503,6 +503,17 @@ class FormulaAuditor
     if text =~ /Formula\.factory\(/
       problem t('cmd.audit.formula_factory')
     end
+
+    if text =~ /system "npm", "install"/ && text !~ %r[opt_libexec}/npm/bin]
+      need_npm = "\#{Formula[\"node\"].opt_libexec\}/npm/bin"
+      problem <<-EOS.undent
+       Please add ENV.prepend_path \"PATH\", \"#{need_npm}"\ to def install
+      EOS
+    end
+
+    if text =~ /system "npm", "install"/ && text !~ /"HOME"/
+      problem "Please add ENV[\"HOME\"] = buildpath/\".brew_home\" to def install"
+    end
   end
 
   def audit_line(line, lineno)
@@ -972,6 +983,11 @@ class ResourceAuditor
       problem t("cmd.audit.homepage_gnu_ftpmirror", :url => url)
     end
 
+    # GNU's ftpmirror does NOT support SSL/TLS.
+    if url =~ %r[^https://ftpmirror\.gnu\.org/]
+      problem "Please use http:// for #{url}"
+    end
+
     if mirrors.include?(url)
       problem t("cmd.audit.url_duped_mirror", :url => url)
     end
@@ -981,9 +997,6 @@ class ResourceAuditor
     # Check a variety of SSL/TLS URLs that don't consistently auto-redirect
     # or are overly common errors that need to be reduced & fixed over time.
     urls.each do |p|
-      # Skip the main url link, as it can't be made SSL/TLS yet.
-      next if p =~ %r[/ftpmirror\.gnu\.org]
-
       case p
       when %r[^http://ftp\.gnu\.org/],
            %r[^http://[^/]*\.apache\.org/],

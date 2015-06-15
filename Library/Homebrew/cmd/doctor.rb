@@ -653,40 +653,27 @@ def check_for_autoconf
 end
 
 def __check_linked_brew f
-  links_found = []
-
   prefix = f.prefix
 
   prefix.find do |src|
     next if src == prefix
     dst = HOMEBREW_PREFIX + src.relative_path_from(prefix)
-
-    next if !dst.symlink? || !dst.exist? || src != dst.resolved_path
-
-    if src.directory?
-      Find.prune
-    else
-      links_found << dst
-    end
+    return true if dst.symlink? && src == dst.resolved_path
   end
 
-  return links_found
+  false
 end
 
 def check_for_linked_keg_only_brews
   return unless HOMEBREW_CELLAR.exist?
 
-  warnings = Hash.new
+  linked = Formula.select { |f|
+    f.keg_only? && f.installed? && __check_linked_brew(f)
+  }
 
-  Formula.each do |f|
-    next unless f.keg_only? and f.installed?
-    links = __check_linked_brew f
-    warnings[f.full_name] = links unless links.empty?
-  end
-
-  unless warnings.empty?
+  unless linked.empty?
     s = t('cmd.doctor.keg_only_formula_linked')
-    warnings.each_key { |f| s << "    #{f}\n" }
+    linked.each { |f| s << "    #{f.full_name}\n" }
     s
   end
 end
@@ -724,12 +711,6 @@ def check_git_status
     unless `git status --untracked-files=all --porcelain -- Library/Homebrew/ 2>/dev/null`.chomp.empty?
       t('cmd.doctor.uncommitted_mods', :path => HOMEBREW_LIBRARY)
     end
-  end
-end
-
-def check_git_ssl_verify
-  if MacOS.version <= :leopard && !ENV['GIT_SSL_NO_VERIFY']
-    t('cmd.doctor.osx_libcurl_outdated', :macos_version => MacOS.version)
   end
 end
 

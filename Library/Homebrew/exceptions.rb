@@ -105,6 +105,18 @@ class TapFormulaAmbiguityError < RuntimeError
   end
 end
 
+class TapUnavailableError < RuntimeError
+  attr_reader :name
+
+  def initialize name
+    @name = name
+
+    super <<-EOS.undent
+      No available tap #{name}.
+    EOS
+  end
+end
+
 class OperationInProgressError < RuntimeError
   def initialize name
     super t("exceptions.operation_in_progress_error", :name => name)
