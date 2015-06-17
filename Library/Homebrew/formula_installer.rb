@@ -641,8 +641,8 @@ class FormulaInstaller
       return if Homebrew::Hooks::Bottles.pour_formula_bottle(formula)
     end
 
-    if formula.local_bottle_path
-      downloader = LocalBottleDownloadStrategy.new(formula)
+    if (bottle_path = formula.local_bottle_path)
+      downloader = LocalBottleDownloadStrategy.new(bottle_path)
     else
       downloader = formula.bottle
       downloader.verify_download_integrity(downloader.fetch)
@@ -705,23 +705,5 @@ class FormulaInstaller
       @@locked.clear
       @hold_locks = false
     end
-  end
-end
-
-
-class Formula
-  def keg_only_text
-    s = t('formula_installer.keg_only_1', :path => HOMEBREW_PREFIX)
-    s << "\n\n#{keg_only_reason.to_s}"
-    if lib.directory? or include.directory?
-      s << t('formula_installer.keg_only_2')
-      if lib.directory?
-        s << t('formula_installer.keg_only_ldflags', :path => opt_lib)
-      end
-      if include.directory?
-        s << t('formula_installer.keg_only_cppflags', :path => opt_include)
-      end
-    end
-    s << "\n"
   end
 end

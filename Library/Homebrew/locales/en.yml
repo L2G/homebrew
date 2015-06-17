@@ -767,7 +767,7 @@ en:
         Changes will be lost!
         The first time you `brew update', all local changes will be lost, you should
         thus `brew update' before you `brew edit'!
-    help: |-
+    help: |
       Example usage:
         brew [info | home | options ] [FORMULA...]
         brew install FORMULA...
@@ -786,7 +786,7 @@ en:
       Brewing:
         brew create [URL [--no-fetch]]
         brew edit [FORMULA...]
-        open https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
+        https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
 
       Further help:
         man brew

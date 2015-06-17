@@ -3,13 +3,7 @@ class Goffice < Formula
   homepage "https://developer.gnome.org/goffice/"
   url "https://download.gnome.org/sources/goffice/0.10/goffice-0.10.22.tar.xz"
   sha256 "0206a87a323b52a874dc54491374245f9e1c5f62e93a2ce4a02fb444a26b0e28"
-
-  bottle do
-    revision 2
-    sha256 "8c94537b1917665098cc5b9ed4947fb54e8bec93d053bcc424c59c6b4b118c4a" => :yosemite
-    sha256 "9b4c25cda4b2b61038ab9b7c0fbab9ed7931e77be6e46148ca73479ae66b2fec" => :mavericks
-    sha256 "13958f27c96a72a9cf9e366cf29cdc070d65b6c2a2955f99db6dadfede7646c9" => :mountain_lion
-  end
+  revision 1
 
   # Fixes a crash with quad precision math when building using clang
   # Will be included in the next release; patch from upstream commit.
@@ -39,7 +33,6 @@ class Goffice < Formula
   depends_on "librsvg"
   depends_on "pango"
   depends_on "pcre"
-  depends_on :x11
 
   def install
     args = %W[--disable-dependency-tracking --prefix=#{prefix}]

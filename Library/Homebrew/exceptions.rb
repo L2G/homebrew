@@ -242,6 +242,11 @@ class BuildError < RuntimeError
                :url => i['html_url'])
       end
     end
+
+    if MacOS.version >= "10.11"
+      require "cmd/doctor"
+      opoo Checks.new.check_for_unsupported_osx
+    end
   end
 end
 

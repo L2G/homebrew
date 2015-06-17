@@ -4,17 +4,18 @@ class Fontforge < Formula
   url "https://github.com/fontforge/fontforge/archive/20150430.tar.gz"
   sha256 "430c6d02611c7ca948df743e9241994efe37eda25f81a94aeadd9b6dd286ff37"
   head "https://github.com/fontforge/fontforge.git"
+  revision 1
 
   bottle do
-    sha256 "db55b0a73b4851077da8dfd48c39675f05eaf437323acccf56602779b21cf414" => :yosemite
-    sha256 "dd876ff9dc19e6a1dba1a83cc1d9c106813a08f98675543359d99b14b2691510" => :mavericks
-    sha256 "bf152c19b04f3ad0ba87e179dfe0bba44c9c770def473698603d9a831f9b3ef0" => :mountain_lion
+    revision 1
+    sha256 "f8ad785c9a6e150d531571d572ccceb7e2a04073949c6c3508f91a9510b080f1" => :yosemite
+    sha256 "7542f92ad89962181c0b1df6cfdf966d781274f86c797b940457c1b93d845b66" => :mavericks
+    sha256 "bfc3c9062cbc8defca80a9660682f86df28541a349b064f7894648ae626ae1d5" => :mountain_lion
   end
 
   option "with-giflib", "Build with GIF support"
   option "with-extra-tools", "Build with additional font tools"
 
-  deprecated_option "with-x" => "with-x11"
   deprecated_option "with-gif" => "with-giflib"
 
   # Autotools are required to build from source in all releases.
@@ -32,7 +33,6 @@ class Fontforge < Formula
   depends_on "libtiff" => :recommended
   depends_on "giflib" => :optional
   depends_on "libspiro" => :optional
-  depends_on :x11 => :optional
   depends_on :python if MacOS.version <= :snow_leopard
 
   # This may be causing font-display glitches and needs further isolation & fixing.
@@ -47,9 +47,9 @@ class Fontforge < Formula
 
   def install
     if MacOS.version <= :snow_leopard || !build.bottle?
-      pydir = "#{%x(python-config --prefix).chomp}"
+      pydir = `python-config --prefix`.chomp
     else
-      pydir = "#{%x(/usr/bin/python-config --prefix).chomp}"
+      pydir = `/usr/bin/python-config --prefix`.chomp
     end
 
     args = %W[
@@ -57,13 +57,8 @@ class Fontforge < Formula
       --disable-silent-rules
       --disable-dependency-tracking
       --with-pythonbinary=#{pydir}/bin/python2.7
+      --without-x
     ]
-
-    if build.with? "x11"
-      args << "--with-x"
-    else
-      args << "--without-x"
-    end
 
     args << "--without-libpng" if build.without? "libpng"
     args << "--without-libjpeg" if build.without? "jpeg"
@@ -94,9 +89,6 @@ class Fontforge < Formula
         bin.install Dir["*"].select { |f| File.executable? f }
       end
     end
-
-    # The name is case-sensitive. Don't downcase it when linking.
-    ln_s "#{share}/fontforge/osx/FontForge.app", prefix if build.with? "x11"
   end
 
   test do

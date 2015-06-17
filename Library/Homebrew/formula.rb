@@ -616,7 +616,7 @@ class Formula
   def python(options={}, &block)
     opoo t("formula.python_method_deprecated")
     block.call if block_given?
-    PythonDependency.new
+    PythonRequirement.new
   end
   alias_method :python2, :python
   alias_method :python3, :python

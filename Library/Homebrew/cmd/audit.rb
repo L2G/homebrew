@@ -174,17 +174,17 @@ class FormulaAuditor
       end
     end
 
-    if formula.class < GithubGistFormula
+    if Object.const_defined?("GithubGistFormula") && formula.class < GithubGistFormula
       problem t('cmd.audit.formula_subclass_deprecated',
                 :subclass => 'GithubGistFormula')
     end
 
-    if formula.class < ScriptFileFormula
+    if Object.const_defined?("ScriptFileFormula") && formula.class < ScriptFileFormula
       problem t('cmd.audit.formula_subclass_deprecated',
                 :subclass => 'ScriptFileFormula')
     end
 
-    if formula.class < AmazonWebServicesFormula
+    if Object.const_defined?("AmazonWebServicesFormula") && formula.class < AmazonWebServicesFormula
       problem t('cmd.audit.formula_subclass_deprecated',
                 :subclass => 'AmazonWebServicesFormula')
     end
@@ -723,11 +723,11 @@ class FormulaAuditor
       problem t('cmd.audit.define_method_in_class_body', :method => $1.inspect)
     end
 
-    if line =~ /ENV.fortran/ && !formula.requirements.map(&:class).include?(FortranDependency)
+    if line =~ /ENV.fortran/ && !formula.requirements.map(&:class).include?(FortranRequirement)
       problem t('cmd.audit.use_depends_on_fortran')
     end
 
-    if line =~ /JAVA_HOME/i && !formula.requirements.map(&:class).include?(JavaDependency)
+    if line =~ /JAVA_HOME/i && !formula.requirements.map(&:class).include?(JavaRequirement)
       problem t('cmd.audit.use_depends_on_java_to_set_java_home')
     end
 
