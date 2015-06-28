@@ -66,7 +66,7 @@ def opoo warning
   $stderr.puts t('utils.message_w_intro_colored',
                  :intro => t('utils.warning'),
                  :message => warning,
-                 :intro_color => Tty.red,
+                 :intro_color => Tty.yellow,
                  :reset_color => Tty.reset)
 end
 

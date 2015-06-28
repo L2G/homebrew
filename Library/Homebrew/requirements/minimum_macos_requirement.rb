@@ -8,7 +8,7 @@ class MinimumMacOSRequirement < Requirement
     super
   end
 
-  satisfy { MacOS.version >= @version }
+  satisfy(:build_env => false) { MacOS.version >= @version }
 
   def message
     t("requirements.minimum_macos_requirement",

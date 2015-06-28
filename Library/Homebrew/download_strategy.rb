@@ -275,16 +275,17 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
   def fetch
     ohai t('download_strategy.downloading', :url => @url)
 
-    urls = actual_urls
-    unless urls.empty?
-      ohai "Downloading from: #{urls.last}"
-      if !ENV["HOMEBREW_NO_INSECURE_REDIRECT"].nil? && @url.start_with?("https://") &&
-        urls.any? { |u| !u.start_with? "https://" }
-        raise "HTTPS to HTTP redirect detected & HOMEBREW_NO_INSECURE_REDIRECT is set."
-      end
-    end
-
     unless cached_location.exist?
+      urls = actual_urls
+      unless urls.empty?
+        ohai "Downloading from #{urls.last}"
+        if !ENV["HOMEBREW_NO_INSECURE_REDIRECT"].nil? && @url.start_with?("https://") &&
+          urls.any? { |u| !u.start_with? "https://" }
+          raise "HTTPS to HTTP redirect detected & HOMEBREW_NO_INSECURE_REDIRECT is set."
+        end
+        @url = urls.last
+      end
+
       had_incomplete_download = temporary_path.exist?
       begin
         _fetch

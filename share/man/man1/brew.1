@@ -224,10 +224,10 @@ To install a newer version of HEAD use \fBbrew rm <foo> && brew install \-\-HEAD
 If \fB\-\-git\fR is passed, Homebrew will create a Git repository, useful for creating patches to the software\.
 .
 .IP "\(bu" 4
-\fBirb [\-\-example]\fR: Enter the interactive Homebrew Ruby shell\.
+\fBirb [\-\-examples]\fR: Enter the interactive Homebrew Ruby shell\.
 .
 .IP
-If \fB\-\-example\fR is passed, several examples will be shown\.
+If \fB\-\-examples\fR is passed, several examples will be shown\.
 .
 .IP "\(bu" 4
 \fBleaves\fR: Show installed formulae that are not dependencies of another installed formula\.
@@ -254,13 +254,13 @@ If no \fIformulae\fR are provided, all of them will have their \.apps symlinked\
 If provided, \fB\-\-local\fR will move them into the user\'s \fB~/Applications\fR directory instead of the system directory\. It may need to be created, first\.
 .
 .IP "\(bu" 4
-\fBls, list [\-\-unbrewed] [\-\-versions [\-\-multiple]] [\-\-pinned]\fR [\fIformulae\fR]: Without any arguments, list all installed formulae\.
+\fBls, list [\-\-full\-name]\fR List all installed formulae\. If \fB\-\-full\-name\fR is passed, print formulae with full\-qualified names\.
 .
-.IP
-If \fIformulae\fR are given, list the installed files for \fIformulae\fR\. Combined with \fB\-\-verbose\fR, recursively list the contents of all subdirectories in each \fIformula\fR\'s keg\.
+.IP "\(bu" 4
+\fBls, list \-\-unbrewed\fR List all files in the Homebrew prefix not installed by Homebrew\.
 .
-.IP
-If \fB\-\-unbrewed\fR is passed, list all files in the Homebrew prefix not installed by Homebrew\.
+.IP "\(bu" 4
+\fBls, list [\-\-versions [\-\-multiple]] [\-\-pinned]\fR [\fIformulae\fR]: List the installed files for \fIformulae\fR\. Combined with \fB\-\-verbose\fR, recursively list the contents of all subdirectories in each \fIformula\fR\'s keg\.
 .
 .IP
 If \fB\-\-versions\fR is passed, show the version number for installed formulae, or only the specified formulae if \fIformulae\fR are given\. With \fB\-\-multiple\fR, only show formulae with multiple versions installed\.
@@ -290,7 +290,7 @@ If \fB\-\-all\fR is passed, show options for all formulae\.
 If \fB\-\-installed\fR is passed, show options for all installed formulae\.
 .
 .IP "\(bu" 4
-\fBoutdated [\-\-quiet|\-\-verbose]\fR: Show formulae that have an updated version available\.
+\fBoutdated [\-\-quiet | \-\-verbose | \-\-json=v1 ]\fR: Show formulae that have an updated version available\.
 .
 .IP
 By default, version information is displayed in interactive shells, and suppressed otherwise\.
@@ -300,6 +300,9 @@ If \fB\-\-quiet\fR is passed, list only the names of outdated brews (takes prece
 .
 .IP
 If \fB\-\-verbose\fR is passed, display detailed version information\.
+.
+.IP
+If \fB\-\-json=<version>\fR is passed, the output will be in JSON format\. The only valid version is \fBv1\fR\.
 .
 .IP "\(bu" 4
 \fBpin\fR \fIformulae\fR: Pin the specified \fIformulae\fR, preventing them from being upgraded when issuing the \fBbrew upgrade \-\-all\fR command\. See also \fBunpin\fR\.
