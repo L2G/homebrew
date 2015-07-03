@@ -201,10 +201,7 @@ module SharedEnvExtension
     end
 
     unless gcc_formula.opt_prefix.exist?
-      raise <<-EOS.undent
-      The requested Homebrew GCC was not installed. You must:
-        brew install #{gcc_formula.full_name}
-      EOS
+      raise t('extend.env.gcc_not_installed', :name => gcc_formula.full_name)
     end
   end
 

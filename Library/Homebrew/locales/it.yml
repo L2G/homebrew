@@ -38,6 +38,10 @@ it:
   caveats:
     app: 
     bash_completion: 
+    keg_only_1: 
+    keg_only_2: 
+    keg_only_cppflags: 
+    keg_only_ldflags: 
     plist_load: 
     plist_login: 
     plist_manual: 
@@ -96,7 +100,6 @@ it:
       formula_factory: 
       formula_subclass_deprecated: 
       formulae: 
-      found_non_ascii: 
       git_specify_revision_with_tag: 
       github_patch_macports: 
       github_patch_needs_rev: 
@@ -125,7 +128,6 @@ it:
       quoted_dep: 
       redundant_cvs_module: 
       redundant_module_value: 
-      remove_redundant_utf8: 
       replace_with_optional_dep: 
       replace_with_recommended_dep: 
       resource_problem: 
@@ -285,7 +287,6 @@ it:
       osx_gcc_installer_advice: 
       osx_gcc_installer_advice_lion: 
       osx_gcc_installer_advice_mavericks: 
-      osx_libcurl_outdated: 
       other_framework_detected: 
       pydistutils_cfg_in_home: 
       python_bad_symlink: 
@@ -408,7 +409,6 @@ it:
       still_installed: 
       uninstalling: 
     untap:
-      error_no_such_tap: 
       error_usage: 
       untapped_formulae: 
       untapping: 
@@ -504,7 +504,6 @@ it:
       cxx11_not_supported: 
       gcc_formula_not_found: 
       gcc_not_installed: 
-      gcc_not_installed_brew: 
       gfortran_homebrew: 
       gfortran_other: 
       invalid_value: 
@@ -566,10 +565,6 @@ it:
     installing_dep_for: 
     installing_deps_for: 
     keg_already_linked: 
-    keg_only_1: 
-    keg_only_2: 
-    keg_only_cppflags: 
-    keg_only_ldflags: 
     must_link_deps: 
     nothing_installed_to: 
     postinstall_fail_1: 

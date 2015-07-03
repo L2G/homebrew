@@ -98,6 +98,15 @@ en-US:
     bash_completion: |
       Bash completion has been installed to:
         %{path}
+    keg_only_1: This formula is keg-only, which means it was not symlinked into %{path}.
+    keg_only_2: |
+      Generally there are no consequences of this for you. If you build your
+      own software and it requires this formula, you'll need to add to your
+      build variables:
+    keg_only_cppflags: |2
+          CPPFLAGS: -I%{path}
+    keg_only_ldflags: |2
+          LDFLAGS:  -L%{path}
     plist_load: 'To load %{name}:'
     plist_login: 'To have launchd start %{name} at login:'
     plist_manual: 'Or, if you don''t want/need launchctl, you can just run:'
@@ -171,7 +180,6 @@ en-US:
       formulae:
         one: "%{count} formula"
         other: "%{count} formulae"
-      found_non_ascii: 'Found non-ASCII character: add `# encoding: UTF-8` in the first line'
       git_specify_revision_with_tag: Git should specify :revision when a :tag is specified.
       github_patch_macports: |-
         MacPorts patches should specify a revision instead of trunk:
@@ -211,7 +219,6 @@ en-US:
       quoted_dep: "'%{dep}'"
       redundant_cvs_module: Redundant CVS module appended to URL
       redundant_module_value: Redundant :module value in URL
-      remove_redundant_utf8: 'Remove the redundant `# encoding: UTF-8`'
       replace_with_optional_dep: Replace %{line} with "depends_on %{dep} => :optional"
       replace_with_recommended_dep: Replace %{line} with "depends_on %{dep} => :recommended"
       resource_problem: "%{name} resource %{resource}: %{problem}"
@@ -266,7 +273,7 @@ en-US:
       use_if_build_without: Use if build.without?%{option} instead of unless build.with?%{option}
       use_macos_version: Use MacOS.version instead of MACOS_VERSION
       use_mpi_dependency: |
-        There are multiple conflicting ways to install MPI. Use an MPIDependency:
+        There are multiple conflicting ways to install MPI. Use an MPIRequirement:
           depends_on :mpi => [<lang list>]
         Where <lang list> is a comma delimited list that can include:
           :cc, :cxx, :f77, :f90
@@ -541,18 +548,6 @@ en-US:
         Please install the CLT or Xcode %{latest_xcode}.
       osx_gcc_installer_advice_mavericks: |
         Please run `xcode-select --install` to install the CLT.
-      osx_libcurl_outdated: |
-        The version of libcurl provided with Mac OS X %{macos_version} has outdated
-        SSL certificates.
-
-        This can cause problems when running Homebrew commands that use Git to
-        fetch over HTTPS, e.g. `brew update` or installing formulae that perform
-        Git checkouts.
-
-        You can force Git to ignore these errors:
-          export GIT_SSL_NO_VERIFY=1
-        or
-          git config --global http.sslVerify false
       other_framework_detected: |
         %{framework} detected
         This can be picked up by CMake's build system and likely cause the build to
@@ -868,7 +863,6 @@ en-US:
         other: "%{name} %{versions} are still installed."
       uninstalling: Uninstalling %{name}... (%{abv})
     untap:
-      error_no_such_tap: No such tap!
       error_usage: Usage is `brew untap <tap-name>`
       untapped_formulae:
         one: Untapped %{count} formula
@@ -927,9 +921,9 @@ en-US:
     removing_invalid_repo: Removing invalid repository from cache
     trying_full_download: Trying a full download
     trying_mirror: Trying a mirror...
-    unexpected_revision: |
+    unexpected_revision: |-
       %{ref} tag should be %{expected}
-      but is actually %{actual}!
+      but is actually %{actual}
     unknown_download_strategy: Unknown download strategy %{name} was requested.
     unknown_download_strategy_spec: Unknown download strategy specification %{name}
     updating: Updating %{path}
@@ -1019,14 +1013,8 @@ en-US:
         Homebrew GCC requested, but formula %{name} not found!
         You may need to: brew tap homebrew/versions
       gcc_not_installed: |
-        The requested Homebrew GCC, %{name}, was not installed.
-        You must:
-          brew tap homebrew/versions
+        The requested Homebrew GCC was not installed. You must:
           brew install %{name}
-      gcc_not_installed_brew: |
-        The Homebrew GCC was not installed.
-        You must:
-          brew install gcc
       gfortran_homebrew: Using Homebrew-provided fortran compiler.
       gfortran_other: Using a Fortran compiler found at %{path}.
       invalid_value: 'Invalid value for %{source}: %{other}'
@@ -1140,17 +1128,6 @@ en-US:
     installing_dep_for: 'Installing %{name} dependency: %{dep_in_green}'
     installing_deps_for: 'Installing dependencies for %{name}: %{deps_in_green}'
     keg_already_linked: This keg was marked linked already, continuing anyway
-    keg_only_1: This formula is keg-only, which means it was not symlinked into %{path}.
-    keg_only_2: |2
-
-
-      Generally there are no consequences of this for you. If you build your
-      own software and it requires this formula, you'll need to add to your
-      build variables:
-    keg_only_cppflags: |2
-          CPPFLAGS: -I%{path}
-    keg_only_ldflags: |2
-          LDFLAGS:  -L%{path}
     must_link_deps: You must `brew link %{deps}' before %{name} can be installed
     nothing_installed_to: Nothing was installed to %{path}
     postinstall_fail_1: The post-install step did not complete successfully
