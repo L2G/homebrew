@@ -407,8 +407,8 @@ module GitHub extend self
     def pretty_ratelimit_reset(reset)
       if (seconds = Time.at(reset) - Time.now) > 60
         t('utils.rate_limit_time_m_s',
-          :n_minutes => t('utils.minutes', :count => seconds / 60),
-          :n_seconds => t('utils.seconds', :count => seconds % 60))
+          :n_minutes => t('utils.minutes', :count => seconds.to_i / 60),
+          :n_seconds => t('utils.seconds', :count => seconds.to_i % 60))
       else
         t('utils.seconds', :count => seconds)
       end
