@@ -1,4 +1,5 @@
 require 'hardware'
+require "software_spec"
 
 module Homebrew
   def config
@@ -165,6 +166,8 @@ module Homebrew
     f.puts t('cmd.config.item_last_commit', :value => last_commit)
     f.puts t('cmd.config.item_homebrew_prefix', :value => HOMEBREW_PREFIX)
     f.puts t('cmd.config.item_homebrew_cellar', :value => HOMEBREW_CELLAR)
+    f.puts t('cmd.config.item_homebrew_bottle_domain',
+             :value => BottleSpecification::DEFAULT_DOMAIN)
     f.puts hardware
     f.puts t('cmd.config.item_os_x',
              :version => MACOS_FULL_VERSION,

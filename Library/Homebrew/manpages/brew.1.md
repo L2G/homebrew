@@ -38,7 +38,7 @@ Note that these flags should only appear after a command.
 
 ## COMMANDS
 
-  * `audit` [--strict] [<formulae>]:
+  * `audit` [--strict] [--online] [<formulae>]:
     Check <formulae> for Homebrew coding style violations. This should be
     run before submitting a new formula.
 
@@ -46,6 +46,9 @@ Note that these flags should only appear after a command.
 
     If `--strict` is passed, additional checks are run. This should be used
     when creating for new formulae.
+
+    If `--online` is passed, additional slower checks that require a network
+    connection are run. This should be used when creating for new formulae.
 
     `audit` exits with a non-zero status if any errors are found. This is useful,
     for instance, for implementing pre-commit hooks.
@@ -68,6 +71,9 @@ Note that these flags should only appear after a command.
     If `-s` is passed, scrubs the cache, removing downloads for even the latest
     versions of formula. Note downloads for any installed formula will still not be
     deleted. If you want to delete those too: `rm -rf $(brew --cache)`
+
+  * `command` <cmd>:
+    Display the path to the file which is used when invoking `brew <cmd>`.
 
   * `commands`:
     Show a list of built-in and external commands.
@@ -181,7 +187,7 @@ Note that these flags should only appear after a command.
     See the docs for examples of using the JSON:
     <https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Querying-Brew.md>
 
-  * `install [--debug] [--env=<std|super>] [--ignore-dependencies] [--only-dependencies] [--cc=<compiler>] [--build-from-source] [--devel|--HEAD]` <formula>:
+  * `install [--debug] [--env=<std|super>] [--ignore-dependencies] [--only-dependencies] [--cc=<compiler>] [--build-from-source|--force-bottle] [--devel|--HEAD]` <formula>:
     Install <formula>.
 
     <formula> is usually the name of the formula to install, but it can be specified
@@ -209,6 +215,9 @@ Note that these flags should only appear after a command.
 
     If `--build-from-source` is passed, compile from source even if a bottle
     is provided for <formula>.
+
+    If `--force-bottle` is passed, install from a bottle if it exists
+    for the current version of OS X, even if custom options are given.
 
     If `--devel` is passed, and <formula> defines it, install the development version.
 
@@ -537,7 +546,10 @@ can take several different forms:
 
     Set this to force Homebrew to use a particular git binary.
 
-  * HOMEBREW_BROWSER:
+  * HOMEBREW\_BOTTLE\_DOMAIN:
+    If set, instructs Homebrew to use the given URL as a download mirror for bottles.
+
+  * HOMEBREW\_BROWSER:
     If set, uses this setting as the browser when opening project homepages,
     instead of the OS default browser.
 
@@ -664,7 +676,7 @@ Homebrew Documentation: <https://github.com/Homebrew/homebrew/blob/master/share/
 
 ## AUTHORS
 
-Homebrew's current maintainers are Misty De Meo, Adam Vandenberg, Jack Nagel, Mike McQuaid, Brett Koonce and Tim Smith.
+Homebrew's current maintainers are Misty De Meo, Adam Vandenberg, Mike McQuaid, Brett Koonce and Tim Smith.
 
 Homebrew was originally created by Max Howell.
 
