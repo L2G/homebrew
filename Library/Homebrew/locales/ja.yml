@@ -217,6 +217,7 @@ ja:
       item_gcc_42: GCC-4.2：%{value}
       item_hardware: 
       item_head: HEAD：%{value}
+      item_homebrew_bottle_domain: 
       item_homebrew_cellar: HOMEBREW_CELLAR：%{value}
       item_homebrew_prefix: HOMEBREW_PREFIX：%{value}
       item_homebrew_version: HOMEBREW_VERSION：%{value}

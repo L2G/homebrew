@@ -219,6 +219,7 @@ it:
       item_gcc_42: 
       item_hardware: 
       item_head: 
+      item_homebrew_bottle_domain: 
       item_homebrew_cellar: 
       item_homebrew_prefix: 
       item_homebrew_version: 
