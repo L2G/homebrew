@@ -1,15 +1,16 @@
-require "formula"
-
 class Bind < Formula
   desc "Implementation of the DNS protocols"
   homepage "https://www.isc.org/downloads/bind/"
-  url "http://ftp.isc.org/isc/bind9/9.10.2/bind-9.10.2.tar.gz"
-  sha1 "4ddb2670976c06af7e86352616383958d82c51ce"
+  url "https://ftp.isc.org/isc/bind9/9.10.2-P2/bind-9.10.2-P2.tar.gz"
+  mirror "https://fossies.org/linux/misc/dns/bind9/9.10.2-P2/bind-9.10.2-P2.tar.gz"
+  version "9.10.2-P2"
+  sha256 "b1e6f0af88634aaf48fb9d06bbf82968264f49b8e2685f061dd3fd4c1ab76c5f"
+  revision 1
 
   bottle do
-    sha1 "901a4706d23607927fadb78d5495d49f715fdde4" => :yosemite
-    sha1 "ce2cfdc2ebaab7cccc001f9fdefd2d55d6b9fa11" => :mavericks
-    sha1 "b9f513f74bb0ec23af29057fc0eb1e2c410c9769" => :mountain_lion
+    sha256 "2343d20b86ee413b471fa0ec7a47fadf7fb3894ad5cc011829ed10e7ae97efb4" => :yosemite
+    sha256 "f3513b869f6711f0723a637dfdaba8f918c7b9dac852b51ee2e843748a4b15df" => :mavericks
+    sha256 "58626ffa8d02ab626e183c79aef5a7c324071b3a6372e41e2c8e3471c5dc3c9b" => :mountain_lion
   end
 
   head "https://source.isc.org/git/bind9.git"

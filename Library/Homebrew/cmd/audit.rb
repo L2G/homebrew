@@ -355,7 +355,9 @@ class FormulaAuditor
     # Make sure the formula name plus description is no longer than 80 characters
     linelength = formula.full_name.length + ": ".length + desc.length
     if linelength > 80
-      problem t('cmd.audit.desc_too_long', :length => linelength)
+      problem t('cmd.audit.desc_too_long',
+                :length => linelength,
+                :full_name => formula.full_name)
     end
 
     if desc =~ %r[[Cc]ommandline]
@@ -429,6 +431,13 @@ class FormulaAuditor
          %r[^http://www\.gnu\.org/],
          %r[^http://code\.google\.com/]
       problem t("cmd.audit.homepage_please_use_https", :url => homepage)
+    end
+
+    return unless @online
+    begin
+      nostdout { curl "--connect-timeout", "15", "-IL", "-o", "/dev/null", homepage }
+    rescue ErrorDuringExecution
+      problem "The homepage is not reachable (curl exit code #{$?.exitstatus})"
     end
   end
 
@@ -809,6 +818,10 @@ class FormulaAuditor
       problem t('cmd.audit.use_ruby_method_instead_of_system',
                 :method => method,
                 :shell_cmd => system)
+    end
+
+    if line =~ /assert .*\.include?/
+      problem "Use `assert_match` instead of `assert ...include?`"
     end
 
     if @strict

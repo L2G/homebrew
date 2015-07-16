@@ -75,8 +75,11 @@ Note that these flags should only appear after a command.
   * `command` <cmd>:
     Display the path to the file which is used when invoking `brew <cmd>`.
 
-  * `commands`:
+  * `commands [--quiet [--include-aliases]]`:
     Show a list of built-in and external commands.
+
+    If `--quiet` is passed, list only the names of commands without the header.
+    With `--include-aliases`, the aliases of internal commands will be included.
 
   * `config`:
     Show Homebrew and system configuration useful for debugging. If you file
@@ -676,7 +679,7 @@ Homebrew Documentation: <https://github.com/Homebrew/homebrew/blob/master/share/
 
 ## AUTHORS
 
-Homebrew's current maintainers are Misty De Meo, Adam Vandenberg, Mike McQuaid, Brett Koonce and Tim Smith.
+Homebrew's current maintainers are Misty De Meo, Adam Vandenberg, Xu Cheng, Mike McQuaid, Baptiste Fontaine, Brett Koonce, Dominyk Tiller and Tim Smith.
 
 Homebrew was originally created by Max Howell.
 

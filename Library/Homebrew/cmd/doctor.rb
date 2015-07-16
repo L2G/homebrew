@@ -220,11 +220,22 @@ if MacOS.version >= "10.9"
     end
   end
 
-  def check_xcode_up_to_date
-    if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
-      t('cmd.doctor.xcode_outdated_app_store',
-        :outdated_xcode => MacOS::Xcode.version,
-        :latest_xcode => MacOS::Xcode.latest_version)
+  # TODO: remove when 10.11 is released
+  if MacOS.version >= "10.11"
+    def check_xcode_up_to_date
+      if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
+        t('cmd.doctor.xcode_outdated_download',
+          :outdated_xcode => MacOS::Xcode.version,
+          :latest_xcode => MacOS::Xcode.latest_version)
+      end
+    end
+  else
+    def check_xcode_up_to_date
+      if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
+        t('cmd.doctor.xcode_outdated_app_store',
+          :outdated_xcode => MacOS::Xcode.version,
+          :latest_xcode => MacOS::Xcode.latest_version)
+      end
     end
   end
 
