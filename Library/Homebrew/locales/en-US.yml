@@ -164,7 +164,9 @@ en-US:
       dependency_has_no_option: Dependency %{dependency} does not define option %{option}
       depends_on_takes_classes: "`depends_on` can take requirement classes instead of instances"
       deprecated_symbol: ':%{name} is deprecated. Usage should be "%{name}"'
-      desc_too_long: 'Description is too long. "name: desc" should be less than 80 characters (currently %{length}).'
+      desc_too_long: |
+        Description is too long. "name: desc" should be less than 80 characters.
+        Length is calculated as %{full_name} + desc. (currently %{length})
       devel_older_than_stable: devel version %{devel} is older than stable version %{stable}
       devel_only: Devel-only (no stable download)
       dont_need_to_interpolate: Don't need to interpolate "%{var}" with %{method}
