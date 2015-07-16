@@ -1,10 +1,9 @@
-require "formula"
-
 class Fltk < Formula
   desc "Cross-platform C++ GUI toolkit"
   homepage "http://www.fltk.org/"
-  url "http://fossies.org/linux/misc/fltk-1.3.3-source.tar.gz"
-  sha1 "873aac49b277149e054b9740378e2ca87b0bd435"
+  url "https://fossies.org/linux/misc/fltk-1.3.3-source.tar.gz"
+  sha256 "f8398d98d7221d40e77bc7b19e761adaf2f1ef8bb0c30eceb7beb4f2273d0d97"
+  revision 1
 
   bottle do
     sha1 "33c75cce41deadbfe54bdcc22ae91d17d3ecc782" => :mavericks
@@ -21,8 +20,10 @@ class Fltk < Formula
     cause "http://llvm.org/bugs/show_bug.cgi?id=10338"
   end
 
-  # Fixes issue with -lpng not found.
-  # Based on: https://trac.macports.org/browser/trunk/dports/aqua/fltk/files/patch-src-Makefile.diff
+  # Fixes a couple of issues:
+  # * issue with -lpng not found (patch based on
+  #   https://trac.macports.org/browser/trunk/dports/aqua/fltk/files/patch-src-Makefile.diff)
+  # * jpeg_read_header() from jpeg library called with integer instead of boolean
   patch :DATA
 
   def install
@@ -30,7 +31,12 @@ class Fltk < Formula
     system "./configure", "--prefix=#{prefix}",
                           "--enable-threads",
                           "--enable-shared"
-    system "make install"
+    system "make", "install"
+  end
+
+  test do
+    output = shell_output("#{bin}/fltk-config --version")
+    assert_equal "#{version}\n", output
   end
 end
 
@@ -47,3 +53,26 @@ index fcad5f0..5a5a850 100644
 +		$(IMGOBJECTS)  -L. $(LDLIBS) $(IMAGELIBS) -lfltk $(LDFLAGS)
  	$(RM) libfltk_images.dylib
  	$(LN) libfltk_images.1.3.dylib libfltk_images.dylib
+
+diff --git a/src/Fl_JPEG_Image.cxx b/src/Fl_JPEG_Image.cxx
+index 179ade6..ede4ed4 100644
+--- a/src/Fl_JPEG_Image.cxx
++++ b/src/Fl_JPEG_Image.cxx
+@@ -155,7 +155,7 @@ Fl_JPEG_Image::Fl_JPEG_Image(const char *filename)	// I - File to load
+
+   jpeg_create_decompress(&dinfo);
+   jpeg_stdio_src(&dinfo, fp);
+-  jpeg_read_header(&dinfo, 1);
++  jpeg_read_header(&dinfo, TRUE);
+
+   dinfo.quantize_colors      = (boolean)FALSE;
+   dinfo.out_color_space      = JCS_RGB;
+@@ -337,7 +337,7 @@ Fl_JPEG_Image::Fl_JPEG_Image(const char *name, const unsigned char *data)
+
+   jpeg_create_decompress(&dinfo);
+   jpeg_mem_src(&dinfo, data);
+-  jpeg_read_header(&dinfo, 1);
++  jpeg_read_header(&dinfo, TRUE);
+
+   dinfo.quantize_colors      = (boolean)FALSE;
+   dinfo.out_color_space      = JCS_RGB;
