@@ -3,6 +3,7 @@ class GdkPixbuf < Formula
   homepage "http://gtk.org"
   url "https://download.gnome.org/sources/gdk-pixbuf/2.30/gdk-pixbuf-2.30.8.tar.xz"
   sha256 "4853830616113db4435837992c0aebd94cbb993c44dc55063cee7f72a7bef8be"
+  revision 1
 
   bottle do
     revision 1
