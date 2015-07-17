@@ -3,6 +3,7 @@ class Gphoto2 < Formula
   homepage "http://gphoto.org/"
   url "https://downloads.sourceforge.net/project/gphoto/gphoto/2.5.8/gphoto2-2.5.8.tar.bz2"
   sha256 "a9abcd15d95f205318d17e3ac12af7ce523d2bc4943709d50b0a12c30cc5ee4d"
+  revision 1
 
   bottle do
     cellar :any
@@ -20,6 +21,11 @@ class Gphoto2 < Formula
   def install
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
-    system "make install"
+    system "make", "install"
+  end
+
+  test do
+    output = shell_output("#{bin}/gphoto2 --version")
+    assert_match(/^#{name} #{version}$/, output)
   end
 end
