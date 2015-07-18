@@ -264,6 +264,7 @@ class Keg
       # all icons subfolders should also mkpath
       when /^icons\// then :mkpath
       when /^zsh/ then :mkpath
+      when /^fish/ then :mkpath
       else :link
       end
     end

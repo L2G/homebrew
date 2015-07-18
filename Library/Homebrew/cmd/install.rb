@@ -87,9 +87,9 @@ module Homebrew
       else
         ofail e.message
         query = query_regexp(e.name)
-        puts t('cmd.install.searching_formulae')
+        ohai t('cmd.install.searching_formulae')
         puts_columns(search_formulae(query))
-        puts t('cmd.install.searching_taps')
+        ohai t('cmd.install.searching_taps')
         puts_columns(search_taps(query))
 
         # If they haven't updated in 48 hours (172800 seconds), that
