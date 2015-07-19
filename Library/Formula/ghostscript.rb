@@ -1,6 +1,7 @@
 class Ghostscript < Formula
   desc "Interpreter for PostScript and PDF"
   homepage "http://www.ghostscript.com/"
+  revision 1
 
   stable do
     url "http://downloads.ghostscript.com/public/ghostscript-9.16.tar.gz"
