@@ -228,7 +228,7 @@ module Homebrew
         # No fallthrough
       end
 
-      return t("utils.last_commit_how_long_ago",
+      return t("utils.how_long_ago",
                :how_long => t("utils.years", :count => years))
     end
   end
