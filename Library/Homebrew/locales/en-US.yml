@@ -709,16 +709,6 @@ en-US:
         formulae that put executables in %{path}.
         Consider setting the PATH for example like so
             echo 'export PATH="%{path}:$PATH"' >> %{shell_profile}
-      user_path_out_of_order: |
-        /usr/bin occurs before %{path}
-        This means that system-provided programs will be used instead of those
-        provided by Homebrew. The following tools exist at both paths:
-
-            %{conflicts}
-
-        Consider setting your PATH so that %{path}
-        occurs before /usr/bin. Here is a one-liner:
-            echo 'export PATH="%{path}:$PATH"' >> %{shell_profile}
       user_path_out_of_order_1: |
         /usr/bin occurs before %{path}
         This means that system-provided programs will be used instead of those
@@ -1055,7 +1045,6 @@ en-US:
     at_least_url_required: formulae require at least a URL
     cannot_override_brew_method: You cannot override Formula#brew in class %{name}
     failed_to_import: 'Failed to import: %{name}'
-    python_method_deprecated: Formula#python is deprecated and will go away shortly.
     tap_action_catchall: Performing action "%{verb}" on %{name} from %{tap}
     tap_action_fetching: Fetching %{name} from %{tap}
     tap_action_installing: Installing %{name} from %{tap}

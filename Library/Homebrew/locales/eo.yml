@@ -320,7 +320,6 @@ eo:
       user_curlrc_exists: 
       user_path_has_no_homebrew_bin: 
       user_path_has_no_homebrew_sbin: 
-      user_path_out_of_order: 
       user_path_out_of_order_1: 
       user_path_out_of_order_2: 
       xcode_clt_install_from_web: 
@@ -547,7 +546,6 @@ eo:
     at_least_url_required: 
     cannot_override_brew_method: 
     failed_to_import: 
-    python_method_deprecated: 
     tap_action_catchall: 
     tap_action_fetching: 
     tap_action_installing: 
