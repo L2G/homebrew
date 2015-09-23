@@ -1,13 +1,13 @@
 class Iojs < Formula
   desc "npm-compatible platform based on Node.js"
   homepage "https://iojs.org/"
-  url "https://iojs.org/dist/v2.3.4/iojs-v2.3.4.tar.xz"
-  sha256 "cf8bdbcf8598a47c514ddd964dcbee40d6cd118f9954ee4afbec9163312e43a2"
+  url "https://iojs.org/dist/v3.2.0/iojs-v3.2.0.tar.xz"
+  sha256 "52bf6b872ae97f4152acf8387657a23280e83ddee8f0d2ea620c5d36d067358c"
 
   bottle do
-    sha256 "ba290d26dd062790c0b37095eead0f2ab5dcfde0c3ea0637559524a6f379779a" => :yosemite
-    sha256 "8269b4a75ed7ba9a882e1d83373fecac3eb2e77cb836016e715fe82b686a7f8d" => :mavericks
-    sha256 "55f809bc4b62b30c240c6e1f3e09208b98b62f993ef75db5c3697cef7cba6303" => :mountain_lion
+    sha256 "e4bc33b13a4b547b21f002055f9fc267ba8cd55b488bbb4129f81b2ce7144ad6" => :yosemite
+    sha256 "148f64235bda9701088abb027dcc2c1a12b77b707f83d6302535a410abfc31ce" => :mavericks
+    sha256 "434bab78bc9826f4e27d6939e79bd036f254625fcd5e5d9e36a985d86bfd5287" => :mountain_lion
   end
 
   keg_only "iojs conflicts with node (which is currently more established)"
@@ -17,7 +17,7 @@ class Iojs < Formula
 
   depends_on "pkg-config" => :build
   depends_on "icu4c" => :optional
-  depends_on :python => :build
+  depends_on :python => :build if MacOS.version <= :snow_leopard
 
   def install
     args = %W[--prefix=#{prefix} --without-npm]

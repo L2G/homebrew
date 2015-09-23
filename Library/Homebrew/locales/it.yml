@@ -2,6 +2,7 @@ it:
   blacklist:
     clojure: 
     distributed_with_os_x: 
+    gem_via_ruby_formula: 
     gfortran: 
     google_tool: 
     gsutil: 
@@ -249,6 +250,7 @@ it:
       warn_cant_determine_version_2: 
     doctor:
       autoconf_xcode: 
+      bad_curl: 
       bad_install_name_tool: 
       broken_symlinks: 
       cellar_and_temp_not_same_vol: 
@@ -305,6 +307,7 @@ it:
       trailing_slashes: 
       uncommitted_mods: 
       unlinked_kegs_in_cellar: 
+      unsupported_curl_vars: 
       unsupported_ruby: 
       unwritable: 
       unwritable_access_logs: 
@@ -421,6 +424,8 @@ it:
       homebrew_tap_structure_3: 
       new_formulae: 
       no_formula_names: 
+      rename_with_arrow: 
+      renamed_formulae: 
       update_tap_failed: 
       updated_formulae: 
       updated_homebrew: 
@@ -468,8 +473,8 @@ it:
       dump_tap: 
       failed_executing: 
       formula_did_not_build: 
-      issues_line_item: "%{title} (%{url})"
-      logs_line_item: "     %{log_entry}"
+      issues_line_item: "%{title} %{url}"
+      logs_line_item: "    %{log_entry}"
       moved_to_boneyard: 
       read_this: 
       refer_to_issues: 
@@ -493,6 +498,7 @@ it:
     no_such_keg_error: 
     operation_in_progress_error: 
     resource_missing_error: 
+    tap_and_try_again: 
     tap_formula_unavailable_error: 
     tap_formula_unavailable_error_w_dependent: 
     unsatisfied_requirements: 
@@ -628,7 +634,11 @@ it:
     xcode_install_hint: 
     xcode_install_hint_lion: 
   sandbox:
+    cannot_be_used_now: 
+    log_filtered_with_time: 
+    log_heading: 
     sandbox_profile: 
+    using_sandbox: 
   software_spec:
     cxx11: 
     thirty_two_bit: 

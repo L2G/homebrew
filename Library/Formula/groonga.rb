@@ -1,13 +1,13 @@
 class Groonga < Formula
   desc "Fulltext search engine and column store"
   homepage "http://groonga.org/"
-  url "http://packages.groonga.org/source/groonga/groonga-5.0.5.tar.gz"
-  sha256 "ca62d15374117f4007a7b406ac2072683edda7ed7607d1b1fbcf3a30920f5b56"
+  url "http://packages.groonga.org/source/groonga/groonga-5.0.7.tar.gz"
+  sha256 "f0f148916179993b22c14f914f148fd9bad3163071b106a36251e92a3869b710"
 
   bottle do
-    sha256 "0e4834e388e1e485527c0fd89cde6a61de679fc5873f05cd0d21be93baf9a17c" => :yosemite
-    sha256 "e387a4528bc4ae8069570e08d4ab7e7171e410f314972ce1574f585e4552b957" => :mavericks
-    sha256 "2c431bda2806787342854e84fdb284d7e20f3ca04d28d72f7875f640cd8f5564" => :mountain_lion
+    sha256 "8d6f96fb3bf2212916e0bf0dcb4af23983b6f89fe0c29f553a03fcb76e4bfc31" => :yosemite
+    sha256 "02681009cdcfbad7c085380277706c8d3391ff9949c63f129135dfebdd015a4b" => :mavericks
+    sha256 "c5b2b8d400696df717b19d149ebd75a9407b19c96f7fa70863d5cbc1b49f0134" => :mountain_lion
   end
 
   option "with-benchmark", "With benchmark program for developer use"

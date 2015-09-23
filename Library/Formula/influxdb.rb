@@ -5,21 +5,15 @@ class Influxdb < Formula
   homepage "https://influxdb.com"
 
   stable do
-    url "https://github.com/influxdb/influxdb/archive/v0.9.1.tar.gz"
-    sha256 "a37d5ebda1b31f912390fe4e1d46e085326f91397671e2bd418f5d515004e5be"
+    url "https://github.com/influxdb/influxdb/archive/v0.9.3.tar.gz"
+    sha256 "f49f7a007f821991984dd8716a6ddccc94a1832c5ac1abf4bb1cb88d9616c2e9"
   end
 
   bottle do
     cellar :any
-    sha256 "f4244b8a3a9d71372cc822547ba97809e37731c95483ce89d9c4e21b171a366b" => :yosemite
-    sha256 "c5a1f8fe170a6f2a5c9a6f5568600711d8d98eb28e74f5a37a54e906ba15c134" => :mavericks
-    sha256 "5bbf255e5facc8d9060f1de5e25840e3c415dd37b9c2b9f20320a8d264b533e9" => :mountain_lion
-  end
-
-  devel do
-    url "https://github.com/influxdb/influxdb/archive/v0.9.2-rc1.tar.gz"
-    sha256 "1c90462fcacb1b14b17602c06fa6deb4161b3d9bff1c1d318c743bb1982062c9"
-    version "0.9.2-rc1"
+    sha256 "5e79b7fd8a73044b8bfe3c42bcc5146ea11ec7bbd9d3f888432faf3d761d4abe" => :yosemite
+    sha256 "adc114f9abc40db4b9672a37d4f9fc9ebd7c8e1767db8cc6c204767aa694732b" => :mavericks
+    sha256 "3136f678fb48e5040be3c242211bc40ce4de411947aa740fd674242f12a2ceee" => :mountain_lion
   end
 
   head do
@@ -41,15 +35,15 @@ class Influxdb < Formula
   end
 
   go_resource "github.com/boltdb/bolt" do
-    url "https://github.com/boltdb/bolt.git", :revision => "abb4088170cfac644ed5f4648a5cdc566cdb1da2"
+    url "https://github.com/boltdb/bolt.git", :revision => "0f053fabc06119583d61937a0a06ef0ba0f1b301"
   end
 
   go_resource "github.com/gogo/protobuf" do
-    url "https://github.com/gogo/protobuf.git", :revision => "499788908625f4d83de42a204d1350fde8588e4f"
+    url "https://github.com/gogo/protobuf.git", :revision => "cabd153b69f71bab8b89fd667a2d9bb28c92ceb4"
   end
 
   go_resource "github.com/golang/protobuf" do
-    url "https://github.com/golang/protobuf.git", :revision => "34a5f244f1c01cdfee8e60324258cfbb97a42aec"
+    url "https://github.com/golang/protobuf.git", :revision => "aece6fb931241ad332956db4f62798dfbea944b3"
   end
 
   go_resource "github.com/hashicorp/go-msgpack" do
@@ -57,7 +51,7 @@ class Influxdb < Formula
   end
 
   go_resource "github.com/hashicorp/raft" do
-    url "https://github.com/hashicorp/raft.git", :revision => "379e28eb5a538707eae7a97ecc60846821217f27"
+    url "https://github.com/hashicorp/raft.git", :revision => "feb5f8bb5624ccb475c1354a2ca14a22eea7da4e"
   end
 
   go_resource "github.com/hashicorp/raft-boltdb" do
@@ -65,11 +59,11 @@ class Influxdb < Formula
   end
 
   go_resource "github.com/kimor79/gollectd" do
-    url "https://github.com/kimor79/gollectd.git", :revision => "cf6dec97343244b5d8a5485463675d42f574aa2d"
+    url "https://github.com/kimor79/gollectd.git", :revision => "61d0deeb4ffcc167b2a1baa8efd72365692811bc"
   end
 
   go_resource "github.com/peterh/liner" do
-    url "https://github.com/peterh/liner.git", :revision => "1bb0d1c1a25ed393d8feb09bab039b2b1b1fbced"
+    url "https://github.com/peterh/liner.git", :revision => "c754da6f2d91ef30ddb6c975d2dbe7696eec4fbc"
   end
 
   go_resource "github.com/rakyll/statik" do
@@ -77,7 +71,7 @@ class Influxdb < Formula
   end
 
   go_resource "golang.org/x/crypto" do
-    url "https://go.googlesource.com/crypto.git", :revision => "1e856cbfdf9bc25eefca75f83f25d55e35ae72e0"
+    url "https://go.googlesource.com/crypto.git", :revision => "81bf7719a6b7ce9b665598222362b50122dfc13b"
   end
 
   go_resource "gopkg.in/fatih/pool.v2" do
@@ -85,7 +79,11 @@ class Influxdb < Formula
   end
 
   go_resource "collectd.org" do
-    url "https://github.com/collectd/go-collectd.git", :revision => "27f4f77337ae0b2de0d3267f6278d62aff8b52fb"
+    url "https://github.com/collectd/go-collectd.git", :revision => "b57a70fc3a8592302821687ba82204ba4071b0a8"
+  end
+
+  go_resource "github.com/golang/snappy" do
+    url "https://github.com/golang/snappy.git", :revision => "723cc1e459b8eea2dea4583200fd60757d40097a"
   end
 
   def install
@@ -97,11 +95,9 @@ class Influxdb < Formula
 
     cd influxdb_path do
       if build.head?
-        system "go", "install", "-ldflags", "-X main.version 0.9.3-HEAD -X main.commit #{`git rev-parse HEAD`.strip}", "./..."
-      elsif build.devel?
-        system "go", "install", "-ldflags", "-X main.version 0.9.2-rc1 -X main.commit f404a8ac31360c380e0ebcf1f1481411cda02fc1", "./..."
+        system "go", "install", "-ldflags", "-X main.version 0.9.4-HEAD -X main.commit #{`git rev-parse HEAD`.strip}", "./..."
       else
-        system "go", "install", "-ldflags", "-X main.version 0.9.1 -X main.commit 8b3219e74fcc3843a6f4901bdf00e905642b6bd6", "./..."
+        system "go", "install", "-ldflags", "-X main.version 0.9.3 -X main.commit 2094f3fec17e7f675e5cacc8e984d98b1aec662d", "./..."
       end
     end
 

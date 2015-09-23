@@ -1,4 +1,4 @@
-require 'hardware'
+require "hardware"
 require "software_spec"
 
 module Homebrew
@@ -7,23 +7,23 @@ module Homebrew
   end
 
   def llvm
-    @llvm ||= MacOS.llvm_build_version
+    @llvm ||= MacOS.llvm_build_version if MacOS.has_apple_developer_tools?
   end
 
   def gcc_42
-    @gcc_42 ||= MacOS.gcc_42_build_version
+    @gcc_42 ||= MacOS.gcc_42_build_version if MacOS.has_apple_developer_tools?
   end
 
   def gcc_40
-    @gcc_40 ||= MacOS.gcc_40_build_version
+    @gcc_40 ||= MacOS.gcc_40_build_version if MacOS.has_apple_developer_tools?
   end
 
   def clang
-    @clang ||= MacOS.clang_version
+    @clang ||= MacOS.clang_version if MacOS.has_apple_developer_tools?
   end
 
   def clang_build
-    @clang_build ||= MacOS.clang_build_version
+    @clang_build ||= MacOS.clang_build_version if MacOS.has_apple_developer_tools?
   end
 
   def xcode
@@ -63,7 +63,7 @@ module Homebrew
     if origin.empty? then t('cmd.config.none') else origin end
   end
 
-  def describe_path path
+  def describe_path(path)
     return t('cmd.config.not_applicable') if path.nil?
     realpath = path.realpath
     if realpath == path
@@ -74,22 +74,19 @@ module Homebrew
   end
 
   def describe_x11
-    if MacOS::XQuartz.installed?
-      t('cmd.config.pair_with_arrow',
-        :from => MacOS::XQuartz.version,
-        :to => describe_path(MacOS::XQuartz.prefix))
-    else
-      t('cmd.config.not_applicable')
-    end
+    return t('cmd.config.not_applicable') unless MacOS::XQuartz.installed?
+    t('cmd.config.pair_with_arrow',
+      :from => MacOS::XQuartz.version,
+      :to => describe_path(MacOS::XQuartz.prefix))
   end
 
   def describe_perl
-    describe_path(which 'perl')
+    describe_path(which "perl")
   end
 
   def describe_python
-    python = which 'python'
-    if %r{/shims/python$} =~ python && which('pyenv')
+    python = which "python"
+    if %r{/shims/python$} =~ python && which("pyenv")
       begin
         t('cmd.config.pair_with_arrow',
           :from => python,
@@ -103,8 +100,8 @@ module Homebrew
   end
 
   def describe_ruby
-    ruby = which 'ruby'
-    if %r{/shims/ruby$} =~ ruby && which('rbenv')
+    ruby = which "ruby"
+    if %r{/shims/ruby$} =~ ruby && which("rbenv")
       begin
         t('cmd.config.pair_with_arrow',
           :from => ruby,
@@ -142,7 +139,7 @@ module Homebrew
       s << RUBY_VERSION
     end
 
-    if RUBY_PATH.to_s !~ %r[^/System/Library/Frameworks/Ruby.framework/Versions/[12]\.[089]/usr/bin/ruby]
+    if RUBY_PATH.to_s !~ %r{^/System/Library/Frameworks/Ruby.framework/Versions/[12]\.[089]/usr/bin/ruby}
       s = t('cmd.config.pair_with_arrow', :from => s, :to => RUBY_PATH)
     end
     s
@@ -159,12 +156,13 @@ module Homebrew
     end
   end
 
-  def dump_verbose_config(f=$stdout)
+  def dump_verbose_config(f = $stdout)
     f.puts t('cmd.config.item_homebrew_version', :value => HOMEBREW_VERSION)
     f.puts t('cmd.config.item_origin', :value => origin)
     f.puts t('cmd.config.item_head', :value => head)
     f.puts t('cmd.config.item_last_commit', :value => last_commit)
     f.puts t('cmd.config.item_homebrew_prefix', :value => HOMEBREW_PREFIX)
+    f.puts "HOMEBREW_REPOSITORY: #{HOMEBREW_REPOSITORY}"
     f.puts t('cmd.config.item_homebrew_cellar', :value => HOMEBREW_CELLAR)
     f.puts t('cmd.config.item_homebrew_bottle_domain',
              :value => BottleSpecification::DEFAULT_DOMAIN)

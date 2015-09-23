@@ -1,8 +1,10 @@
-require 'cmd/install'
-require 'cmd/outdated'
+require "cmd/install"
+require "cmd/outdated"
 
 module Homebrew
   def upgrade
+    FormulaInstaller.prevent_build_flags unless MacOS.has_apple_developer_tools?
+
     Homebrew.perform_preinstall_checks
 
     if ARGV.named.empty?
@@ -53,10 +55,10 @@ module Homebrew
   end
 
   def upgrade_pinned?
-    not ARGV.named.empty?
+    !ARGV.named.empty?
   end
 
-  def upgrade_formula f
+  def upgrade_formula(f)
     outdated_keg = Keg.new(f.linked_keg.resolved_path) if f.linked_keg.directory?
     tab = Tab.for_formula(f)
 
@@ -77,7 +79,6 @@ module Homebrew
     outdated_keg.unlink if outdated_keg
 
     fi.install
-    fi.caveats
     fi.finish
 
     # If the formula was pinned, and we were force-upgrading it, unpin and
@@ -99,7 +100,6 @@ module Homebrew
     ofail e
   ensure
     # restore previous installation state if build failed
-    outdated_keg.link if outdated_keg and not f.installed? rescue nil
+    outdated_keg.link if outdated_keg && !f.installed? rescue nil
   end
-
 end

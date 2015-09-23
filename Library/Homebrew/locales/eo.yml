@@ -2,6 +2,7 @@ eo:
   blacklist:
     clojure: 
     distributed_with_os_x: 'Apple disdonas "%{name}" kun OS X. Vi povas trovi ĝin ĉe: %{path}'
+    gem_via_ruby_formula: 
     gfortran: 
     google_tool: 
     gsutil: 'Instalu "gsutil" jene: `pip install gsutil`'
@@ -247,6 +248,7 @@ eo:
       warn_cant_determine_version_2: 
     doctor:
       autoconf_xcode: 
+      bad_curl: 
       bad_install_name_tool: 
       broken_symlinks: |
         Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
@@ -258,8 +260,8 @@ eo:
       enthought_python_in_path: 
       external_commands_conflict: 
       filesystem_case_sensitive: |
-        La dosiersistemo ĉe %{paths} aspektas usklecodistinga.
-        La dosiersistemo de OS X kutime estas ne-usklecodistinga.
+        La dosiersistemo ĉe %{paths} aspektas uskleco-distinga.
+        La dosiersistemo de OS X kutime estas ne-uskleco-distinga.
         Bonvolu raporti iujn ajn ŝajnajn zorgojn.
       found_command_here: 
       git_autocrlf_settings: 
@@ -308,6 +310,7 @@ eo:
       trailing_slashes: 
       uncommitted_mods: 
       unlinked_kegs_in_cellar: 
+      unsupported_curl_vars: 
       unsupported_ruby: 
       unwritable: 
       unwritable_access_logs: 
@@ -407,7 +410,7 @@ eo:
       private_repo_tapped: 
       tapped_formulae_abv:
         one: Aldonis kranon de %{count} formulon (%{abv})
-        other: Aldonis kranon de  %{count} formulojn (%{abv})
+        other: Aldonis kranon de %{count} formulojn (%{abv})
     uninstall:
       comma: ", "
       must_remove_all: 
@@ -436,11 +439,13 @@ eo:
       no_formula_names: |
         Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
         nomojn.  Uzu `brew upgrade <formula>`.
+      rename_with_arrow: 
+      renamed_formulae: 
       update_tap_failed: 
       updated_formulae:
         one: "Ĝisdatigita Formulo"
         other: "Ĝisdatigitaj Formuloj"
-      updated_homebrew: Homebrew estis ĝisdatigata de %{initial_revision} ĝis %{current_revision}
+      updated_homebrew: Homebrew estis ĝisdatigata de %{initial_revision} ĝis %{current_revision}.
     upgrade:
       formula_already_installed: 
       formula_name_and_version: "%{name} %{version}"
@@ -487,8 +492,8 @@ eo:
       dump_tap: 'Krano: %{tap}'
       failed_executing: 'Misfino plenumi: %{cmd} %{args}'
       formula_did_not_build: 
-      issues_line_item: "%{title} (%{url})"
-      logs_line_item: "     %{log_entry}"
+      issues_line_item: "%{title} %{url}"
+      logs_line_item: "    %{log_entry}"
       moved_to_boneyard: 
       read_this: "%{read_this_color}LEGU ĈI TIUN%{reset_color}: %{url_color}%{url}%{reset_color}"
       refer_to_issues: 
@@ -512,6 +517,7 @@ eo:
     no_such_keg_error: 
     operation_in_progress_error: 
     resource_missing_error: 
+    tap_and_try_again: 
     tap_formula_unavailable_error: 
     tap_formula_unavailable_error_w_dependent: 
     unsatisfied_requirements: 
@@ -651,7 +657,11 @@ eo:
     xcode_install_hint: 
     xcode_install_hint_lion: 
   sandbox:
+    cannot_be_used_now: 
+    log_filtered_with_time: 
+    log_heading: 
     sandbox_profile: 
+    using_sandbox: 
   software_spec:
     cxx11: 
     thirty_two_bit: 

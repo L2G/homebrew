@@ -9,6 +9,7 @@ en-US:
       and then follow the tutorial:
         https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
     distributed_with_os_x: Apple distributes %{name} with OS X, you can find it in %{path}.
+    gem_via_ruby_formula: 'Homebrew provides gem via: `brew install ruby`.'
     gfortran: |
       GNU Fortran is now provided as part of GCC, and can be installed with:
         brew install gcc
@@ -56,7 +57,7 @@ en-US:
 
       We recommend using a MacTeX distribution: https://www.tug.org/mactex/
     xcode_app_store: Xcode can be installed from the App Store.
-    xcode_download: Xcode can be installed from https://developer.apple.com/downloads/
+    xcode_download: Xcode can be installed from https://developer.apple.com/xcode/downloads/
   brew:
     bad_sudo: Cowardly refusing to `sudo brew %{cmd}`
     bad_sudo_2: |-
@@ -254,9 +255,9 @@ en-US:
       url_sourceforge_geoloc: Use https://downloads.sourceforge.net to get geolocation (url is %{url}).
       url_sourceforge_no_download: Don't use /download in SourceForge urls (url is %{url}).
       url_sourceforge_no_mirror: Don't use %{url_query_part}use_mirror in SourceForge urls (url is %{url}).
-      url_sourceforge_no_prdown: |
+      url_sourceforge_no_prdown: |-
         Don't use prdownloads in SourceForge urls (url is %{url}).
-            See: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/
+                See: http://librelist.com/browser/homebrew/2011/1/12/prdownloads-is-bad/
       url_sourceforge_no_specific: Don't use specific dl mirrors in SourceForge urls (url is %{url}).
       url_using_redundant: Redundant :using value in URL
       use_build_head: Use 'build.head?' instead of inspecting 'version'
@@ -366,6 +367,11 @@ en-US:
           %{path}
 
         This custom autoconf may cause some Homebrew formulae to fail to compile.
+      bad_curl: |
+        The system curl on 10.6 and below is often incapable of supporting
+        modern secure connections & will fail on fetching formulae.
+        We recommend you:
+          brew install curl
       bad_install_name_tool: |
         You have an outdated version of /usr/bin/install_name_tool installed.
         This will cause binary package installations to fail.
@@ -385,10 +391,8 @@ en-US:
       dyld_vars_are_set: |
         Setting DYLD_* vars can break dynamic linking.
         Set variables:
-      dyld_vars_are_set_2: |2
-            %{name}: %{value}
-      dyld_vars_have_go_conflict: |2
-
+      dyld_vars_are_set_2: "    %{name}: %{value}"
+      dyld_vars_have_go_conflict: |
         Setting DYLD_INSERT_LIBRARIES can cause Go builds to fail.
         Having this set is common if you use this software:
           http://asepsis.binaryage.com/
@@ -419,7 +423,7 @@ en-US:
       git_outdated: |
         An outdated version of Git was detected in your PATH.
         Git 1.7.10 or newer is required to perform checkouts over HTTPS from GitHub.
-        Please upgrade: brew upgrade git
+        Please upgrade: brew %{brew_command} git
       git_remote_no_origin: |
         Missing git origin remote.
 
@@ -449,7 +453,7 @@ en-US:
         No developer tools installed.
         Install the Command Line Tools:
           xcode-select --install
-      keg_only_formula_linked: |
+      keg_only_formula_linked: |+
         Some keg-only formula are linked into the Cellar.
         Linking a keg-only formula, such as gettext, into the cellar with
         `brew link <formula>` will cause other formulae to detect them during
@@ -460,6 +464,7 @@ en-US:
         with other strange results.
 
         You may wish to `brew unlink` these brews:
+
       libiconv_formula_linked: |
         A libiconv formula is installed and linked
         This will break stuff. For serious. Unlink it.
@@ -569,7 +574,7 @@ en-US:
         Homebrew only supports building against the System-provided Python or a
         brewed Python. In particular, Pythons installed to /Library can interfere
         with other software installs.
-      stray_config_scripts: |
+      stray_config_scripts: |+
         "config" scripts exist outside your system or Homebrew directories.
         `./configure` scripts often look for *-config scripts to determine if
         software packages are installed, and what additional flags to use when
@@ -578,6 +583,7 @@ en-US:
         Having additional scripts in your path can confuse software installed via
         Homebrew if the config script overrides a system or Homebrew provided
         script of the same name. We found the following "config" scripts:
+
       stray_dev_dir: |
         You have leftover files from an older version of Xcode.
         You should delete them using:
@@ -625,7 +631,7 @@ en-US:
         cause problems when two formula install to locations that are mapped on top of each
         other during the linking step.
       tmpdir_doesnt_exist: TMPDIR %{path} doesn't exist.
-      tmpdir_needs_sticky_bit: |-
+      tmpdir_needs_sticky_bit: |
         %{path} is world-writable but does not have the sticky bit set.
         Please run "Repair Disk Permissions" in Disk Utility.
       trailing_slashes: |
@@ -644,6 +650,11 @@ en-US:
         those kegs to fail to run properly once built. Run `brew link` on these:
 
                 %{kegs}
+      unsupported_curl_vars: |
+        SSL_CERT_DIR support was removed from Apple's curl.
+        If fetching formulae fails you should:
+          unset SSL_CERT_DIR
+        and remove it from %{shell_profile} if present.
       unsupported_ruby: |
         Ruby version %{unsupported_ruby} is unsupported on %{macos_version}. Homebrew
         is developed and tested on Ruby %{supported_ruby}, and may not work correctly
@@ -661,12 +672,12 @@ en-US:
         This can happen if you run `brew install` or `brew fetch` as another user.
         Homebrew caches downloaded files to this location.
         You should probably `chown` %{path}
-      unwritable_directories: |
-        Some directories in %{path} aren't writable.
+      unwritable_directories: |+
         This can happen if you "sudo make install" software that isn't managed
         by Homebrew. If a brew tries to add locale information to one of these
         directories, then the install will fail during the link step.
         You should probably `chown` them:
+
       unwritable_directory: |
         %{path} isn't writable.
 
@@ -736,16 +747,16 @@ en-US:
       xcode_not_installed: |
         Xcode is not installed. Most formulae need Xcode to build.
         It can be installed from
-          https://developer.apple.com/downloads
+          https://developer.apple.com/xcode/downloads/
       xcode_outdated_app_store: |
         Your Xcode (%{outdated_xcode}) is outdated
         Please update to Xcode %{latest_xcode}.
         Xcode can be updated from the App Store.
-      xcode_outdated_download: |
+      xcode_outdated_download: |-
         Your Xcode (%{outdated_xcode}) is outdated
         Please update to Xcode %{latest_xcode}.
         Xcode can be updated from
-          https://developer.apple.com/downloads
+          https://developer.apple.com/xcode/downloads/
       xcode_prefix_has_space: |
         Xcode is installed to a directory with a space in the name.
         This will cause some formulae to fail to build.
@@ -774,7 +785,7 @@ en-US:
         brew search [foo]
         brew list [FORMULA...]
         brew update
-        brew upgrade [--all | FORMULA...]
+        brew upgrade [FORMULA...]
         brew pin/unpin [FORMULA...]
 
       Troubleshooting:
@@ -859,7 +870,7 @@ en-US:
         other: Tapped %{count} formulae (%{abv})
     uninstall:
       comma: ", "
-      must_remove_all: Use `brew remove --force %{name}` to remove all versions.
+      must_remove_all: 'Use `brew uninstall --force #{e.name}` to remove all versions.'
       remove_all: Remove them all with `brew uninstall --force %{name}`.
       still_installed:
         one: "%{name} %{versions} is still installed."
@@ -885,11 +896,15 @@ en-US:
       no_formula_names: |
         This command updates brew itself, and does not take formula names.
         Use `brew upgrade <formula>`.
+      rename_with_arrow: "%{old_name} -> %{new_name}"
+      renamed_formulae:
+        one: Renamed Formula
+        other: Renamed Formulae
       update_tap_failed: 'Failed to update tap: %{tap}'
       updated_formulae:
         one: Updated Formula
         other: Updated Formulae
-      updated_homebrew: Updated Homebrew from %{initial_revision} to %{current_revision}
+      updated_homebrew: Updated Homebrew from %{initial_revision} to %{current_revision}.
     upgrade:
       formula_already_installed: "%{name} already installed"
       formula_name_and_version: "%{name} %{version}"
@@ -940,8 +955,8 @@ en-US:
       dump_tap: 'Tap: %{tap}'
       failed_executing: 'Failed executing: %{cmd} %{args}'
       formula_did_not_build: "%{name} %{version} did not build"
-      issues_line_item: "%{title} (%{url})"
-      logs_line_item: "     %{log_entry}"
+      issues_line_item: "%{title} %{url}"
+      logs_line_item: "    %{log_entry}"
       moved_to_boneyard: |
         %{formula} was moved to homebrew-boneyard because it has unfixable issues.
         Please do not file any issues about this. Sorry!
@@ -993,6 +1008,7 @@ en-US:
       Another active Homebrew process is already using %{name}.
       Please wait for it to finish or terminate it to continue.
     resource_missing_error: "%{formula} does not define resource %{resource}"
+    tap_and_try_again: 'Please tap it and then try again: brew tap %{tap}'
     tap_formula_unavailable_error: |
       No available formula for %{name}
       Please tap it and then try again: brew tap %{user}/%{repo}
@@ -1019,7 +1035,7 @@ en-US:
         The requested Homebrew GCC was not installed. You must:
           brew install %{name}
       gfortran_homebrew: Using Homebrew-provided fortran compiler.
-      gfortran_other: Using a Fortran compiler found at %{path}.
+      gfortran_other: Using a fortran compiler found at %{path}.
       invalid_value: 'Invalid value for %{source}: %{other}'
       no_fc_flags: |
         No Fortran optimization information was provided.  You may want to consider
@@ -1233,10 +1249,15 @@ en-US:
     x11_dependency:
       xquartz_required: XQuartz is required to install this formula.
       xquartz_version_required: XQuartz %{version} is required to install this formula.
-    xcode_install_hint: Xcode can be installed from https://developer.apple.com/downloads/
+    xcode_install_hint: |
+      Xcode can be installed from https://developer.apple.com/xcode/downloads/
     xcode_install_hint_lion: Xcode can be installed from the App Store.
   sandbox:
+    cannot_be_used_now: The sandbox cannot be used in debug or interactive mode.
+    log_filtered_with_time: We use time to filter sandbox log. Therefore, unrelated logs may be recorded.
+    log_heading: Sandbox log
     sandbox_profile: 'Sandbox profile:'
+    using_sandbox: Using the sandbox
   software_spec:
     cxx11: Build using C++11 mode
     thirty_two_bit: Build 32-bit only
@@ -1297,7 +1318,7 @@ en-US:
       GitHub %{error}
       Try again in %{duration}, or create a personal access token:
         https://github.com/settings/tokens
-      and then set it as: HOMEBREW_GITHUB_API_TOKEN
+      and then set the token as: HOMEBREW_GITHUB_API_TOKEN
     rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
     searching_pull_requests: Searching pull requests...
     seconds:

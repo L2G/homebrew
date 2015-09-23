@@ -1,4 +1,4 @@
-require 'cmd/tap' # for tap_args
+require "cmd/tap" # for tap_args
 
 module Homebrew
   def untap
@@ -9,6 +9,8 @@ module Homebrew
 
       raise TapUnavailableError, tap.name unless tap.installed?
       puts t("cmd.untap.untapping", :name => tap, :abv => tap.path.abv)
+
+      tap.unpin if tap.pinned?
 
       formula_count = tap.formula_files.size
       tap.path.rmtree

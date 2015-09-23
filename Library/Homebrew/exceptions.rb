@@ -5,7 +5,7 @@ class KegUnspecifiedError < UsageError; end
 class MultipleVersionsInstalledError < RuntimeError
   attr_reader :name
 
-  def initialize name
+  def initialize(name)
     @name = name
     super t("exceptions.multiple_versions_installed_error", :name => name)
   end
@@ -16,7 +16,7 @@ class NotAKegError < RuntimeError; end
 class NoSuchKegError < RuntimeError
   attr_reader :name
 
-  def initialize name
+  def initialize(name)
     @name = name
     super t("exceptions.no_such_keg_error",
             :cellar => HOMEBREW_CELLAR,
@@ -42,7 +42,7 @@ class FormulaUnavailableError < RuntimeError
   attr_reader :name
   attr_accessor :dependent
 
-  def initialize name
+  def initialize(name)
     @name = name
   end
 
@@ -63,33 +63,26 @@ class FormulaUnavailableError < RuntimeError
 end
 
 class TapFormulaUnavailableError < FormulaUnavailableError
-  attr_reader :user, :repo, :shortname
+  attr_reader :tap, :user, :repo
 
-  def initialize name
-    super
-    @user, @repo, @shortname = name.split("/", 3)
+  def initialize(tap, name)
+    @tap = tap
+    @user = tap.user
+    @repo = tap.repo
+    super "#{tap}/#{name}"
   end
 
   def to_s
-    if dependent and dependent != name
-      t("exceptions.tap_formula_unavailable_error_w_dependent",
-        :name => shortname,
-        :dependent => dependent,
-        :user => user,
-        :repo => repo)
-    else
-      t("exceptions.tap_formula_unavailable_error",
-        :name => shortname,
-        :user => user,
-        :repo => repo)
-    end
+    s = super
+    s += "\n" + t("exceptions.tap_and_try_again", :tap => tap) unless tap.installed?
+    s
   end
 end
 
 class TapFormulaAmbiguityError < RuntimeError
   attr_reader :name, :paths, :formulae
 
-  def initialize name, paths
+  def initialize(name, paths)
     @name = name
     @paths = paths
     @formulae = paths.map do |path|
@@ -105,10 +98,30 @@ class TapFormulaAmbiguityError < RuntimeError
   end
 end
 
+class TapFormulaWithOldnameAmbiguityError < RuntimeError
+  attr_reader :name, :possible_tap_newname_formulae, :taps
+
+  def initialize(name, possible_tap_newname_formulae)
+    @name = name
+    @possible_tap_newname_formulae = possible_tap_newname_formulae
+
+    @taps = possible_tap_newname_formulae.map do |newname|
+      newname =~ HOMEBREW_TAP_FORMULA_REGEX
+      "#{$1}/#{$2}"
+    end
+
+    super <<-EOS.undent
+      Formulae with '#{name}' old name found in multiple taps: #{taps.map { |t| "\n       * #{t}" }.join}
+
+      Please use the fully-qualified name e.g. #{taps.first}/#{name} to refer the formula or use its new name.
+    EOS
+  end
+end
+
 class TapUnavailableError < RuntimeError
   attr_reader :name
 
-  def initialize name
+  def initialize(name)
     @name = name
 
     super <<-EOS.undent
@@ -117,9 +130,21 @@ class TapUnavailableError < RuntimeError
   end
 end
 
+class TapPinStatusError < RuntimeError
+  attr_reader :name, :pinned
+
+  def initialize(name, pinned)
+    @name = name
+    @pinned = pinned
+
+    super pinned ? "#{name} is already pinned." : "#{name} is already unpinned."
+  end
+end
+
 class OperationInProgressError < RuntimeError
-  def initialize name
-    super t("exceptions.operation_in_progress_error", :name => name)
+  def initialize(name)
+    message = t("exceptions.operation_in_progress_error", :name => name)
+    super message
   end
 end
 
@@ -164,6 +189,7 @@ class FormulaConflictError < RuntimeError
                         :name => formula.full_name,
                         :count => conflicts.length),
       :conflict_list => conflicts.map { |c| conflict_message(c) }.join("\n") + "\n",
+      :conflicts => (conflicts.map(&:name)*" "),
       :homebrew_prefix => HOMEBREW_PREFIX)
   end
 end
@@ -174,7 +200,7 @@ class BuildError < RuntimeError
   def initialize(formula, cmd, args, env)
     @formula = formula
     @env = env
-    args = args.map{ |arg| arg.to_s.gsub " ", "\\ " }.join(" ")
+    args = args.map { |arg| arg.to_s.gsub " ", "\\ " }.join(" ")
     super t("exceptions.build_error.failed_executing",
             :cmd => cmd,
             :args => args)
@@ -192,7 +218,8 @@ class BuildError < RuntimeError
   end
 
   def dump
-    if not ARGV.verbose?
+    if !ARGV.verbose?
+      puts
       puts t("exceptions.build_error.read_this",
              :read_this_color => Tty.red,
              :url => OS::ISSUES_URL,
@@ -209,8 +236,8 @@ class BuildError < RuntimeError
         end
       end
     else
-      require 'cmd/config'
-      require 'cmd/--env'
+      require "cmd/config"
+      require "cmd/--env"
 
       ohai t("exceptions.build_error.dump_heading_formula")
       puts t("exceptions.build_error.dump_tap", :tap => formula.tap) if formula.tap?
@@ -250,6 +277,100 @@ class BuildError < RuntimeError
   end
 end
 
+# raised by FormulaInstaller.check_dependencies_bottled and
+# FormulaInstaller.install if the formula or its dependencies are not bottled
+# and are being installed on a system without necessary build tools
+class BuildToolsError < RuntimeError
+  def initialize(formulae)
+    if formulae.length > 1
+      formula_text = "formulae"
+      package_text = "binary packages"
+    else
+      formula_text = "formula"
+      package_text = "a binary package"
+    end
+
+    if MacOS.version >= "10.10"
+      xcode_text = <<-EOS.undent
+        To continue, you must install Xcode from the App Store,
+        or the CLT by running:
+          xcode-select --install
+      EOS
+    elsif MacOS.version == "10.9"
+      xcode_text = <<-EOS.undent
+        To continue, you must install Xcode from:
+          https://developer.apple.com/downloads/
+        or the CLT by running:
+          xcode-select --install
+      EOS
+    elsif MacOS.version >= "10.7"
+      xcode_text = <<-EOS.undent
+        To continue, you must install Xcode or the CLT from:
+          https://developer.apple.com/downloads/
+      EOS
+    else
+      xcode_text = <<-EOS.undent
+        To continue, you must install Xcode from:
+          https://developer.apple.com/xcode/downloads/
+      EOS
+    end
+
+    super <<-EOS.undent
+      The following #{formula_text}:
+        #{formulae.join(", ")}
+      cannot be installed as a #{package_text} and must be built from source.
+      #{xcode_text}
+    EOS
+  end
+end
+
+# raised by Homebrew.install, Homebrew.reinstall, and Homebrew.upgrade
+# if the user passes any flags/environment that would case a bottle-only
+# installation on a system without build tools to fail
+class BuildFlagsError < RuntimeError
+  def initialize(flags)
+    if flags.length > 1
+      flag_text = "flags"
+      require_text = "require"
+    else
+      flag_text = "flag"
+      require_text = "requires"
+    end
+
+    if MacOS.version >= "10.10"
+      xcode_text = <<-EOS.undent
+        or install Xcode from the App Store, or the CLT by running:
+          xcode-select --install
+      EOS
+    elsif MacOS.version == "10.9"
+      xcode_text = <<-EOS.undent
+        or install Xcode from:
+          https://developer.apple.com/downloads/
+        or the CLT by running:
+          xcode-select --install
+      EOS
+    elsif MacOS.version >= "10.7"
+      xcode_text = <<-EOS.undent
+        or install Xcode or the CLT from:
+          https://developer.apple.com/downloads/
+      EOS
+    else
+      xcode_text = <<-EOS.undent
+        or install Xcode from:
+          https://developer.apple.com/xcode/downloads/
+      EOS
+    end
+
+    super <<-EOS.undent
+      The following #{flag_text}:
+        #{flags.join(", ")}
+      #{require_text} building tools, but none are installed.
+      Either remove the #{flag_text} to attempt bottle installation,
+      #{xcode_text}
+    EOS
+  end
+end
+
 # raised by CompilerSelector if the formula fails with all of
 # the compilers available on the user's system
 class CompilerSelectionError < RuntimeError
@@ -272,7 +393,7 @@ end
 class CurlDownloadStrategyError < RuntimeError
   def initialize(url)
     case url
-    when %r[^file://(.+)]
+    when %r{^file://(.+)}
       super t("exceptions.curl_download_strategy_error_local_file", :file => $1)
     else
       super t("exceptions.curl_download_strategy_error_remote_url", :url => url)
@@ -282,7 +403,7 @@ end
 
 # raised by safe_system in utils.rb
 class ErrorDuringExecution < RuntimeError
-  def initialize(cmd, args=[])
+  def initialize(cmd, args = [])
     args = args.map { |a| a.to_s.gsub " ", "\\ " }.join(" ")
     super t("exceptions.error_during_execution", :cmd => cmd, :args => args)
   end
@@ -295,7 +416,7 @@ class ChecksumMissingError < ArgumentError; end
 class ChecksumMismatchError < RuntimeError
   attr_reader :expected, :hash_type
 
-  def initialize fn, expected, actual
+  def initialize(fn, expected, actual)
     @expected = expected
     @hash_type = expected.hash_type.to_s.upcase
 
@@ -318,5 +439,15 @@ end
 class DuplicateResourceError < ArgumentError
   def initialize(resource)
     super t("exceptions.duplicate_resource_error", :resource => resource.inspect)
+  end
+end
+
+class BottleVersionMismatchError < RuntimeError
+  def initialize(bottle_file, bottle_version, formula, formula_version)
+    super <<-EOS.undent
+      Bottle version mismatch
+      Bottle: #{bottle_file} (#{bottle_version})
+      Formula: #{formula.full_name} (#{formula_version})
+    EOS
   end
 end

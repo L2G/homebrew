@@ -9,13 +9,13 @@ module Homebrew
   def install
     raise FormulaUnspecifiedError if ARGV.named.empty?
 
-    if ARGV.include? '--head'
+    if ARGV.include? "--head"
       raise t('cmd.install.head_uppercase')
     end
 
     ARGV.named.each do |name|
-      if !File.exist?(name) && (name =~ HOMEBREW_TAP_FORMULA_REGEX \
-                                || name =~ HOMEBREW_CASK_TAP_FORMULA_REGEX)
+      if !File.exist?(name) && (name !~ HOMEBREW_CORE_FORMULA_REGEX) \
+              && (name =~ HOMEBREW_TAP_FORMULA_REGEX || name =~ HOMEBREW_CASK_TAP_FORMULA_REGEX)
         install_tap $1, $2
       end
     end unless ARGV.force?
@@ -38,33 +38,37 @@ module Homebrew
         end
       end
 
+      # if the user's flags will prevent bottle only-installations when no
+      # developer tools are available, we need to stop them early on
+      FormulaInstaller.prevent_build_flags unless MacOS.has_apple_developer_tools?
+
       ARGV.formulae.each do |f|
         # head-only without --HEAD is an error
-        if not ARGV.build_head? and f.stable.nil? and f.devel.nil?
+        if !ARGV.build_head? && f.stable.nil? && f.devel.nil?
           raise t("cmd.install.head_only_formula", :name => f.full_name)
         end
 
         # devel-only without --devel is an error
-        if not ARGV.build_devel? and f.stable.nil? and f.head.nil?
+        if !ARGV.build_devel? && f.stable.nil? && f.head.nil?
           raise t("cmd.install.devel_only_formula", :name => f.full_name)
         end
 
-        if ARGV.build_stable? and f.stable.nil?
+        if ARGV.build_stable? && f.stable.nil?
           raise t("cmd.install.no_stable_download", :name => f.full_name)
         end
 
         # --HEAD, fail with no head defined
-        if ARGV.build_head? and f.head.nil?
+        if ARGV.build_head? && f.head.nil?
           raise t("cmd.install.no_head_defined", :name => f.full_name)
         end
 
         # --devel, fail with no devel defined
-        if ARGV.build_devel? and f.devel.nil?
+        if ARGV.build_devel? && f.devel.nil?
           raise t("cmd.install.no_devel_defined", :name => f.full_name)
         end
 
         if f.installed?
-          if f.linked_keg.symlink? or f.keg_only?
+          if f.linked_keg.symlink? || f.keg_only?
             opoo t("cmd.install.already_installed",
                    :name => f.full_name,
                    :version => f.installed_version)
@@ -73,6 +77,13 @@ module Homebrew
                    :name => f.full_name,
                    :version => f.installed_version)
           end
+        elsif f.oldname && (dir = HOMEBREW_CELLAR/f.oldname).exist? && !dir.subdirs.empty? \
+            && f.tap == Tab.for_keg(dir.subdirs.first).tap && !ARGV.force?
+          # Check if the formula we try to install is the same as installed
+          # but not migrated one. If --force passed then install anyway.
+          opoo "#{f.oldname} already installed, it's just not migrated"
+          puts "You can migrate formula with `brew migrate #{f}`"
+          puts "Or you can force install it with `brew install #{f} --force`"
         else
           formulae << f
         end
@@ -114,18 +125,18 @@ module Homebrew
   end
 
   def check_writable_install_location
-    raise t('cmd.install.cannot_write_dir', :path => HOMEBREW_CELLAR) if HOMEBREW_CELLAR.exist? and not HOMEBREW_CELLAR.writable_real?
-    raise t('cmd.install.cannot_write_dir', :path => HOMEBREW_PREFIX) unless HOMEBREW_PREFIX.writable_real? or HOMEBREW_PREFIX.to_s == '/usr/local'
+    raise t('cmd.install.cannot_write_dir', :path => HOMEBREW_CELLAR) if HOMEBREW_CELLAR.exist? && !HOMEBREW_CELLAR.writable_real?
+    raise t('cmd.install.cannot_write_dir', :path => HOMEBREW_PREFIX) unless HOMEBREW_PREFIX.writable_real? || HOMEBREW_PREFIX.to_s == "/usr/local"
   end
 
   def check_xcode
     checks = Checks.new
     %w[
       check_for_unsupported_osx
+      check_for_bad_install_name_tool
       check_for_installed_developer_tools
       check_xcode_license_approved
       check_for_osx_gcc_installer
-      check_for_bad_install_name_tool
     ].each do |check|
       out = checks.send(check)
       opoo out unless out.nil?
@@ -140,7 +151,7 @@ module Homebrew
   end
 
   def check_cellar
-    FileUtils.mkdir_p HOMEBREW_CELLAR if not File.exist? HOMEBREW_CELLAR
+    FileUtils.mkdir_p HOMEBREW_CELLAR unless File.exist? HOMEBREW_CELLAR
   rescue
     raise t('cmd.install.cannot_create_dir',
             :path => HOMEBREW_CELLAR,
@@ -150,11 +161,11 @@ module Homebrew
   def perform_preinstall_checks
     check_ppc
     check_writable_install_location
-    check_xcode
+    check_xcode if MacOS.has_apple_developer_tools?
     check_cellar
   end
 
-  def install_formula f
+  def install_formula(f)
     f.print_tap_action
 
     fi = FormulaInstaller.new(f)
@@ -171,7 +182,6 @@ module Homebrew
     fi.debug               = ARGV.debug?
     fi.prelude
     fi.install
-    fi.caveats
     fi.finish
   rescue FormulaInstallationAlreadyAttemptedError
     # We already attempted to install f as part of the dependency tree of

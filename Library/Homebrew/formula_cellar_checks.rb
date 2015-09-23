@@ -1,5 +1,5 @@
 module FormulaCellarChecks
-  def check_PATH bin
+  def check_PATH(bin)
     # warn the user if stuff was installed outside of their PATH
     return unless bin.directory?
     return unless bin.children.length > 0
@@ -17,14 +17,14 @@ module FormulaCellarChecks
 
   def check_manpages
     # Check for man pages that aren't in share/man
-    return unless (formula.prefix+'man').directory?
+    return unless (formula.prefix+"man").directory?
 
     t("formula_cellar_checks.top_level_man_dir")
   end
 
   def check_infopages
     # Check for info pages that aren't in share/info
-    return unless (formula.prefix+'info').directory?
+    return unless (formula.prefix+"info").directory?
 
     t("formula_cellar_checks.top_level_info_dir")
   end
@@ -41,11 +41,11 @@ module FormulaCellarChecks
   def check_non_libraries
     return unless formula.lib.directory?
 
-    valid_extensions = %w(.a .dylib .framework .jnilib .la .o .so
-                          .jar .prl .pm .sh)
+    valid_extensions = %w[.a .dylib .framework .jnilib .la .o .so
+                          .jar .prl .pm .sh]
     non_libraries = formula.lib.children.select do |g|
       next if g.directory?
-      not valid_extensions.include? g.extname
+      !valid_extensions.include? g.extname
     end
     return if non_libraries.empty?
 
@@ -54,17 +54,17 @@ module FormulaCellarChecks
       (non_libraries * "\n        ")
   end
 
-  def check_non_executables bin
+  def check_non_executables(bin)
     return unless bin.directory?
 
-    non_exes = bin.children.select { |g| g.directory? or not g.executable? }
+    non_exes = bin.children.select { |g| g.directory? || !g.executable? }
     return if non_exes.empty?
 
     t("formula_cellar_checks.non_execs_found_in_bin", :path => bin) +
       (non_exes * "\n        ")
   end
 
-  def check_generic_executables bin
+  def check_generic_executables(bin)
     return unless bin.directory?
     generic_names = %w[run service start stop]
     generics = bin.children.select { |g| generic_names.include? g.basename.to_s }
@@ -95,7 +95,7 @@ module FormulaCellarChecks
       (files * "\n        ")
   end
 
-  def check_easy_install_pth lib
+  def check_easy_install_pth(lib)
     pth_found = Dir["#{lib}/python{2.7,3}*/site-packages/easy-install.pth"].map { |f| File.dirname(f) }
     return if pth_found.empty?
 
@@ -113,10 +113,10 @@ module FormulaCellarChecks
     return if system_openssl.empty?
 
     t("formula_cellar_checks.obj_linked_against_system_openssl") +
-      (system_openssl  * "\n        ")
+      (system_openssl * "\n        ")
   end
 
-  def check_python_framework_links lib
+  def check_python_framework_links(lib)
     python_modules = Pathname.glob lib/"python*/site-packages/**/*.so"
     framework_links = python_modules.select do |obj|
       dlls = obj.dynamically_linked_libraries
@@ -126,6 +126,26 @@ module FormulaCellarChecks
 
     t("formula_cellar_checks.python_explicit_frameworks") +
       (framework_links * "\n        ")
+  end
+
+  def check_emacs_lisp(share, name)
+    return unless (share/"emacs/site-lisp").directory?
+
+    # Emacs itself can do what it wants
+    return if name == "emacs"
+
+    elisps = (share/"emacs/site-lisp").children.select { |file| %w[.el .elc].include? file.extname }
+    return if elisps.empty?
+
+    <<-EOS.undent
+      Emacs Lisp files were linked directly to #{HOMEBREW_PREFIX}/share/emacs/site-lisp
+
+      This may cause conflicts with other packages; install to a subdirectory instead, such as
+      #{share}/emacs/site-lisp/#{name}
+
+      The offending files are:
+        #{elisps * "\n        "}
+    EOS
   end
 
   def audit_installed
@@ -141,6 +161,7 @@ module FormulaCellarChecks
     audit_check_output(check_easy_install_pth(formula.lib))
     audit_check_output(check_openssl_links)
     audit_check_output(check_python_framework_links(formula.lib))
+    audit_check_output(check_emacs_lisp(formula.share, formula.name))
   end
 
   private

@@ -1,33 +1,33 @@
 # Gets a patch from a GitHub commit or pull request and applies it to Homebrew.
 # Optionally, installs it too.
 
-require 'utils'
-require 'formula'
-require 'cmd/tap'
+require "utils"
+require "formula"
+require "cmd/tap"
 
 module Homebrew
   HOMEBREW_PULL_API_REGEX = %r{https://api\.github\.com/repos/([\w-]+)/homebrew(-[\w-]+)?/pulls/(\d+)}
 
-  def tap arg
-    match = arg.match(%r[homebrew-([\w-]+)/])
+  def tap(arg)
+    match = arg.match(%r{homebrew-([\w-]+)/})
     match[1].downcase if match
   end
 
-  def pull_url url
+  def pull_url(url)
     # GitHub provides commits/pull-requests raw patches using this URL.
-    url += '.patch'
+    url += ".patch"
 
     patchpath = HOMEBREW_CACHE + File.basename(url)
-    curl url, '-o', patchpath
+    curl url, "-o", patchpath
 
-    ohai 'Applying patch'
+    ohai "Applying patch"
     patch_args = []
     # Normally we don't want whitespace errors, but squashing them can break
     # patches so an option is provided to skip this step.
-    if ARGV.include? '--ignore-whitespace' or ARGV.include? '--clean'
-      patch_args << '--whitespace=nowarn'
+    if ARGV.include?("--ignore-whitespace") || ARGV.include?("--clean")
+      patch_args << "--whitespace=nowarn"
     else
-      patch_args << '--whitespace=fix'
+      patch_args << "--whitespace=fix"
     end
 
     # Fall back to three-way merge if patch does not apply cleanly
@@ -35,12 +35,12 @@ module Homebrew
     patch_args << patchpath
 
     begin
-      safe_system 'git', 'am', *patch_args
+      safe_system "git", "am", *patch_args
     rescue ErrorDuringExecution
       if ARGV.include? "--resolve"
         odie t("cmd.pull.patch_failed_to_apply")
       else
-        system 'git', 'am', '--abort'
+        system "git", "am", "--abort"
         odie t("cmd.pull.patch_failure_abort")
       end
     ensure
@@ -53,9 +53,11 @@ module Homebrew
       odie t("cmd.pull.argument_required")
     end
 
-    if ARGV[0] == '--rebase'
+    if ARGV[0] == "--rebase"
       odie t("cmd.pull.you_meant_git_pull_rebase")
     end
+
+    bintray_fetch_formulae =[]
 
     ARGV.named.each do |arg|
       if arg.to_i > 0
@@ -64,7 +66,7 @@ module Homebrew
       elsif (testing_match = arg.match %r{brew.sh/job/Homebrew%20Testing/(\d+)/})
         _, testing_job = *testing_match
         url = "https://github.com/Homebrew/homebrew/compare/master...BrewTestBot:testing-#{testing_job}"
-        odie "Testing URLs require `--bottle`!" unless ARGV.include?('--bottle')
+        odie "Testing URLs require `--bottle`!" unless ARGV.include?("--bottle")
       else
         if (api_match = arg.match HOMEBREW_PULL_API_REGEX)
           _, user, tap, pull = *api_match
@@ -99,7 +101,7 @@ module Homebrew
       branch = `git symbolic-ref --short HEAD`.strip
 
       unless branch == "master"
-        opoo t("cmd.pull.current_branch_not_master", :branch => branch)
+        opoo t("cmd.pull.current_branch_not_master", :branch => branch) unless ARGV.include? "--clean"
       end
 
       pull_url url
@@ -126,7 +128,7 @@ module Homebrew
         end
       end
 
-      unless ARGV.include? '--bottle'
+      unless ARGV.include? "--bottle"
         changed_formulae.each do |f|
           next unless f.bottle
           opoo t("cmd.pull.has_bottle", :name => f.full_name)
@@ -136,11 +138,11 @@ module Homebrew
       # i18n: Careful, the value of message should be in English since it will
       # be the log message of the GitHub commit
 
-      if issue && !ARGV.include?('--clean')
+      if issue && !ARGV.include?("--clean")
         ohai t("cmd.pull.patch_closes_issue_number", :issue => issue)
         message = `git log HEAD^.. --format=%B`
 
-        if ARGV.include? '--bump'
+        if ARGV.include? "--bump"
           odie t("cmd.pull.can_only_bump_one_changed_formula") unless changed_formulae.length == 1
           formula = changed_formulae.first
           subject = "#{formula.name} #{formula.version}"
@@ -152,7 +154,7 @@ module Homebrew
         # If this is a pull request, append a close message.
         unless message.include? "Closes ##{issue}."
           message += "\nCloses ##{issue}."
-          safe_system 'git', 'commit', '--amend', '--signoff', '--allow-empty', '-q', '-m', message
+          safe_system "git", "commit", "--amend", "--signoff", "--allow-empty", "-q", "-m", message
         end
       end
 
@@ -192,12 +194,7 @@ module Homebrew
               "-u#{bintray_user}:#{bintray_key}", "-X", "POST",
               "-d", '{"publish_wait_for_secs": -1}',
               "https://api.bintray.com/content/homebrew/#{repo}/#{package}/#{version}/publish"
-            success = system "brew", "fetch", "--retry", "--force-bottle", f.full_name
-            unless success
-              ohai "That didn't work; waiting for 15 seconds and trying again..."
-              sleep 15
-              system "brew", "fetch", "--retry", "--force-bottle", f.full_name
-            end
+            bintray_fetch_formulae << f
           end
         else
           opoo t("cmd.pull.must_set_bintray_creds")
@@ -207,12 +204,28 @@ module Homebrew
       ohai t("cmd.pull.patch_changed")
       safe_system "git", "diff-tree", "-r", "--stat", revision, "HEAD"
 
-      if ARGV.include? '--install'
+      if ARGV.include? "--install"
         changed_formulae.each do |f|
           ohai t("cmd.pull.installing", :name => f.full_name)
-          install = f.installed? ? 'upgrade' : 'install'
-          safe_system 'brew', install, '--debug', f.full_name
+          install = f.installed? ? "upgrade" : "install"
+          safe_system "brew", install, "--debug", f.full_name
         end
+      end
+    end
+
+    bintray_fetch_formulae.each do |f|
+      max_retries = 5
+      retry_count = 0
+      begin
+        success = system "brew", "fetch", "--force-bottle", f.full_name
+        raise "Failed to download #{f} bottle!" unless success
+      rescue RuntimeError => e
+        retry_count += 1
+        raise e if retry_count >= max_retries
+        sleep_seconds = 2**retry_count
+        ohai "That didn't work; sleeping #{sleep_seconds} seconds and trying again..."
+        sleep sleep_seconds
+        retry
       end
     end
   end
