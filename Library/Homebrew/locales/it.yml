@@ -1,13 +1,11 @@
 it:
   blacklist:
     clojure: 
-    distributed_with_os_x: 
     gem_via_ruby_formula: 
     gfortran: 
     google_tool: 
     gsutil: 
     haskell_platform: 
-    libiconv: 
     lzma: 
     macruby: 
     osmium: 
@@ -499,8 +497,6 @@ it:
     operation_in_progress_error: 
     resource_missing_error: 
     tap_and_try_again: 
-    tap_formula_unavailable_error: 
-    tap_formula_unavailable_error_w_dependent: 
     unsatisfied_requirements: 
   extend:
     argv:
@@ -637,7 +633,6 @@ it:
     cannot_be_used_now: 
     log_filtered_with_time: 
     log_heading: 
-    sandbox_profile: 
     using_sandbox: 
   software_spec:
     cxx11: 

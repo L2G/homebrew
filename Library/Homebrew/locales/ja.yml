@@ -1,13 +1,11 @@
 ja:
   blacklist:
     clojure: 
-    distributed_with_os_x: Appleはそれが%{path}にありますOS Xに「%{name}」を配布しています。
     gem_via_ruby_formula: 
     gfortran: 
     google_tool: 
     gsutil: 
     haskell_platform: 
-    libiconv: 
     lzma: 
     macruby: 
     osmium: 
@@ -474,8 +472,6 @@ ja:
     operation_in_progress_error: 
     resource_missing_error: 
     tap_and_try_again: 
-    tap_formula_unavailable_error: 
-    tap_formula_unavailable_error_w_dependent: 
     unsatisfied_requirements: 
   extend:
     argv:
@@ -612,7 +608,6 @@ ja:
     cannot_be_used_now: 
     log_filtered_with_time: 
     log_heading: 
-    sandbox_profile: 
     using_sandbox: 
   software_spec:
     cxx11: 

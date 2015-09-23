@@ -8,7 +8,6 @@ en:
         brew install leiningen
       and then follow the tutorial:
         https://github.com/technomancy/leiningen/blob/stable/doc/TUTORIAL.md
-    distributed_with_os_x: Apple distributes %{name} with OS X, you can find it in %{path}.
     gem_via_ruby_formula: 'Homebrew provides gem via: `brew install ruby`.'
     gfortran: |-
       GNU Fortran is now provided as part of GCC, and can be installed with:
@@ -24,10 +23,6 @@ en:
 
       A binary installer is available:
         https://www.haskell.org/platform/mac.html
-    libiconv: |-
-      Apple distributes %{name} with OS X, you can find it in /usr/lib.
-      Some build scripts fail to detect it correctly, please check existing
-      formulae for solutions.
     lzma: lzma is now part of the xz formula.
     macruby: |-
       MacRuby works better when you install their package:
@@ -1007,12 +1002,6 @@ en:
       Please wait for it to finish or terminate it to continue.
     resource_missing_error: "%{formula} does not define resource %{resource}"
     tap_and_try_again: 'Please tap it and then try again: brew tap %{tap}'
-    tap_formula_unavailable_error: |
-      No available formula for %{name}
-      Please tap it and then try again: brew tap %{user}/%{repo}
-    tap_formula_unavailable_error_w_dependent: |-
-      No available formula for %{name} (dependency of %{dependent})
-      Please tap it and then try again: brew tap %{user}/%{repo}
     unsatisfied_requirements:
       one: An unsatisfied requirement failed this build.
       other: Unsatisfied requirements failed this build.
@@ -1254,7 +1243,6 @@ en:
     cannot_be_used_now: The sandbox cannot be used in debug or interactive mode.
     log_filtered_with_time: We use time to filter sandbox log. Therefore, unrelated logs may be recorded.
     log_heading: Sandbox log
-    sandbox_profile: 'Sandbox profile:'
     using_sandbox: Using the sandbox
   software_spec:
     cxx11: Build using C++11 mode
