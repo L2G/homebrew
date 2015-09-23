@@ -1,4 +1,5 @@
 require "tap"
+require "descriptions"
 
 module Homebrew
   def tap
@@ -41,6 +42,7 @@ module Homebrew
 
     formula_count = tap.formula_files.size
     puts t("cmd.tap.tapped_formulae_abv", :count => formula_count, :abv => tap.path.abv)
+    Descriptions.cache_formulae(tap.formula_names)
 
     if !clone_target && tap.private?
       puts t("cmd.tap.private_repo_tapped",

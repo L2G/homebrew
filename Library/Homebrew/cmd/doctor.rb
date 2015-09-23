@@ -59,14 +59,6 @@ class Checks
   def inject_file_list(list, str)
     list.inject(str) { |s, f| s << "    #{f}\n" }
   end
-
-  # Git will always be on PATH because of the wrapper script in
-  # Library/ENV/scm, so we check if there is a *real*
-  # git here to avoid multiple warnings.
-  def git?
-    return @git if instance_variable_defined?(:@git)
-    @git = system "git --version >/dev/null 2>&1"
-  end
   ############# END HELPERS
 
   # Sorry for the lack of an indent here, the diff would have been unreadable.
@@ -74,9 +66,7 @@ class Checks
   def check_path_for_trailing_slashes
     bad_paths = ENV["PATH"].split(File::PATH_SEPARATOR).select { |p| p[-1..-1] == "/" }
     return if bad_paths.empty?
-    s = t('cmd.doctor.trailing_slashes')
-    bad_paths.each { |p| s << "    #{p}" }
-    s
+    inject_file_list bad_paths, t('cmd.doctor.trailing_slashes')
   end
 
   # Installing MacGPG2 interferes with Homebrew in a big way
@@ -197,14 +187,12 @@ class Checks
         end
       end
     end
-    unless broken_symlinks.empty?
-      t('cmd.doctor.broken_symlinks',
-        :broken_symlinks => broken_symlinks * "\n      ")
-    end
+    return if broken_symlinks.empty?
+    inject_file_list broken_symlinks, t('cmd.doctor.broken_symlinks')
   end
 
   def check_for_unsupported_osx
-    if MacOS.version >= "10.11" then <<-EOS.undent
+    if !ARGV.homebrew_developer? && MacOS.version >= "10.11" then <<-EOS.undent
     You are using OS X #{MacOS.version}.
     We do not provide support for this pre-release version.
     You may encounter build failures or other breakage.
@@ -329,12 +317,8 @@ class Checks
       cant_read << d unless d.writable_real?
     end
 
-    cant_read.sort!
-    if cant_read.length > 0
-      s = t('cmd.doctor.unwritable_directories', :path => target)
-      cant_read.each { |f| s << "    #{f}\n" }
-      s
-    end
+    return if cant_read.empty?
+    inject_file_list cant_read.sort, t('cmd.doctor.unwritable_directories', :path => target)
   end
 
   def check_access_share_locale
@@ -440,6 +424,19 @@ class Checks
     end
   end
 
+  # Xcode 7 lacking the 10.10 SDK is forcing sysroot to be declared
+  # nil on 10.10 & breaking compiles. CLT is workaround.
+  def check_sdk_path_not_nil_yosemite
+    if MacOS.version == :yosemite && !MacOS::CLT.installed? && MacOS::Xcode.installed? && MacOS.sdk_path.nil?
+      <<-EOS.undent
+      Xcode 7 lacks the 10.10 SDK which can cause some builds to fail.
+      We recommend installing the Command Line Tools with:
+        xcode-select --install
+      to resolve this issue.
+     EOS
+    end
+  end
+
   def check_user_path_1
     $seen_prefix_bin = false
     $seen_prefix_sbin = false
@@ -457,10 +454,13 @@ class Checks
                       select { |bn| File.exist? "/usr/bin/#{bn}" }
 
           if conflicts.size > 0
-            out = t('cmd.doctor.user_path_out_of_order',
-                    :path => "#{HOMEBREW_PREFIX}/bin",
-                    :conflicts => conflicts * "\n                ",
-                    :shell_profile => shell_profile)
+            out = inject_file_list conflicts,
+                                   t('cmd.doctor.user_path_out_of_order_1',
+                                     :path => "#{HOMEBREW_PREFIX}/bin")
+
+            out += "\n" + t('cmd.doctor.user_path_out_of_order_2',
+                            :path => "#{HOMEBREW_PREFIX}/bin",
+                            :shell_profile => shell_profile)
           end
         end
       when "#{HOMEBREW_PREFIX}/bin"
@@ -576,27 +576,23 @@ class Checks
       scripts += Dir.chdir(p) { Dir["*-config"] }.map { |c| File.join(p, c) }
     end
 
-    unless scripts.empty?
-      s = t('cmd.doctor.stray_config_scripts')
-
-      s << scripts.map { |f| "  #{f}" }.join("\n")
-    end
+    return if scripts.empty?
+    inject_file_list scripts, t('cmd.doctor.stray_config_scripts')
   end
 
   def check_DYLD_vars
     found = ENV.keys.grep(/^DYLD_/)
-    unless found.empty?
-      s = t('cmd.doctor.dyld_vars_are_set')
-      s << found.map do |e|
-        t('cmd.doctor.dyld_vars_are_set_2',
-          :var => e,
-          :value => ENV.fetch(e)) + "\n"
-      end.join
-      if found.include? "DYLD_INSERT_LIBRARIES"
-        s += "\n" + t('cmd.doctor.dyld_vars_have_go_conflict')
-      end
-      s
+    return if found.empty?
+    s = inject_file_list(found.map do |e|
+                           t("cmd.doctor.dyld_vars_are_set_2",
+                             :name => e,
+                             :value => ENV.fetch(e))
+                         end,
+                         t('cmd.doctor.dyld_vars_are_set'))
+    if found.include? "DYLD_INSERT_LIBRARIES"
+      s += "\n" + t('cmd.doctor.dyld_vars_have_go_conflict')
     end
+    s
   end
 
   def check_for_symlinked_cellar
@@ -658,7 +654,7 @@ class Checks
   end
 
   def check_for_git
-    if git?
+    if Utils.git_available?
       __check_git_version
     else
       t('cmd.doctor.git_not_found')
@@ -666,7 +662,7 @@ class Checks
   end
 
   def check_git_newline_settings
-    return unless git?
+    return unless Utils.git_available?
 
     autocrlf = `git config --get core.autocrlf`.chomp
 
@@ -676,16 +672,14 @@ class Checks
   end
 
   def check_git_origin
-    return unless git? && (HOMEBREW_REPOSITORY/".git").exist?
+    return if !Utils.git_available? || !(HOMEBREW_REPOSITORY/".git").exist?
 
-    HOMEBREW_REPOSITORY.cd do
-      origin = `git config --get remote.origin.url`.strip
+    origin = Homebrew.git_origin
 
-      if origin.empty?
-        t('cmd.doctor.git_remote_no_origin', :path => HOMEBREW_REPOSITORY)
-      elsif origin !~ /(mxcl|Homebrew)\/homebrew(\.git)?$/
-        t('cmd.doctor.git_remote_origin_suspect', :origin => origin)
-      end
+    if origin.nil?
+      t('cmd.doctor.git_remote_no_origin', :path => HOMEBREW_REPOSITORY)
+    elsif origin !~ /(mxcl|Homebrew)\/homebrew(\.git)?$/
+      t('cmd.doctor.git_remote_origin_suspect', :origin => origin)
     end
   end
 
@@ -718,11 +712,9 @@ class Checks
       f.keg_only? && __check_linked_brew(f)
     end
 
-    unless linked.empty?
-      s = t('cmd.doctor.keg_only_formula_linked')
-      linked.each { |f| s << "    #{f.full_name}\n" }
-      s
-    end
+    return if linked.empty?
+    inject_file_list linked.map(&:full_name),
+                     t('cmd.doctor.keg_only_formula_linked')
   end
 
   def check_for_other_frameworks
@@ -755,7 +747,7 @@ class Checks
   end
 
   def check_git_status
-    return unless git?
+    return unless Utils.git_available?
     HOMEBREW_REPOSITORY.cd do
       unless `git status --untracked-files=all --porcelain -- Library/Homebrew/ 2>/dev/null`.chomp.empty?
         t('cmd.doctor.uncommitted_mods', :path => HOMEBREW_LIBRARY)
@@ -821,7 +813,7 @@ class Checks
   end
 
   def check_for_outdated_homebrew
-    return unless git?
+    return unless Utils.git_available?
     HOMEBREW_REPOSITORY.cd do
       if File.directory? ".git"
         local = `git rev-parse -q --verify refs/remotes/origin/master`.chomp
@@ -844,11 +836,8 @@ class Checks
   end
 
   def check_for_unlinked_but_not_keg_only
-    return unless HOMEBREW_CELLAR.exist?
-    unlinked = HOMEBREW_CELLAR.children.reject do |rack|
-      if !rack.directory?
-        true
-      elsif !(HOMEBREW_REPOSITORY/"Library/LinkedKegs"/rack.basename).directory?
+    unlinked = Formula.racks.reject do |rack|
+      if !(HOMEBREW_REPOSITORY/"Library/LinkedKegs"/rack.basename).directory?
         begin
           Formulary.from_rack(rack).keg_only?
         rescue FormulaUnavailableError, TapFormulaAmbiguityError
@@ -859,9 +848,8 @@ class Checks
       end
     end.map(&:basename)
 
-    unless unlinked.empty?
-      t('cmd.doctor.unlinked_kegs_in_cellar', :kegs => unlinked * "\n        ")
-    end
+    return if unlinked.empty?
+    inject_file_list unlinked, t('cmd.doctor.unlinked_kegs_in_cellar')
   end
 
   def check_xcode_license_approved
@@ -914,8 +902,8 @@ class Checks
     return if cmd_map.empty?
     s = t("cmd.doctor.external_commands_conflict")
     cmd_map.each do |cmd_name, cmd_paths|
-      s += "\n\n" + t("cmd.doctor.found_command_here", :cmd_name => cmd_name) + "\n"
-      s += cmd_paths.map { |f| "  #{f}" }.join("\n")
+      s += inject_file_list(cmd_paths,
+                            "\n  " + t("cmd.doctor.found_command_here", :cmd_name => cmd_name))
     end
     s
   end

@@ -1,5 +1,6 @@
 require "hardware"
 require "software_spec"
+require "rexml/document"
 
 module Homebrew
   def config
@@ -57,10 +58,7 @@ module Homebrew
   end
 
   def origin
-    origin = HOMEBREW_REPOSITORY.cd do
-      `git config --get remote.origin.url 2>/dev/null`.chomp
-    end
-    if origin.empty? then t('cmd.config.none') else origin end
+    Homebrew.git_origin || t('cmd.config.none')
   end
 
   def describe_path(path)
@@ -86,31 +84,30 @@ module Homebrew
 
   def describe_python
     python = which "python"
-    if %r{/shims/python$} =~ python && which("pyenv")
-      begin
-        t('cmd.config.pair_with_arrow',
-          :from => python,
-          :to => Pathname.new(`pyenv which python`.strip).realpath)
-      rescue
-        describe_path(python)
-      end
+    return t("cmd.config.not_applicable") if python.nil?
+    python_binary = Utils.popen_read python, "-c", "import sys; sys.stdout.write(sys.executable)"
+    python_binary = Pathname.new(python_binary).realpath
+    if python == python_binary
+      python
     else
-      describe_path(python)
+      t('cmd.config.pair_with_arrow',
+        :from => python,
+        :to => python_binary)
     end
   end
 
   def describe_ruby
     ruby = which "ruby"
-    if %r{/shims/ruby$} =~ ruby && which("rbenv")
-      begin
-        t('cmd.config.pair_with_arrow',
-          :from => ruby,
-          :to => Pathname.new(`rbenv which ruby`.strip).realpath)
-      rescue
-        describe_path(ruby)
-      end
+    return t("cmd.config.not_applicable") if ruby.nil?
+    ruby_binary = Utils.popen_read ruby, "-rrbconfig", "-e", \
+      'include RbConfig;print"#{CONFIG["bindir"]}/#{CONFIG["ruby_install_name"]}#{CONFIG["EXEEXT"]}"'
+    ruby_binary = Pathname.new(ruby_binary).realpath
+    if ruby == ruby_binary
+      ruby
     else
-      describe_path(ruby)
+      t('cmd.config.pair_with_arrow',
+        :from => ruby,
+        :to => ruby_binary)
     end
   end
 
@@ -146,14 +143,13 @@ module Homebrew
   end
 
   def describe_java
-    if which("java").nil?
-      t('cmd.config.not_applicable')
-    elsif !(`/usr/libexec/java_home --failfast &>/dev/null` && $?.success?)
-      t('cmd.config.not_applicable')
-    else
-      java = `java -version 2>&1`.lines.first.chomp
-      java =~ /java version "(.+?)"/ ? $1 : java
+    java_xml = Utils.popen_read("/usr/libexec/java_home", "--xml", "--failfast")
+    return t("cmd.config.not_applicable") unless $?.success?
+    javas = []
+    REXML::XPath.each(REXML::Document.new(java_xml), "//key[text()='JVMVersion']/following-sibling::string") do |item|
+      javas << item.text
     end
+    javas.uniq.join(t("cmd.config.comma_join"))
   end
 
   def dump_verbose_config(f = $stdout)

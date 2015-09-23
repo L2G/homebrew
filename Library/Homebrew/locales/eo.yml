@@ -185,6 +185,7 @@ eo:
       xcodebuild_args: 
       xcodebuild_symroot: 
     bottle:
+      absolute_symlink: 
       absolute_symlink_1: 
       absolute_symlink_2: "  %{keg} -> %{resolved_path}"
       bottle_block_addition_failed: 
@@ -250,7 +251,6 @@ eo:
       bad_install_name_tool: 
       broken_symlinks: |
         Rompitaj simbolligoj trovitaj. Forigu tiujn per `brew prune`:
-          %{broken_symlinks}
       cellar_and_temp_not_same_vol: 
       dyld_vars_are_set: 
       dyld_vars_are_set_2: 
@@ -321,6 +321,8 @@ eo:
       user_path_has_no_homebrew_bin: 
       user_path_has_no_homebrew_sbin: 
       user_path_out_of_order: 
+      user_path_out_of_order_1: 
+      user_path_out_of_order_2: 
       xcode_clt_install_from_web: 
       xcode_clt_update_from_app_store: 
       xcode_clt_update_from_web: 

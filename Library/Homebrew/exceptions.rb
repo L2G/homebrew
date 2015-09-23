@@ -261,12 +261,12 @@ class BuildError < RuntimeError
       end
     end
     puts
-    unless RUBY_VERSION < "1.8.7" || issues.empty?
+    if RUBY_VERSION >= "1.8.7" && issues && issues.any?
       puts t("exceptions.build_error.refer_to_issues")
       issues.each do |i|
         puts t("exceptions.build_error.issues_line_item",
-               :title => i['title'],
-               :url => i['html_url'])
+               :title => i["title"],
+               :url => i["html_url"])
       end
     end
 

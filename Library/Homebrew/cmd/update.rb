@@ -2,6 +2,7 @@ require "cmd/tap"
 require "formula_versions"
 require "migrator"
 require "formulary"
+require "descriptions"
 
 module Homebrew
   def update
@@ -99,6 +100,7 @@ module Homebrew
              :current_revision => master_updater.current_revision[0, 8])
       report.dump
     end
+    Descriptions.update_cache(report)
   end
 
   private
@@ -190,9 +192,24 @@ class Updater
       @stashed = true
     end
 
-    @initial_branch = `git symbolic-ref --short HEAD`.chomp
-    if @initial_branch != "master" && !@initial_branch.empty?
-      safe_system "git", "checkout", "master", *quiet
+    # The upstream repository's default branch may not be master;
+    # check refs/remotes/origin/HEAD to see what the default
+    # origin branch name is, and use that. If not set, fall back to "master".
+    begin
+      @upstream_branch = `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null`
+      @upstream_branch = @upstream_branch.chomp.sub('refs/remotes/origin/', '')
+    rescue ErrorDuringExecution
+      @upstream_branch = "master"
+    end
+
+    begin
+      @initial_branch = `git symbolic-ref --short HEAD 2>/dev/null`.chomp
+    rescue ErrorDuringExecution
+      @initial_branch = ""
+    end
+
+    if @initial_branch != @upstream_branch && !@initial_branch.empty?
+      safe_system "git", "checkout", @upstream_branch, *quiet
     end
 
     @initial_revision = read_current_revision
@@ -201,11 +218,12 @@ class Updater
     safe_system "git", "config", "core.autocrlf", "false"
 
     args = ["pull"]
-    args << "--rebase" if ARGV.include? "--rebase"
+    args << "--ff"
+    args << ((ARGV.include? "--rebase") ? "--rebase" : "--no-rebase")
     args += quiet
     args << "origin"
-    # the refspec ensures that 'origin/master' gets updated
-    args << "refs/heads/master:refs/remotes/origin/master"
+    # the refspec ensures that the default upstream branch gets updated
+    args << "refs/heads/#{@upstream_branch}:refs/remotes/origin/#{@upstream_branch}"
 
     reset_on_interrupt { safe_system "git", *args }
 
@@ -229,7 +247,7 @@ class Updater
     ignore_interrupts { yield }
   ensure
     if $?.signaled? && $?.termsig == 2 # SIGINT
-      safe_system "git", "checkout", @initial_branch
+      safe_system "git", "checkout", @initial_branch unless @initial_branch.empty?
       safe_system "git", "reset", "--hard", @initial_revision
       safe_system "git", "stash", "pop" if @stashed
     end

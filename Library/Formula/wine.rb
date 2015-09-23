@@ -22,15 +22,16 @@ class Wine < Formula
   end
 
   bottle do
+    sha256 "545e28e3c8442d8be08dbb5ec193bbc9fbf82d1c196030e07f4758161af42924" => :el_capitan
     sha1 "348f15e19880888d19d04d2fe4bad42048fe6828" => :yosemite
     sha1 "69f05602ecde44875cf26297871186aaa0b26cd7" => :mavericks
     sha1 "a89371854006687b74f4446a52ddb1f68cfafa7e" => :mountain_lion
   end
 
   devel do
-    url "https://downloads.sourceforge.net/project/wine/Source/wine-1.7.50.tar.bz2"
-    mirror "http://mirrors.ibiblio.org/wine/source/1.7/wine-1.7.50.tar.bz2"
-    sha256 "7c5410fab820281f337d478c18305027363c9012f30f742339ef1eb0f9dd711e"
+    url "https://downloads.sourceforge.net/project/wine/Source/wine-1.7.51.tar.bz2"
+    mirror "http://mirrors.ibiblio.org/wine/source/1.7/wine-1.7.51.tar.bz2"
+    sha256 "397fc95b463d6ae1b65ab0477d9fe5d0871e8e2a3322bc9d984e438f2c4d0f52"
 
     depends_on "samba" => :optional
     depends_on "gnutls"

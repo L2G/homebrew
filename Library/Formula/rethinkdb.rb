@@ -1,14 +1,14 @@
 class Rethinkdb < Formula
   desc "The open-source database for the realtime web"
-  homepage "http://www.rethinkdb.com/"
-  url "http://download.rethinkdb.com/dist/rethinkdb-2.1.2.tgz"
-  sha256 "e46495ccd95e8b2bd855211f48ecd6964a64b520b951115d46b9b9e55cb48322"
+  homepage "https://www.rethinkdb.com/"
+  url "https://download.rethinkdb.com/dist/rethinkdb-2.1.4.tgz"
+  sha256 "2553ad4a31b5f09522fc651fd2cfa98d76bccfebd6db87ef929eda54220f70b2"
 
   bottle do
     cellar :any
-    sha256 "d23d74af5012291dc17baf43c52e160bac205993c382e4f7735e87b6629b5269" => :yosemite
-    sha256 "ab004f3d794361d220718ab0784fbbe34960f9999f6801264459800934eb579d" => :mavericks
-    sha256 "0d2fecbd99924316a5a98dd7e2e360645389f67533f6600efc5764d82108c992" => :mountain_lion
+    sha256 "d41b18a64b0acb843bd441d999cf5c63bb9495ad3e0630f7287c70d0d16d6e17" => :el_capitan
+    sha256 "7461fd60287dea32a95416b47521d341ff082729f2a390da5408bf06e36016c2" => :yosemite
+    sha256 "82c8c2d42fa1e0d428704e86c7a64a8cb59c2247289c96fd113cd597a8939914" => :mavericks
   end
 
   depends_on :macos => :lion
@@ -32,7 +32,7 @@ class Rethinkdb < Formula
     system "make"
     system "make", "install-osx"
 
-    mkdir_p "#{var}/log/rethinkdb"
+    (var/"log/rethinkdb").mkpath
   end
 
   def plist; <<-EOS.undent

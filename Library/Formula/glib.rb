@@ -1,13 +1,13 @@
 class Glib < Formula
   desc "Core application library for C"
   homepage "https://developer.gnome.org/glib/"
-  url "https://download.gnome.org/sources/glib/2.44/glib-2.44.1.tar.xz"
-  sha256 "8811deacaf8a503d0a9b701777ea079ca6a4277be10e3d730d2112735d5eca07"
+  url "https://download.gnome.org/sources/glib/2.46/glib-2.46.0.tar.xz"
+  sha256 "b1cee83469ae7d80f17c267c37f090414e93960bd62d2b254a5a96fbc5baacb4"
 
   bottle do
-    sha256 "b6017260ce6e82abca388e12ab536a7e0675caf17f4a5f3ae7d7876ec1f7b5d9" => :yosemite
-    sha256 "ec584074182b988e2b83fcc23d6143fe463a9bb6ddca6d7f75d40d96a9282a7b" => :mavericks
-    sha256 "fcac604c02b1f562c4a6823b8361f35067a2cc1cdcf2ea0dc772698b5f2a156a" => :mountain_lion
+    sha256 "8a9253f6f7b282bb00382a7b25d3b774e70da4d14e2b29840befc963c4b4a591" => :el_capitan
+    sha256 "a4b9dabbc6336cc45eafb2defdf0bf9022748f644c230295b372614d0ad6420a" => :yosemite
+    sha256 "be4a68f07e3d9a9b2bf8700e48cc51f0cf471cb67c5b2ec7a8777f37b75577ab" => :mavericks
   end
 
   option :universal
@@ -44,8 +44,8 @@ class Glib < Formula
   # to unrelated issues in GCC, but improves the situation.
   # Patch submitted upstream: https://bugzilla.gnome.org/show_bug.cgi?id=672777
   patch do
-    url "https://gist.githubusercontent.com/jacknagel/9835034/raw/282d36efc126272f3e73206c9865013f52d67cd8/gio.patch"
-    sha256 "d285c70cfd3434394a1c77c92a8d2bad540c954aad21e8bb83777482c26aab9a"
+    url "https://gist.githubusercontent.com/tschoonj/0977f68918e535ad6c27/raw/6b322d5cde85c53916518857c4d78a99f63c640e/gio.patch"
+    sha256 "cc3f0f6d561d663dfcdd6154b075150f68a36f5a92f94e5163c1c20529bfdf32"
   end
 
   patch do
@@ -58,6 +58,10 @@ class Glib < Formula
 
     inreplace %w[gio/gdbusprivate.c gio/xdgmime/xdgmime.c glib/gutils.c],
       "@@HOMEBREW_PREFIX@@", HOMEBREW_PREFIX
+
+    # renaming is necessary for patches to work
+    mv "gio/gcocoanotificationbackend.c", "gio/gcocoanotificationbackend.m"
+    mv "gio/gnextstepsettingsbackend.c", "gio/gnextstepsettingsbackend.m"
 
     # Disable dtrace; see https://trac.macports.org/ticket/30413
     args = %W[
