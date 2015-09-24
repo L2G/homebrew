@@ -354,6 +354,14 @@ module Homebrew
         @name = "#{@formulae.first}-#{diff_end_sha1}"
       end
 
+      if ENV["TRAVIS"]
+        puts "name: #{@name}"
+        puts "url: #{@url}"
+        puts "hash: #{@hash}"
+        puts "diff_start_sha1: #{diff_start_sha1}"
+        puts "diff_end_sha1: #{diff_end_sha1}"
+      end
+
       @log_root = @brewbot_root + @name
       FileUtils.mkdir_p @log_root
 
@@ -854,6 +862,7 @@ module Homebrew
 
     if ENV["TRAVIS"]
       ARGV << "--verbose"
+      ARGV << "--ci-master" if ENV["TRAVIS_PULL_REQUEST"] == "false"
       ENV["HOMEBREW_VERBOSE_USING_DOTS"] = "1"
     end
 

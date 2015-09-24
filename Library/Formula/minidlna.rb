@@ -6,9 +6,10 @@ class Minidlna < Formula
 
   bottle do
     cellar :any
-    sha256 "20b87cf651499f92c73a5e22823eaa268f37611c61e8f74f7f43e508c3e140ab" => :el_capitan
-    sha256 "a03b5be50423b59805acb5e268c75bbd1f5685ae4a0e35f87a556d7a3ee7c2fc" => :yosemite
-    sha256 "6f8bb8023f20b7e3131320f14f3bc042d2d1077dd100ec089a2c65d08f2279e3" => :mavericks
+    revision 1
+    sha256 "a1720c0519c4c628f1741e340b4462f92a2b20a00f8ed319d7a98602d4ad27a5" => :el_capitan
+    sha256 "f59f5cc914bbd49af01f7421e5d0b368b05eca5a3f63b32be446c61b6ab151cc" => :yosemite
+    sha256 "00a50390c52a5fd7fed585776d586ef285c27ff98e7239ca219325577cf2c10d" => :mavericks
   end
 
   head do
@@ -33,32 +34,47 @@ class Minidlna < Formula
     system "./autogen.sh" if build.head?
     system "./configure", "--exec-prefix=#{prefix}"
     system "make", "install"
-    sample_config_path.write sample_config
+  end
+
+  def post_install
+    (pkgshare/"minidlna.conf").write <<-EOS.undent
+      friendly_name=Mac DLNA Server
+      media_dir=#{ENV["HOME"]}/.config/minidlna/media
+      db_dir=#{ENV["HOME"]}/.config/minidlna/cache
+      log_dir=#{ENV["HOME"]}/.config/minidlna
+    EOS
   end
 
   def caveats; <<-EOS.undent
       Simple single-user configuration:
 
       mkdir -p ~/.config/minidlna
-      cp #{sample_config_path} ~/.config/minidlna/minidlna.conf
+      cp #{opt_pkgshare}/minidlna.conf ~/.config/minidlna/minidlna.conf
       ln -s YOUR_MEDIA_DIR ~/.config/minidlna/media
       minidlnad -f ~/.config/minidlna/minidlna.conf -P ~/.config/minidlna/minidlna.pid
     EOS
   end
 
-  def sample_config_path
-    share + "minidlna/minidlna.conf"
-  end
-
-  def sample_config; <<-EOS.undent
-    friendly_name=Mac DLNA Server
-    media_dir=#{ENV["HOME"]}/.config/minidlna/media
-    db_dir=#{ENV["HOME"]}/.config/minidlna/cache
-    log_dir=#{ENV["HOME"]}/.config/minidlna
-    EOS
-  end
-
   test do
-    system "#{sbin}/minidlnad", "-V"
+    (testpath/".config/minidlna/media").mkpath
+    (testpath/".config/minidlna/cache").mkpath
+    (testpath/"minidlna.conf").write <<-EOS.undent
+      friendly_name=Mac DLNA Server
+      media_dir=#{testpath}/.config/minidlna/media
+      db_dir=#{testpath}/.config/minidlna/cache
+      log_dir=#{testpath}/.config/minidlna
+    EOS
+
+    pid = fork do
+      exec "#{sbin}/minidlnad -f minidlna.conf -p 8081 -P #{testpath}/minidlna.pid"
+    end
+    sleep 2
+
+    begin
+      assert_match /MiniDLNA #{version}/, shell_output("curl localhost:8081")
+    ensure
+      Process.kill("SIGINT", pid)
+      Process.wait(pid)
+    end
   end
 end
