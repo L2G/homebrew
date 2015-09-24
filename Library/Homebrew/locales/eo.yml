@@ -438,7 +438,7 @@ eo:
       no_formula_names: |
         Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
         nomojn.  Uzu `brew upgrade <formula>`.
-      rename_with_arrow: 
+      rename_with_arrow: "%{old_name} -> %{new_name}"
       renamed_formulae: 
       update_tap_failed: 
       updated_formulae:

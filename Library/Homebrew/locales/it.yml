@@ -424,7 +424,7 @@ it:
       homebrew_tap_structure_3: 
       new_formulae: 
       no_formula_names: 
-      rename_with_arrow: 
+      rename_with_arrow: "%{old_name} -> %{new_name}"
       renamed_formulae: 
       update_tap_failed: 
       updated_formulae: 
