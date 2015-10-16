@@ -2,6 +2,7 @@ class Qemu < Formula
   desc "x86 and PowerPC Emulator"
   homepage "http://wiki.qemu.org"
   url "http://wiki.qemu-project.org/download/qemu-2.4.0.1.tar.bz2"
+  mirror "http://ftp.osuosl.org/pub/blfs/conglomeration/qemu/qemu-2.4.0.1.tar.bz2"
   sha256 "ecfe8b88037e41e817d72c460c56c6a0b573d540d6ba38b162d0de4fd22d1bdb"
   head "git://git.qemu-project.org/qemu.git"
 
@@ -35,10 +36,15 @@ class Qemu < Formula
       --prefix=#{prefix}
       --cc=#{ENV.cc}
       --host-cc=#{ENV.cc}
-      --enable-cocoa
       --disable-bsd-user
       --disable-guest-agent
     ]
+
+    if build.with?("sdl") && build.head?
+      args << "--disable-cocoa"
+    else
+      args << "--enable-cocoa"
+    end
 
     args << (build.with?("sdl") ? "--enable-sdl" : "--disable-sdl")
     args << (build.with?("vde") ? "--enable-vde" : "--disable-vde")

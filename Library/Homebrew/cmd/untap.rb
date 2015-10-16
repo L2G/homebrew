@@ -6,7 +6,7 @@ module Homebrew
     raise t("cmd.untap.error_usage") if ARGV.empty?
 
     ARGV.named.each do |tapname|
-      tap = Tap.new(*tap_args(tapname))
+      tap = Tap.fetch(*tap_args(tapname))
 
       raise TapUnavailableError, tap.name unless tap.installed?
       puts t("cmd.untap.untapping", :name => tap, :abv => tap.path.abv)

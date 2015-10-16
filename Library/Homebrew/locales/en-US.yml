@@ -54,8 +54,12 @@ en-US:
     xcode_app_store: Xcode can be installed from the App Store.
     xcode_download: Xcode can be installed from https://developer.apple.com/xcode/downloads/
   brew:
-    bad_sudo: Cowardly refusing to `sudo brew %{cmd}`
-    bad_sudo_2: |-
+    bad_sudo: |
+      Cowardly refusing to `sudo brew %{cmd}`
+      You can use brew with sudo, but only if the brew executable is owned by root.
+      However, this is both not recommended and completely unsupported so do so at
+      your own risk.
+    bad_sudo_2: |
       You can use brew with sudo, but only if the brew executable is owned by root.
       However, this is both not recommended and completely unsupported so do so at
       your own risk.
@@ -77,6 +81,9 @@ en-US:
       Homebrew requires Snow Leopard or higher. For Tiger and Leopard support, see:
       https://github.com/mistydemeo/tigerbrew
     unknown_command: 'Unknown command: %{cmd}'
+    xcode_license: |
+      You have not agreed to the Xcode license. Please resolve this by running:
+        sudo xcodebuild -license
   build:
     git: |
       This directory is now a git repo. Make your changes and then use:
@@ -694,6 +701,7 @@ en-US:
 
         You should probably change the ownership and permissions of /usr/local
         back to your user account.
+          sudo chown -R $(whoami):admin /usr/local
       user_curlrc_exists: |
         You have a curlrc file
         If you have trouble downloading packages with Homebrew, then maybe this
@@ -885,9 +893,11 @@ en-US:
       new_formulae:
         one: New Formula
         other: New Formulae
+      no_changes_to_formulae: No changes to formulae.
       no_formula_names: |
         This command updates brew itself, and does not take formula names.
         Use `brew upgrade <formula>`.
+      note_installed: " (installed)"
       rename_with_arrow: "%{old_name} -> %{new_name}"
       renamed_formulae:
         one: Renamed Formula
@@ -992,7 +1002,7 @@ en-US:
     formula_installation_already_attempted_error: 'Formula installation already attempted: %{name}'
     formula_unavailable_error: No available formula for %{name}
     formula_unavailable_error_w_dependent: No available formula for %{name} (dependency of %{dependent})
-    formula_validation_error: 'invalid attribute: %{attr} (%{value})'
+    formula_validation_error: 'invalid attribute for formula ''%{formula}'': %{attr} (%{value})'
     multiple_versions_installed_error: "%{name} has multiple installed versions"
     no_such_keg_error: 'No such keg: %{cellar}/%{name}'
     operation_in_progress_error: |
@@ -1284,7 +1294,6 @@ en-US:
     how_long_ago: "%{how_long} ago"
     in_the_future: in the future
     interactive_shell_abort: Aborting due to non-zero exit status
-    item_with_star: "%{item}*"
     message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
     message_w_intro_colored: "%{intro_color}%{intro}%{reset_color}: %{message}"
     minutes:

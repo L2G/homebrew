@@ -16,11 +16,12 @@ matrix:
       rvm: system
 
 before_install:
-  - sudo rm -rf /usr/local/.git
+  - export TRAVIS_COMMIT=$(git rev-parse --verify -q HEAD)
+  - cd /usr/local
+  - sudo rm -rf /usr/local/.git/refs /usr/local/.git/packed-refs
   - sudo rsync -az "$TRAVIS_BUILD_DIR/" /usr/local/
   - export TRAVIS_BUILD_DIR="/usr/local"
   - sudo chown -R $USER /usr/local
-  - cd /usr/local
   - env | grep TRAVIS_
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - git reset --hard $TRAVIS_COMMIT

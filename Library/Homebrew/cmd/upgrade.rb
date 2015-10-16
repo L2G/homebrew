@@ -1,5 +1,6 @@
 require "cmd/install"
 require "cmd/outdated"
+require "cmd/cleanup"
 
 module Homebrew
   def upgrade
@@ -51,7 +52,10 @@ module Homebrew
       end.join(t('cmd.upgrade.list_join'))
     end
 
-    outdated.each { |f| upgrade_formula(f) }
+    outdated.each do |f|
+      upgrade_formula(f)
+      cleanup_formula(f) if ARGV.include?("--cleanup") && f.installed?
+    end
   end
 
   def upgrade_pinned?

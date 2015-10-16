@@ -68,15 +68,9 @@ module Homebrew
         end
 
         if f.installed?
-          if f.linked_keg.symlink? || f.keg_only?
-            opoo t("cmd.install.already_installed",
-                   :name => f.full_name,
-                   :version => f.installed_version)
-          else
-            opoo t("cmd.install.already_installed_not_linked",
-                   :name => f.full_name,
-                   :version => f.installed_version)
-          end
+          msg = "#{f.full_name}-#{f.installed_version} already installed"
+          msg << ", it's just not linked" unless f.linked_keg.symlink? || f.keg_only?
+          opoo msg
         elsif f.oldname && (dir = HOMEBREW_CELLAR/f.oldname).exist? && !dir.subdirs.empty? \
             && f.tap == Tab.for_keg(dir.subdirs.first).tap && !ARGV.force?
           # Check if the formula we try to install is the same as installed

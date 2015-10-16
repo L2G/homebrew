@@ -9,7 +9,9 @@ module Homebrew
   SEARCH_ERROR_QUEUE = Queue.new
 
   def search
-    if ARGV.include? "--macports"
+    if ARGV.empty?
+      puts_columns Formula.full_names
+    elsif ARGV.include? "--macports"
       exec_browser "https://www.macports.org/ports.php?by=name&substr=#{ARGV.next}"
     elsif ARGV.include? "--fink"
       exec_browser "http://pdb.finkproject.org/pdb/browse.php?summary=#{ARGV.next}"
@@ -25,8 +27,6 @@ module Homebrew
       query = ARGV.next
       rx = query_regexp(query)
       Descriptions.search(rx, :desc).print
-    elsif ARGV.empty?
-      puts_columns Formula.full_names
     elsif ARGV.first =~ HOMEBREW_TAP_FORMULA_REGEX
       query = ARGV.first
       user, repo, name = query.split("/", 3)
@@ -42,44 +42,47 @@ module Homebrew
       query = ARGV.first
       rx = query_regexp(query)
       local_results = search_formulae(rx)
-      puts_columns(local_results)
-
-      if !query.empty? && $stdout.tty? && msg = blacklisted?(query)
-        unless local_results.empty?
-          puts
-          # XXX [i18n] is inspect just a shortcut for putting quotes around the
-          # string?
-          puts t("cmd.search.if_you_meant_precisely",
-                 :term => query.inspect)
-          puts
-        end
-        puts msg
-      end
-
+      local_results_installed = local_results.select { |f| f.end_with? "(installed)" }
+      puts_columns(local_results, local_results_installed)
       tap_results = search_taps(rx)
       puts_columns(tap_results)
-      count = local_results.length + tap_results.length
 
-      if count == 0 && !blacklisted?(query)
-        # XXX [i18n] is inspect just a shortcut for putting quotes around the
-        # string?
-        puts t("cmd.search.no_formula_found", :term => query.inspect)
-        begin
-          GitHub.print_pull_requests_matching(query)
-        rescue GitHub::Error => e
-          SEARCH_ERROR_QUEUE << e
+      if $stdout.tty?
+        count = local_results.length + tap_results.length
+
+        if msg = blacklisted?(query)
+          if count > 0
+            puts
+            # XXX [i18n] is inspect just a shortcut for putting quotes around the
+            # string?
+            puts t("cmd.search.if_you_meant_precisely",
+                   :term => query.inspect)
+            puts
+          end
+          puts msg
+        elsif count == 0
+          # XXX [i18n] same question as above
+          puts t("cmd.search.no_formula_found", :term => query.inspect)
+          begin
+            GitHub.print_pull_requests_matching(query)
+          rescue GitHub::Error => e
+            SEARCH_ERROR_QUEUE << e
+          end
         end
       end
     end
-    metacharacters = %w[\\ | ( ) [ ] { } ^ $ * + ? .]
-    bad_regex = metacharacters.any? do |char|
-      ARGV.any? do |arg|
-        arg.include?(char) && !arg.start_with?("/")
+
+    if $stdout.tty?
+      metacharacters = %w[\\ | ( ) [ ] { } ^ $ * + ? .]
+      bad_regex = metacharacters.any? do |char|
+        ARGV.any? do |arg|
+          arg.include?(char) && !arg.start_with?("/")
+        end
       end
-    end
-    if ARGV.any? && bad_regex
-      ohai t("cmd.search.suggest_regex_1")
-      ohai t("cmd.search.suggest_regex_2")
+      if ARGV.any? && bad_regex
+        ohai t("cmd.search.suggest_regex_1")
+        ohai t("cmd.search.suggest_regex_2")
+      end
     end
     raise SEARCH_ERROR_QUEUE.pop unless SEARCH_ERROR_QUEUE.empty?
   end
@@ -146,9 +149,13 @@ module Homebrew
     results = (Formula.full_names+aliases).grep(rx).sort
 
     results.map do |name|
-      formula = Formulary.factory(name)
-      canonical_name = formula.name
-      canonical_full_name = formula.full_name
+      begin
+        formula = Formulary.factory(name)
+        canonical_name = formula.name
+        canonical_full_name = formula.full_name
+      rescue
+        canonical_name = canonical_full_name = name
+      end
       # Ignore aliases from results when the full name was also found
       if aliases.include?(name) && results.include?(canonical_full_name)
         next

@@ -109,6 +109,7 @@ class Checks
       "libntfs-3g.*.dylib", # NTFS-3G
       "libntfs.*.dylib", # NTFS-3G
       "libublio.*.dylib", # NTFS-3G
+      "libUFSDNTFS.dylib", # Paragon NTFS
     ]
 
     __check_stray_files "/usr/local/lib", "*.dylib", white_list, t('cmd.doctor.stray_dylibs')
@@ -192,10 +193,10 @@ class Checks
   end
 
   def check_for_unsupported_osx
-    if !ARGV.homebrew_developer? && MacOS.version >= "10.11" then <<-EOS.undent
+    if !ARGV.homebrew_developer? && MacOS.version >= "10.12" then <<-EOS.undent
     You are using OS X #{MacOS.version}.
     We do not provide support for this pre-release version.
-    You may encounter build failures or other breakage.
+    You may encounter build failures or other breakages.
     EOS
     end
   end
@@ -208,8 +209,8 @@ class Checks
       end
     end
 
-    # TODO: remove when 10.11 is released
-    if MacOS.version >= "10.11"
+    # TODO: bump version when new OS is released
+    if MacOS.version >= "10.12"
       def check_xcode_up_to_date
         if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
           t('cmd.doctor.xcode_outdated_download',
@@ -329,11 +330,19 @@ class Checks
     __check_subdir_access "share/man"
   end
 
+  def check_access_homebrew_repository
+    unless HOMEBREW_REPOSITORY.writable_real? then <<-EOS.undent
+      The #{HOMEBREW_REPOSITORY} is not writable.
+      You should probably `chown` #{HOMEBREW_REPOSITORY}
+    EOS
+    end
+  end
+
   def check_access_usr_local
     return unless HOMEBREW_PREFIX.to_s == "/usr/local"
 
-    unless File.writable_real?("/usr/local")
-      t('cmd.doctor.unwritable_usr_local')
+    unless HOMEBREW_PREFIX.writable_real?
+      t("cmd.doctor.unwritable_usr_local")
     end
   end
 
@@ -840,7 +849,7 @@ class Checks
       if !(HOMEBREW_REPOSITORY/"Library/LinkedKegs"/rack.basename).directory?
         begin
           Formulary.from_rack(rack).keg_only?
-        rescue FormulaUnavailableError, TapFormulaAmbiguityError
+        rescue FormulaUnavailableError, TapFormulaAmbiguityError, TapFormulaWithOldnameAmbiguityError
           false
         end
       else
@@ -943,10 +952,10 @@ module Homebrew
       end
       unless out.nil? || out.empty?
         if first_warning
-          puts Tty.white + t("cmd.doctor.note_on_warnings") + Tty.reset
+          $stderr.puts Tty.white + t("cmd.doctor.note_on_warnings") + Tty.reset
         end
 
-        puts
+        $stderr.puts
         opoo out
         Homebrew.failed = true
         first_warning = false

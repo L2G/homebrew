@@ -14,9 +14,9 @@ module Homebrew
     problem_count = 0
 
     strict = ARGV.include? "--strict"
-    if strict && ARGV.formulae.any? && MacOS.version >= :mavericks
+    if strict && ARGV.resolved_formulae.any? && MacOS.version >= :mavericks
       require "cmd/style"
-      ohai "brew style #{ARGV.formulae.join " "}"
+      ohai "brew style #{ARGV.resolved_formulae.join " "}"
       style
     end
 
@@ -48,7 +48,7 @@ module Homebrew
     ff = if ARGV.named.empty?
       Formula
     else
-      ARGV.formulae
+      ARGV.resolved_formulae
     end
 
     output_header = !strict
@@ -182,14 +182,19 @@ class FormulaAuditor
       [/^  test do/,                       "test block"]
     ]
 
-    component_list.map do |regex, name|
+    present = component_list.map do |regex, name|
       lineno = text.line_number regex
       next unless lineno
       [lineno, name]
-    end.compact.each_cons(2) do |c1, c2|
+    end.compact
+    present.each_cons(2) do |c1, c2|
       unless c1[0] < c2[0]
         problem "`#{c1[1]}` (line #{c1[0]}) should be put before `#{c2[1]}` (line #{c2[0]})"
       end
+    end
+    present.map!(&:last)
+    if present.include?("head") && present.include?("head block")
+      problem "Should not have both `head` and `head do`"
     end
   end
 
@@ -284,9 +289,12 @@ class FormulaAuditor
         rescue TapFormulaAmbiguityError
           problem t('cmd.audit.ambiguous_dependency', :name => dep.name.inspect)
           next
+        rescue TapFormulaWithOldnameAmbiguityError
+          problem "Ambiguous oldname dependency #{dep.name.inspect}."
+          next
         end
 
-        if FORMULA_RENAMES[dep.name] == dep_f.name
+        if dep_f.oldname && dep.name.split("/").last == dep_f.oldname
           problem "Dependency '#{dep.name}' was renamed; use newname '#{dep_f.name}'."
         end
 
@@ -338,8 +346,8 @@ class FormulaAuditor
         # Don't complain about missing cross-tap conflicts.
         next
       rescue FormulaUnavailableError
-        problem t('cmd.audit.cant_find_conflicting', :name => c.name.inspect)
-      rescue TapFormulaAmbiguityError
+        problem t("cmd.audit.cant_find_conflicting", :name => c.name.inspect)
+      rescue TapFormulaAmbiguityError, TapFormulaWithOldnameAmbiguityError
         problem t("cmd.audit.ambiguous_conflict", :name => c.name.inspect)
       end
     end
@@ -473,7 +481,7 @@ class FormulaAuditor
     end
 
     problem "GitHub fork (not canonical repository)" if metadata["fork"]
-    if (metadata["forks_count"] < 10) && (metadata["watchers_count"] < 10) &&
+    if (metadata["forks_count"] < 10) && (metadata["subscribers_count"] < 10) &&
        (metadata["stargazers_count"] < 20)
       problem "GitHub repository not notable enough (<10 forks, <10 watchers and <20 stars)"
     end

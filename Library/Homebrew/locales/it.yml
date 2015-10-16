@@ -29,6 +29,7 @@ it:
     refuse_root_or_usr: 
     snow_leopard_required: 
     unknown_command: 
+    xcode_license: 
   build:
     git: 
     interactive:
@@ -423,7 +424,9 @@ it:
       homebrew_tap_structure_2: 
       homebrew_tap_structure_3: 
       new_formulae: 
+      no_changes_to_formulae: 
       no_formula_names: 
+      note_installed: 
       rename_with_arrow: "%{old_name} -> %{new_name}"
       renamed_formulae: 
       update_tap_failed: 
@@ -666,7 +669,6 @@ it:
     how_long_ago: "%{how_long} fa"
     in_the_future: in futuro
     interactive_shell_abort: 
-    item_with_star: 
     message_colored_w_arrow_colored: 
     message_w_intro_colored: 
     minutes:

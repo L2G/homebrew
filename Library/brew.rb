@@ -25,11 +25,20 @@ elsif ARGV.first == "-v"
   exit 0 if ARGV.length == 1
 end
 
-# Check for bad xcode-select before anything else, because `doctor` and
-# many other things will hang
-# Note that this bug was fixed in 10.9
-if OS.mac? && MacOS.version < :mavericks && MacOS.active_developer_dir == "/"
-  odie t('brew.bad_xcode_path')
+if OS.mac?
+  # Check for bad xcode-select before other checks, because `doctor` and
+  # many other things will hang. Note that this bug was fixed in 10.9
+  if MacOS.version < :mavericks && MacOS.active_developer_dir == "/"
+    odie t("brew.bad_xcode_path")
+  end
+
+  # Check for user agreement of the Xcode license before permitting
+  # any other brew usage to continue. This prevents the situation where
+  # people are instructed to "please re-run as root via sudo" on brew commands.
+  # The check can only fail when Xcode is installed & the active developer dir.
+  if MacOS::Xcode.installed? && `/usr/bin/xcrun clang 2>&1` =~ /license/ && !$?.success?
+    odie t("brew.xcode_license")
+  end
 end
 
 case HOMEBREW_PREFIX.to_s
@@ -38,8 +47,8 @@ when "/", "/usr"
   abort t('brew.refuse_root_or_usr', :path => HOMEBREW_PREFIX)
 end
 
-if OS.mac? and MacOS.version < "10.6"
-  abort t('brew.snow_leopard_required')
+if OS.mac? && MacOS.version < "10.6"
+  abort t("brew.snow_leopard_required")
 end
 
 # Many Pathname operations use getwd when they shouldn't, and then throw
@@ -78,10 +87,8 @@ begin
   sudo_check = %w[ install link pin unpin upgrade ]
 
   if sudo_check.include? cmd
-    if Process.uid.zero? and not File.stat(HOMEBREW_BREW_FILE).uid.zero?
-      # TODO [i18n] combine once translations for 'bad_sudo' and 'bad_sudo_2'
-      # are in sync
-      raise t('brew.bad_sudo', :cmd => cmd) + "\n" + t('brew.bad_sudo_2')
+    if Process.uid.zero? && !File.stat(HOMEBREW_BREW_FILE).uid.zero?
+      raise t("brew.bad_sudo", :cmd => cmd)
     end
   end
 

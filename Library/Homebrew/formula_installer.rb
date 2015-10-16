@@ -56,6 +56,10 @@ class FormulaInstaller
     @pour_failed   = false
   end
 
+  def skip_deps_check?
+    ignore_deps?
+  end
+
   # When no build tools are available and build flags are passed through ARGV,
   # it's necessary to interrupt the user before any sort of installation
   # can proceed. Only invoked when the user has no developer tools.
@@ -99,7 +103,7 @@ class FormulaInstaller
   end
 
   def prelude
-    verify_deps_exist unless ignore_deps?
+    verify_deps_exist unless skip_deps_check?
     lock
     check_install_sanity
   end
@@ -122,7 +126,7 @@ class FormulaInstaller
   def check_install_sanity
     raise FormulaInstallationAlreadyAttemptedError, formula if @@attempted.include?(formula)
 
-    unless ignore_deps?
+    unless skip_deps_check?
       unlinked_deps = formula.recursive_dependencies.map(&:to_formula).select do |dep|
         dep.installed? && !dep.keg_only? && !dep.linked_keg.directory?
       end
@@ -166,7 +170,7 @@ class FormulaInstaller
       raise BuildToolsError.new([formula])
     end
 
-    unless ignore_deps?
+    unless skip_deps_check?
       deps = compute_dependencies
       check_dependencies_bottled(deps) if pour_bottle? && !MacOS.has_apple_developer_tools?
       install_dependencies(deps)
@@ -198,11 +202,17 @@ class FormulaInstaller
       begin
         install_relocation_tools unless formula.bottle_specification.skip_relocation?
         pour
-      rescue => e
+      rescue Exception => e
+        # any exceptions must leave us with nothing installed
+        ignore_interrupts do
+          formula.prefix.rmtree if formula.prefix.directory?
+          formula.rack.rmdir_if_possible
+        end
         raise if ARGV.homebrew_developer?
         @pour_failed = true
         onoe e.message
-        opoo t('formula_installer.bottle_install_fail')
+        opoo t("formula_installer.bottle_install_fail")
+        raise BuildToolsError.new([formula]) unless MacOS.has_apple_developer_tools?
       else
         @poured_bottle = true
       end
@@ -385,15 +395,8 @@ class FormulaInstaller
   end
 
   class DependencyInstaller < FormulaInstaller
-    def initialize(*)
-      super
-      @ignore_deps = true
-    end
-
-    def sanitized_ARGV_options
-      args = super
-      args.delete "--ignore-dependencies"
-      args
+    def skip_deps_check?
+      true
     end
   end
 

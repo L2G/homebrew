@@ -29,6 +29,7 @@ eo:
     refuse_root_or_usr: 
     snow_leopard_required: 
     unknown_command: 'Nekonata komando: %{cmd}'
+    xcode_license: 
   build:
     git: 
     interactive:
@@ -435,9 +436,11 @@ eo:
       new_formulae:
         one: Nova Formulo
         other: Novaj Formuloj
+      no_changes_to_formulae: 
       no_formula_names: |
         Ĉi tiu komando ĝisdatigas la aplikaĵon 'brew' mem, kaj ne akceptas formulajn
         nomojn.  Uzu `brew upgrade <formula>`.
+      note_installed: " (instalita)"
       rename_with_arrow: "%{old_name} -> %{new_name}"
       renamed_formulae: 
       update_tap_failed: 
@@ -688,7 +691,6 @@ eo:
     how_long_ago: antaŭ %{how_long}
     in_the_future: estonte
     interactive_shell_abort: 
-    item_with_star: 
     message_colored_w_arrow_colored: "%{arrow_color}==>%{message_color} %{message}%{reset_color}"
     message_w_intro_colored: "%{intro_color}%{intro}%{reset_color}: %{message}"
     minutes:

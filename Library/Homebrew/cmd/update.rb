@@ -1,4 +1,5 @@
 require "cmd/tap"
+require "cmd/doctor"
 require "formula_versions"
 require "migrator"
 require "formulary"
@@ -8,6 +9,16 @@ module Homebrew
   def update
     unless ARGV.named.empty?
       abort t('cmd.update.no_formula_names')
+    end
+
+    # check permissions
+    checks = Checks.new
+    %w[
+      check_access_usr_local
+      check_access_homebrew_repository
+    ].each do |check|
+      out = checks.send(check)
+      odie out unless out.nil?
     end
 
     # ensure git is installed
@@ -25,12 +36,19 @@ module Homebrew
     report = Report.new
     master_updater = Updater.new(HOMEBREW_REPOSITORY)
     master_updater.pull!
+    master_updated = master_updater.updated?
+    if master_updated
+      puts t("cmd.update.updated_homebrew",
+             :initial_revision => master_updater.initial_revision[0, 8],
+             :current_revision => master_updater.current_revision[0, 8])
+    end
     report.update(master_updater.report)
 
     # rename Taps directories
     # this procedure will be removed in the future if it seems unnecessasry
     rename_taps_dir_if_necessary
 
+    updated_taps = []
     Tap.each do |tap|
       next unless tap.git?
 
@@ -42,12 +60,20 @@ module Homebrew
         rescue
           onoe t('cmd.update.update_tap_failed', :tap => tap)
         else
+          updated_taps << tap.name if updater.updated?
           report.update(updater.report) do |_key, oldval, newval|
             oldval.concat(newval)
           end
         end
       end
     end
+    unless updated_taps.empty?
+      puts "Updated #{updated_taps.size} tap#{plural(updated_taps.size)} " \
+           "(#{updated_taps.join(", ")})."
+    end
+    puts t("cmd.update.already_up_to_date") unless master_updated || !updated_taps.empty?
+
+    Tap.clear_cache
 
     # automatically tap any migrated formulae's new tap
     report.select_formula(:D).each do |f|
@@ -93,11 +119,8 @@ module Homebrew
     end
 
     if report.empty?
-      puts t('cmd.update.already_up_to_date')
+      puts t("cmd.update.no_changes_to_formulae") if master_updated || !updated_taps.empty?
     else
-      puts t('cmd.update.updated_homebrew',
-             :initial_revision => master_updater.initial_revision[0, 8],
-             :current_revision => master_updater.current_revision[0, 8])
       report.dump
     end
     Descriptions.update_cache(report)
@@ -208,6 +231,20 @@ class Updater
       @initial_branch = ""
     end
 
+    # Used for testing purposes, e.g., for testing formula migration after
+    # renaming it in the currently checked-out branch. To test run
+    # "brew update --simulate-from-current-branch"
+    if ARGV.include?("--simulate-from-current-branch")
+      @initial_revision = `git rev-parse -q --verify #{@upstream_branch}`.chomp
+      @current_revision = read_current_revision
+      begin
+        safe_system "git", "merge-base", "--is-ancestor", @initial_revision, @current_revision
+      rescue ErrorDuringExecution
+        odie "Your HEAD is not a descendant of '#{@upstream_branch}'."
+      end
+      return
+    end
+
     if @initial_branch != @upstream_branch && !@initial_branch.empty?
       safe_system "git", "checkout", @upstream_branch, *quiet
     end
@@ -295,6 +332,10 @@ class Updater
     map
   end
 
+  def updated?
+    initial_revision && initial_revision != current_revision
+  end
+
   private
 
   def formula_directory
@@ -366,7 +407,7 @@ class Report
         user = $1
         repo = $2.sub("homebrew-", "")
         oldname = path.basename(".rb").to_s
-        next unless newname = Tap.new(user, repo).formula_renames[oldname]
+        next unless newname = Tap.fetch(user, repo).formula_renames[oldname]
       else
         oldname = path.basename(".rb").to_s
         next unless newname = FORMULA_RENAMES[oldname]
@@ -403,14 +444,35 @@ class Report
 
   def dump_formula_report(key, title_i18n_key)
     formula = select_formula(key)
-    if key == :R
-      formula.map! do |oldname, newname|
-        t("cmd.update.rename_with_arrow", :old_name => oldname, :new_name => newname)
-      end
-    end
     unless formula.empty?
+      # Determine list item indices of installed formulae.
+      formula_installed_index = formula.each_index.select do |index|
+        name, newname = formula[index]
+        installed?(name) || (newname && installed?(newname))
+      end
+
+      # Format list items of renamed formulae.
+      if key == :R
+        formula.map! do |oldname, newname|
+          t("cmd.update.rename_with_arrow", :old_name => oldname, :new_name => newname)
+        end
+      end
+
+      # Append suffix '(installed)' to list items of installed formulae.
+      formula_installed_index.each do |index|
+        formula[index] += t("cmd.update.note_installed")
+      end
+
+      # Fetch list items of installed formulae for highlighting.
+      formula_installed = formula.values_at(*formula_installed_index)
+
+      # Dump formula list.
       ohai t(title_i18n_key, :count => formula.size)
-      puts_columns formula
+      puts_columns(formula, formula_installed)
     end
+  end
+
+  def installed?(formula)
+    (HOMEBREW_CELLAR/formula.split("/").last).directory?
   end
 end
