@@ -169,6 +169,12 @@ module Homebrew
                      :name => f.full_name)
     end
 
+    if f.bottle_disabled?
+      ofail "Formula has disabled bottle: #{f.full_name}"
+      puts f.bottle_disable_reason
+      return
+    end
+
     unless built_as_bottle? f
       return ofail t("cmd.bottle.formula_not_installed_w_build_bottle",
                      :name => f.full_name)
@@ -313,6 +319,12 @@ module Homebrew
     merge_hash.each do |formula_name, bottle_blocks|
       ohai formula_name
       f = Formulary.factory(formula_name)
+
+      if f.bottle_disabled?
+        ofail "Formula #{f.full_name} has disabled bottle"
+        puts f.bottle_disable_reason
+        next
+      end
 
       bottle = if keep_old
         f.bottle_specification.dup

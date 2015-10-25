@@ -1,6 +1,5 @@
 require "pathname"
 require "exceptions"
-require "os/mac"
 require "utils/json"
 require "utils/inreplace"
 require "utils/popen"
@@ -492,7 +491,9 @@ module GitHub
     def initialize(reset, error)
       super t("utils.rate_limit_exceeded",
               :error => error,
-              :duration => pretty_ratelimit_reset(reset))
+              :duration => pretty_ratelimit_reset(reset),
+              :Tty_em => Tty.em,
+              :Tty_reset => Tty.reset)
     end
 
     def pretty_ratelimit_reset(reset)
@@ -508,7 +509,10 @@ module GitHub
 
   class AuthenticationFailedError < Error
     def initialize(error)
-      super t("utils.authentication_failed", :error => error)
+      super t("utils.authentication_failed",
+              :error => error,
+              :Tty_em => Tty.em,
+              :Tty_reset => Tty.reset)
     end
   end
 

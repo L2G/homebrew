@@ -326,8 +326,8 @@ en-US:
       comma_join: ", "
       item_clang: 'Clang: %{value}'
       item_clt: 'CLT: %{value}'
-      item_gcc_40: 'GCC-4.0: %{value}'
-      item_gcc_42: 'GCC-4.2: %{value}'
+      item_gcc_40: 'GCC-4.0: build %{value}'
+      item_gcc_42: 'GCC-4.2: build %{value}'
       item_hardware: 'CPU: %{cores_as_words}-core %{cpu_bits}-bit %{cpu_family}'
       item_head: 'HEAD: %{value}'
       item_homebrew_bottle_domain: 'HOMEBREW_BOTTLE_DOMAIN: %{value}'
@@ -1000,8 +1000,8 @@ en-US:
     formula_conflict_error_line_item: "  %{name}"
     formula_conflict_error_line_item_w_reason: "  %{name}: because %{reason}"
     formula_installation_already_attempted_error: 'Formula installation already attempted: %{name}'
-    formula_unavailable_error: No available formula for %{name}
-    formula_unavailable_error_w_dependent: No available formula for %{name} (dependency of %{dependent})
+    formula_unavailable_error: No available formula with the name %{name}
+    formula_unavailable_error_w_dependent: No available formula with the name %{name} (dependency of %{dependent})
     formula_validation_error: 'invalid attribute for formula ''%{formula}'': %{attr} (%{value})'
     multiple_versions_installed_error: "%{name} has multiple installed versions"
     no_such_keg_error: 'No such keg: %{cellar}/%{name}'
@@ -1269,10 +1269,10 @@ en-US:
       one: There is %{count} bottle of beer on the wall.
       other: There are %{count} bottles of beer on the wall.
   utils:
-    authentication_failed: |-
+    authentication_failed: |
       GitHub %{error}
       HOMEBREW_GITHUB_API_TOKEN may be invalid or expired, check:
-        https://github.com/settings/tokens
+        %{Tty_em}https://github.com/settings/tokens%{Tty_reset}
     cleaning_up: One sec, just cleaning up
     closed_pull_requests: 'Closed pull requests:'
     days:
@@ -1307,10 +1307,10 @@ en-US:
     path_component_invalid: 'The following PATH component is invalid: %{path}'
     plural_called: plural() was called; Y U NO I18N ;-)
     pull_request_with_url: "%{title} (%{html_url})"
-    rate_limit_exceeded: |-
+    rate_limit_exceeded: |
       GitHub %{error}
       Try again in %{duration}, or create a personal access token:
-        https://github.com/settings/tokens
+        %{Tty_em}https://github.com/settings/tokens/new?scopes=&description=Homebrew%{Tty_reset}
       and then set the token as: HOMEBREW_GITHUB_API_TOKEN
     rate_limit_time_m_s: "%{n_minutes} %{n_seconds}"
     searching_pull_requests: Searching pull requests...

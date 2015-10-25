@@ -193,7 +193,7 @@ class Checks
   end
 
   def check_for_unsupported_osx
-    if !ARGV.homebrew_developer? && MacOS.version >= "10.12" then <<-EOS.undent
+    if !ARGV.homebrew_developer? && OS::Mac.prerelease? then <<-EOS.undent
     You are using OS X #{MacOS.version}.
     We do not provide support for this pre-release version.
     You may encounter build failures or other breakages.
@@ -209,8 +209,7 @@ class Checks
       end
     end
 
-    # TODO: bump version when new OS is released
-    if MacOS.version >= "10.12"
+    if OS::Mac.prerelease?
       def check_xcode_up_to_date
         if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
           t("cmd.doctor.xcode_outdated_download",

@@ -1,15 +1,16 @@
 class Sqlite < Formula
   desc "Command-line interface for SQLite"
   homepage "https://sqlite.org/"
-  url "https://sqlite.org/2015/sqlite-autoconf-3090000.tar.gz"
-  sha256 "a324143f4cc35cd7e9605a0a8dec9f9e4861d0be8305f3642e7d05008b77e60d"
-  version "3.9.0"
+  url "https://sqlite.org/2015/sqlite-autoconf-3090100.tar.gz"
+  version "3.9.1"
+  sha256 "d89d0e1d93deafebd0aa067d20d9029d9914ccde244920d9dd09ea51944e1c6c"
 
   bottle do
     cellar :any
-    sha256 "4356826fc382761be194f4ba18ab8fd5ef9a5ab5e33ef6c87366d92b54951da8" => :el_capitan
-    sha256 "00d854c182e1806d4bc4db9df077cbb88af406a92685e42ab8fb2f4fc8920ab2" => :yosemite
-    sha256 "8bbe4af708ce49eeaf7e621ea0c73b0a484f75d89b9d403711b8478101367609" => :mavericks
+    revision 1
+    sha256 "ea201bb5ea138b9a16aa83f7e7c363a3c3b5da1a9669d533c55c8cd4e31e6948" => :el_capitan
+    sha256 "d60ca2af241cfad3c9d8941addaee0bde304d165faf4dfe4d4be0e8762b8db41" => :yosemite
+    sha256 "c77750244a12409e81d96911ff278251eec87539c2ac5233018c93a9e67561b2" => :mavericks
   end
 
   keg_only :provided_by_osx, "OS X provides an older sqlite3."
@@ -30,22 +31,22 @@ class Sqlite < Formula
   depends_on "icu4c" => :optional
 
   resource "functions" do
-    url "https://www.sqlite.org/contrib/download/extension-functions.c?get=25", :using  => :nounzip
+    url "https://www.sqlite.org/contrib/download/extension-functions.c?get=25", :using => :nounzip
     version "2010-01-06"
     sha256 "991b40fe8b2799edc215f7260b890f14a833512c9d9896aa080891330ffe4052"
   end
 
   resource "docs" do
-    url "https://sqlite.org/2015/sqlite-doc-3090000.zip"
-    version "3.9.0"
-    sha256 "2b5f4116b16907ab087548047c0489e4cc8124e249b3f8c55005098db863be17"
+    url "https://sqlite.org/2015/sqlite-doc-3090100.zip"
+    version "3.9.1"
+    sha256 "c8549a4261f74395496d1ebc4b7d36a51b2b3e57f36520d3c71052190a80ccb9"
   end
 
   def install
+    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_COLUMN_METADATA=1"
     ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_RTREE=1" if build.with? "rtree"
     ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1" if build.with? "fts"
     ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_FTS5=1" if build.with? "fts5"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_COLUMN_METADATA=1"
     ENV.append "CPPFLAGS", "-DSQLITE_SECURE_DELETE=1" if build.with? "secure-delete"
     ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_UNLOCK_NOTIFY=1" if build.with? "unlock-notify"
     ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_DBSTAT_VTAB=1" if build.with? "dbstat"

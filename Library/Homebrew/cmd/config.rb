@@ -164,7 +164,7 @@ module Homebrew
              :value => BottleSpecification::DEFAULT_DOMAIN)
     f.puts hardware
     f.puts t("cmd.config.item_os_x",
-             :version => MACOS_FULL_VERSION,
+             :version => MacOS.full_version,
              :kernel => kernel)
     f.puts t("cmd.config.item_xcode",
              :value => xcode ? xcode : t("cmd.config.not_applicable"))

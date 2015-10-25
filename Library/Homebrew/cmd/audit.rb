@@ -175,11 +175,12 @@ class FormulaAuditor
       [/^  bottle do/,                     "bottle block"],
       [/^  devel do/,                      "devel block"],
       [/^  head do/,                       "head block"],
+      [/^  bottle (:unneeded|:disable)/,   "bottle modifier"],
       [/^  option/,                        "option"],
       [/^  depends_on/,                    "depends_on"],
       [/^  def install/,                   "install method"],
       [/^  def caveats/,                   "caveats method"],
-      [/^  test do/,                       "test block"]
+      [/^  test do/,                       "test block"],
     ]
 
     present = component_list.map do |regex, name|
@@ -195,6 +196,9 @@ class FormulaAuditor
     present.map!(&:last)
     if present.include?("head") && present.include?("head block")
       problem "Should not have both `head` and `head do`"
+    end
+    if present.include?("bottle modifier") && present.include?("bottle block")
+      problem "Should not have `bottle :unneeded/:disable` and `bottle do`"
     end
   end
 
@@ -464,6 +468,12 @@ class FormulaAuditor
     end
   end
 
+  def audit_bottle_spec
+    if formula.bottle_disabled? && !formula.bottle_disable_reason.valid?
+      problem "Unrecognized bottle modifier"
+    end
+  end
+
   def audit_github_repository
     return unless @online
 
@@ -616,29 +626,19 @@ class FormulaAuditor
     end
 
     # Comments from default template
-    if line =~ /# PLEASE REMOVE/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /# Documentation:/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /# if this fails, try separate make\/make install steps/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /# The url of the archive/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /## Naming --/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /# if your formula requires any X11\/XQuartz components/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /# if your formula fails when building in parallel/
-      problem t("cmd.audit.comment_remove_default")
-    end
-    if line =~ /# Remove unrecognized options if warned by configure/
-      problem t("cmd.audit.comment_remove_default")
+    [
+      "# PLEASE REMOVE",
+      "# Documentation:",
+      "# if this fails, try separate make/make install steps",
+      "# The URL of the archive",
+      "## Naming --",
+      "# if your formula requires any X11/XQuartz components",
+      "# if your formula fails when building in parallel",
+      "# Remove unrecognized options if warned by configure",
+    ].each do |comment|
+      if line.include? comment
+        problem t("cmd.audit.comment_remove_default")
+      end
     end
 
     # FileUtils is included in Formula
@@ -795,6 +795,10 @@ class FormulaAuditor
       problem t("cmd.audit.use_macos_version")
     end
 
+    if line =~ /MACOS_FULL_VERSION/
+      problem "Use MacOS.full_version instead of MACOS_FULL_VERSION"
+    end
+
     cats = %w[leopard snow_leopard lion mountain_lion].join("|")
     if line =~ /MacOS\.(?:#{cats})\?/
       problem t("cmd.audit.version_symbol_deprecated", :symbol => $&)
@@ -928,6 +932,7 @@ class FormulaAuditor
     audit_specs
     audit_desc
     audit_homepage
+    audit_bottle_spec
     audit_github_repository
     audit_deps
     audit_conflicts
