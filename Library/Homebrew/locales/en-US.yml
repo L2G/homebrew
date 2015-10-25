@@ -59,10 +59,6 @@ en-US:
       You can use brew with sudo, but only if the brew executable is owned by root.
       However, this is both not recommended and completely unsupported so do so at
       your own risk.
-    bad_sudo_2: |
-      You can use brew with sudo, but only if the brew executable is owned by root.
-      However, this is both not recommended and completely unsupported so do so at
-      your own risk.
     bad_xcode_path: |
       Your xcode-select path is currently set to '/'.
       This causes the `xcrun` tool to hang, and can render Homebrew unusable.
@@ -276,6 +272,7 @@ en-US:
       use_if_argv_build: Use "if build.%{build_test}?" instead
       use_if_build_with: Use if build.with?%{option} instead of unless build.without?%{option}
       use_if_build_without: Use if build.without?%{option} instead of unless build.with?%{option}
+      use_macos_full_version: Use MacOS.full_version instead of MACOS_FULL_VERSION
       use_macos_version: Use MacOS.version instead of MACOS_VERSION
       use_mpi_dependency: |
         There are multiple conflicting ways to install MPI. Use an MPIRequirement:
@@ -306,6 +303,7 @@ en-US:
       bottling: Bottling %{filename}...
       detecting_relocatability: Detecting if %{filename} is relocatable...
       determining_bottle_revision: Determining %{name} bottle revision...
+      formula_has_disabled_bottle: 'Formula has disabled bottle: %{name}'
       formula_has_no_stable_version: 'Formula has no stable version: %{name}'
       formula_not_installed_or_up_to_date: 'Formula not installed or up-to-date: %{name}'
       formula_not_installed_w_build_bottle: 'Formula not installed with ''--build-bottle'': %{name}'
@@ -333,6 +331,7 @@ en-US:
       item_homebrew_bottle_domain: 'HOMEBREW_BOTTLE_DOMAIN: %{value}'
       item_homebrew_cellar: 'HOMEBREW_CELLAR: %{value}'
       item_homebrew_prefix: 'HOMEBREW_PREFIX: %{value}'
+      item_homebrew_repository: 'HOMEBREW_REPOSITORY: %{value}'
       item_homebrew_version: 'HOMEBREW_VERSION: %{value}'
       item_java: 'Java: %{value}'
       item_last_commit: 'Last commit: %{value}'
@@ -803,7 +802,8 @@ en-US:
         brew home
     install:
       already_installed: "%{name}-%{version} already installed"
-      already_installed_not_linked: "%{name}-%{version} already installed, it's just not linked"
+      already_installed_not_migrated: "%{name}-%{version} already installed, it's just not migrated"
+      already_installed_not_migrated_name_only: "%{name} already installed, it's just not migrated"
       cannot_create_dir: |
         Could not create %{path}
         Check you have permission to write to %{parent}
@@ -811,6 +811,9 @@ en-US:
       devel_only_formula: |
         %{name} is a devel-only formula
         Install with `brew install --devel %{name}`
+      formulae_found_in_taps:
+        one: 'This formula was found in a tap:'
+        other: 'These formulae were found in taps:'
       head_only_formula: |
         %{name} is a head-only formula
         Install with `brew install --HEAD %{name}`
@@ -820,13 +823,31 @@ en-US:
         Software installed with other package managers causes known problems for
         Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again.
       no_devel_defined: No devel block is defined for %{name}
+      no_formulae_found_in_taps: No formulae found in taps.
       no_head_defined: No head is defined for %{name}
+      no_similar_formulae_found: No similarly named formulae found.
       no_stable_download: "%{name} has no stable download, please choose --devel or --HEAD"
-      searching_formulae: Searching formulae...
+      searching_similar_formulae: Searching for similarly named formulae...
       searching_taps: Searching taps...
+      similar_formulae_found:
+        one: 'This similarly named formula was found:'
+        other: 'These similarly named formulae were found:'
+      to_install_one_of_the_formulae:
+        one: |
+          To install it, run:
+            brew install %{name}
+        other: |
+          To install one of them, run (for example):
+            brew install %{name}
+      to_install_the_formula: |
+        To install it, run:
+          brew install %{name}
       unsupported_arch: |
         Sorry, Homebrew does not support your computer's CPU architecture.
         For PPC support, see: https://github.com/mistydemeo/tigerbrew
+      you_can_migrate_or_force: |
+        You can migrate formula with `brew migrate %{name}`
+        Or you can force install it with `brew install %{name} --force`
     list:
       files: "%{path}/ (%{count} files)"
       other_files: "%{path}/ (%{count} other files)"

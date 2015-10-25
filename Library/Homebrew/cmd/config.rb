@@ -158,7 +158,7 @@ module Homebrew
     f.puts t("cmd.config.item_head", :value => head)
     f.puts t("cmd.config.item_last_commit", :value => last_commit)
     f.puts t("cmd.config.item_homebrew_prefix", :value => HOMEBREW_PREFIX)
-    f.puts "HOMEBREW_REPOSITORY: #{HOMEBREW_REPOSITORY}"
+    f.puts t("cmd.config.item_homebrew_repository", :value => HOMEBREW_REPOSITORY)
     f.puts t("cmd.config.item_homebrew_cellar", :value => HOMEBREW_CELLAR)
     f.puts t("cmd.config.item_homebrew_bottle_domain",
              :value => BottleSpecification::DEFAULT_DOMAIN)

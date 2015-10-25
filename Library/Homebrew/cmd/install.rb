@@ -68,16 +68,23 @@ module Homebrew
         end
 
         if f.installed?
-          msg = "#{f.full_name}-#{f.installed_version} already installed"
-          msg << ", it's just not linked" unless f.linked_keg.symlink? || f.keg_only?
+          msg = if f.linked_keg.symlink? || f.keg_only?
+                  t("cmd.install.already_installed",
+                    :name => f.full_name,
+                    :version => f.installed_version)
+                else
+                  t("cmd.install.already_installed_not_migrated",
+                    :name => f.full_name,
+                    :version => f.installed_version)
+                end
           opoo msg
         elsif f.oldname && (dir = HOMEBREW_CELLAR/f.oldname).exist? && !dir.subdirs.empty? \
             && f.tap == Tab.for_keg(dir.subdirs.first).tap && !ARGV.force?
           # Check if the formula we try to install is the same as installed
           # but not migrated one. If --force passed then install anyway.
-          opoo "#{f.oldname} already installed, it's just not migrated"
-          puts "You can migrate formula with `brew migrate #{f}`"
-          puts "Or you can force install it with `brew install #{f} --force`"
+          opoo t("cmd.install.already_installed_not_migrated_name_only",
+                 :name => f.oldname)
+          puts t("cmd.install.you_can_migrate_or_force", :name => f)
         else
           formulae << f
         end
@@ -93,34 +100,42 @@ module Homebrew
         ofail e.message
         query = query_regexp(e.name)
 
-        ohai "Searching for similarly named formulae..."
+        ohai t("cmd.install.searching_similar_formulae")
         formulae_search_results = search_formulae(query)
         case formulae_search_results.length
         when 0
-          ofail "No similarly named formulae found."
+          ofail t("cmd.install.no_similar_formulae_found")
         when 1
-          puts "This similarly named formula was found:"
+          puts t("cmd.install.similar_formulae_found", :count => 1)
           puts_columns(formulae_search_results)
-          puts "To install it, run:\n  brew install #{formulae_search_results.first}"
+          puts t("cmd.install.to_install_the_formula",
+                 :name => formulae_search_results.first)
         else
-          puts "These similarly named formulae were found:"
+          puts t("cmd.install.similar_formulae_found",
+                 :count => formulae_search_results.length)
           puts_columns(formulae_search_results)
-          puts "To install one of them, run (for example):\n  brew install #{formulae_search_results.first}"
+          puts t("cmd.install.to_install_one_of_the_formulae",
+                 :name => formulae_search_results.first,
+                 :count => formulae_search_results.length)
         end
 
         ohai t("cmd.install.searching_taps")
         taps_search_results = search_taps(query)
         case taps_search_results.length
         when 0
-          ofail "No formulae found in taps."
+          ofail t("cmd.install.no_formulae_found_in_taps")
         when 1
-          puts "This formula was found in a tap:"
+          puts t("cmd.install.formulae_found_in_taps", :count => 1)
           puts_columns(taps_search_results)
-          puts "To install it, run:\n  brew install #{taps_search_results.first}"
+          puts t("cmd.install.to_install_the_formula",
+                 :name => cmd.install.formulae_found_in_taps)
         else
-          puts "These formulae were found in taps:"
+          puts t("cmd.install.formulae_found_in_taps",
+                 :count => taps_search_results.length)
           puts_columns(taps_search_results)
-          puts "To install one of them, run (for example):\n  brew install #{taps_search_results.first}"
+          puts t("cmd.install.to_install_one_of_the_formulae",
+                 :name => taps_search_results.first,
+                 :count => taps_search_results.length)
         end
 
         # If they haven't updated in 48 hours (172800 seconds), that

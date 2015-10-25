@@ -796,7 +796,7 @@ class FormulaAuditor
     end
 
     if line =~ /MACOS_FULL_VERSION/
-      problem "Use MacOS.full_version instead of MACOS_FULL_VERSION"
+      problem t("cmd.audit.use_macos_full_version")
     end
 
     cats = %w[leopard snow_leopard lion mountain_lion].join("|")

@@ -170,7 +170,7 @@ module Homebrew
     end
 
     if f.bottle_disabled?
-      ofail "Formula has disabled bottle: #{f.full_name}"
+      ofail t("cmd.bottle.formula_has_disabled_bottle", :name => f.full_name)
       puts f.bottle_disable_reason
       return
     end

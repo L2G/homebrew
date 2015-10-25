@@ -18,7 +18,6 @@ it:
     xcode_download: 
   brew:
     bad_sudo: 
-    bad_sudo_2: 
     bad_xcode_path: 
     formula_unspecified: 
     homebrew_version: 
@@ -170,6 +169,7 @@ it:
       use_if_argv_build: 
       use_if_build_with: 
       use_if_build_without: 
+      use_macos_full_version: 
       use_macos_version: 
       use_mpi_dependency: 
       use_new_style_opt_defs: 
@@ -196,6 +196,7 @@ it:
       bottling: 
       detecting_relocatability: 
       determining_bottle_revision: 
+      formula_has_disabled_bottle: 
       formula_has_no_stable_version: 
       formula_not_installed_or_up_to_date: 
       formula_not_installed_w_build_bottle: 
@@ -223,6 +224,7 @@ it:
       item_homebrew_bottle_domain: 
       item_homebrew_cellar: 
       item_homebrew_prefix: 
+      item_homebrew_repository: 
       item_homebrew_version: 
       item_java: 
       item_last_commit: 
@@ -360,20 +362,28 @@ it:
         brew home
     install:
       already_installed: 
-      already_installed_not_linked: 
+      already_installed_not_migrated: 
+      already_installed_not_migrated_name_only: 
       cannot_create_dir: 
       cannot_write_dir: 
       devel_only_formula: 
+      formulae_found_in_taps: 
       head_only_formula: 
       head_uppercase: 
       macports_or_fink_installed_1: 
       macports_or_fink_installed_2: 
       no_devel_defined: 
+      no_formulae_found_in_taps: 
       no_head_defined: 
+      no_similar_formulae_found: 
       no_stable_download: 
-      searching_formulae: 
+      searching_similar_formulae: 
       searching_taps: 
+      similar_formulae_found: 
+      to_install_one_of_the_formulae: 
+      to_install_the_formula: 
       unsupported_arch: 
+      you_can_migrate_or_force: 
     list:
       files: 
       other_files: 
