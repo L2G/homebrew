@@ -76,7 +76,7 @@ end
 
 def ohai(title, *sput)
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts t('utils.message_colored_w_arrow_colored',
+  puts t("utils.message_colored_w_arrow_colored",
          :message => title,
          :message_color => Tty.white,
          :arrow_color => Tty.blue,
@@ -86,7 +86,7 @@ end
 
 def oh1(title)
   title = Tty.truncate(title) if $stdout.tty? && !ARGV.verbose?
-  puts t('utils.message_colored_w_arrow_colored',
+  puts t("utils.message_colored_w_arrow_colored",
          :message => title,
          :message_color => Tty.white,
          :arrow_color => Tty.green,
@@ -95,16 +95,16 @@ end
 
 # Print a warning (do this rarely)
 def opoo(warning)
-  $stderr.puts t('utils.message_w_intro_colored',
-                 :intro => t('utils.warning'),
+  $stderr.puts t("utils.message_w_intro_colored",
+                 :intro => t("utils.warning"),
                  :message => warning,
                  :intro_color => Tty.yellow,
                  :reset_color => Tty.reset)
 end
 
 def onoe(error)
-  $stderr.puts t('utils.message_w_intro_colored',
-                 :intro => t('utils.error_1'),
+  $stderr.puts t("utils.message_w_intro_colored",
+                 :intro => t("utils.error_1"),
                  :message => error,
                  :intro_color => Tty.red,
                  :reset_color => Tty.reset)
@@ -121,12 +121,12 @@ def odie(error)
 end
 
 def pretty_duration(s)
-  return t('utils.seconds', :count => s.to_i) if s < 120
-  return t('utils.minutes', :count => (s/6).to_i/10.0)
+  return t("utils.seconds", :count => s.to_i) if s < 120
+  return t("utils.minutes", :count => (s/6).to_i/10.0)
 end
 
 def plural(n, s = "s")
-  opoo t('utils.plural_called')
+  opoo t("utils.plural_called")
   (n == 1) ? "" : s
 end
 
@@ -145,7 +145,7 @@ def interactive_shell(f = nil)
   if $?.success?
     return
   elsif $?.exited?
-    puts t('utils.interactive_shell_abort')
+    puts t("utils.interactive_shell_abort")
     exit $?.exitstatus
   else
     raise $?.inspect
@@ -276,7 +276,7 @@ module Homebrew
     end
 
     unless which executable
-      odie t('utils.gem_installed_but_exec_not_in_path',
+      odie t("utils.gem_installed_but_exec_not_in_path",
              :gem => gem,
              :executable => executable,
              :path => ENV["PATH"])
@@ -321,7 +321,7 @@ def curl(*args)
   else
     Pathname.new "/usr/bin/curl"
   end
-  raise t('utils.not_executable', :path => curl) unless curl.exist? && curl.executable?
+  raise t("utils.not_executable", :path => curl) unless curl.exist? && curl.executable?
 
   flags = HOMEBREW_CURL_ARGS
   flags = flags.delete("#") if ARGV.verbose?
@@ -403,7 +403,7 @@ def which_editor
   # Default to standard vim
   editor ||= "/usr/bin/vim"
 
-  opoo t('utils.using_editor_as_fallback', :editor => editor)
+  opoo t("utils.using_editor_as_fallback", :editor => editor)
 
   editor
 end
@@ -439,7 +439,7 @@ end
 
 def ignore_interrupts(opt = nil)
   std_trap = trap("INT") do
-    puts t('utils.cleaning_up') unless opt == :quietly
+    puts t("utils.cleaning_up") unless opt == :quietly
   end
   yield
 ensure
@@ -466,7 +466,7 @@ def paths
     begin
       File.expand_path(p).chomp("/")
     rescue ArgumentError
-      onoe t('utils.path_component_invalid', :path => p)
+      onoe t("utils.path_component_invalid", :path => p)
     end
   end.uniq.compact
 end
@@ -490,25 +490,25 @@ module GitHub
 
   class RateLimitExceededError < Error
     def initialize(reset, error)
-      super t('utils.rate_limit_exceeded',
+      super t("utils.rate_limit_exceeded",
               :error => error,
               :duration => pretty_ratelimit_reset(reset))
     end
 
     def pretty_ratelimit_reset(reset)
       if (seconds = Time.at(reset) - Time.now) > 60
-        t('utils.rate_limit_time_m_s',
-          :n_minutes => t('utils.minutes', :count => seconds.to_i / 60),
-          :n_seconds => t('utils.seconds', :count => seconds.to_i % 60))
+        t("utils.rate_limit_time_m_s",
+          :n_minutes => t("utils.minutes", :count => seconds.to_i / 60),
+          :n_seconds => t("utils.seconds", :count => seconds.to_i % 60))
       else
-        t('utils.seconds', :count => seconds)
+        t("utils.seconds", :count => seconds)
       end
     end
   end
 
   class AuthenticationFailedError < Error
     def initialize(error)
-      super t('utils.authentication_failed', :error => error)
+      super t("utils.authentication_failed", :error => error)
     end
   end
 
@@ -531,11 +531,11 @@ module GitHub
       handle_api_error(e)
     rescue EOFError, SocketError, OpenSSL::SSL::SSLError => e
       raise Error,
-            t('utils.failed_to_connect', :url => url, :message => e.message),
+            t("utils.failed_to_connect", :url => url, :message => e.message),
             e.backtrace
     rescue Utils::JSON::Error => e
       raise Error,
-            t('utils.failed_to_parse_json', :message => e.message),
+            t("utils.failed_to_parse_json", :message => e.message),
             e.backtrace
     end
   end
@@ -597,23 +597,23 @@ module GitHub
 
   def print_pull_requests_matching(query)
     return [] if ENV["HOMEBREW_NO_GITHUB_API"]
-    ohai t('utils.searching_pull_requests')
+    ohai t("utils.searching_pull_requests")
 
     open_or_closed_prs = issues_matching(query, :type => "pr")
 
     open_prs = open_or_closed_prs.select { |i| i["state"] == "open" }
     if open_prs.any?
-      puts t('utils.open_pull_requests')
+      puts t("utils.open_pull_requests")
       prs = open_prs
     elsif open_or_closed_prs.any?
-      puts t('utils.closed_pull_requests')
+      puts t("utils.closed_pull_requests")
       prs = open_or_closed_prs
     else
       return
     end
 
     prs.each do |i|
-      puts t('utils.pull_request_with_url',
+      puts t("utils.pull_request_with_url",
              :title => i["title"],
              :html_url => i["html_url"])
     end

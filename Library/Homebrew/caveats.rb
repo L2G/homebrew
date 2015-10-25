@@ -52,13 +52,13 @@ class Caveats
 
   def bash_completion_caveats
     if keg && keg.completion_installed?(:bash)
-      t('caveats.bash_completion', :path => "#{HOMEBREW_PREFIX}/etc/bash_completion.d")
+      t("caveats.bash_completion", :path => "#{HOMEBREW_PREFIX}/etc/bash_completion.d")
     end
   end
 
   def zsh_completion_caveats
     if keg && keg.completion_installed?(:zsh)
-      t('caveats.zsh_completion', :path => "#{HOMEBREW_PREFIX}/share/zsh/site-functions")
+      t("caveats.zsh_completion", :path => "#{HOMEBREW_PREFIX}/share/zsh/site-functions")
     end
   end
 
@@ -86,7 +86,7 @@ class Caveats
     if f.keg_only?
       keg_site_packages = f.opt_prefix/"lib/python2.7/site-packages"
       unless Language::Python.in_sys_path?("python", keg_site_packages)
-        s = t('caveats.python_find_keg_bindings',
+        s = t("caveats.python_find_keg_bindings",
               :cmd => "echo #{keg_site_packages} >> #{homebrew_site_packages/f.name}.pth"
             )
         s += instructions unless Language::Python.reads_brewed_pth_files?("python")
@@ -97,16 +97,16 @@ class Caveats
     return if Language::Python.reads_brewed_pth_files?("python")
 
     if !Language::Python.in_sys_path?("python", homebrew_site_packages)
-      s = t('caveats.python_modules_installed') + instructions
+      s = t("caveats.python_modules_installed") + instructions
     elsif keg.python_pth_files_installed?
-      s = t('caveats.python_pth_files_installed') + instructions
+      s = t("caveats.python_pth_files_installed") + instructions
     end
     s
   end
 
   def app_caveats
     if keg && keg.app_installed?
-      t('caveats.app', :name => keg.name)
+      t("caveats.app", :name => keg.name)
     end
   end
 

@@ -1,4 +1,4 @@
-HOMEBREW_HELP = t('cmd.help')
+HOMEBREW_HELP = t("cmd.help")
 
 module Homebrew
   def help

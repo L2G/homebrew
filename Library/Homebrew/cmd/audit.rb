@@ -60,22 +60,22 @@ module Homebrew
       unless fa.problems.empty?
         unless output_header
           puts
-          ohai t('cmd.audit.audit_problems')
+          ohai t("cmd.audit.audit_problems")
           output_header = true
         end
 
         formula_count += 1
         problem_count += fa.problems.size
-        puts t('cmd.audit.audit_problems_formula', :name => f.full_name),
-          fa.problems.map { |p| t('cmd.audit.audit_problems_list_item', :item => p) },
+        puts t("cmd.audit.audit_problems_formula", :name => f.full_name),
+          fa.problems.map { |p| t("cmd.audit.audit_problems_list_item", :item => p) },
           ""
       end
     end
 
     unless problem_count.zero?
-      ofail t('cmd.audit.problems_in',
+      ofail t("cmd.audit.problems_in",
               :count => problem_count,
-              :n_formulae => t('cmd.audit.formulae', :count => formula_count)
+              :n_formulae => t("cmd.audit.formulae", :count => formula_count)
              )
     end
   end
@@ -146,19 +146,19 @@ class FormulaAuditor
 
   def audit_file
     unless formula.path.stat.mode == 0100644
-      problem t('cmd.audit.permissions_644', :path => formula.path)
+      problem t("cmd.audit.permissions_644", :path => formula.path)
     end
 
     if text.has_DATA? && !text.has_END?
-      problem t('cmd.audit.data_without_end')
+      problem t("cmd.audit.data_without_end")
     end
 
     if text.has_END? && !text.has_DATA?
-      problem t('cmd.audit.end_without_data')
+      problem t("cmd.audit.end_without_data")
     end
 
     unless text.has_trailing_newline?
-      problem t('cmd.audit.needs_ending_newline')
+      problem t("cmd.audit.needs_ending_newline")
     end
 
     return unless @strict
@@ -201,22 +201,22 @@ class FormulaAuditor
   def audit_class
     if @strict
       unless formula.test_defined?
-        problem t('cmd.audit.add_test_do')
+        problem t("cmd.audit.add_test_do")
       end
     end
 
     if Object.const_defined?("GithubGistFormula") && formula.class < GithubGistFormula
-      problem t('cmd.audit.formula_subclass_deprecated',
+      problem t("cmd.audit.formula_subclass_deprecated",
                 :subclass => 'GithubGistFormula')
     end
 
     if Object.const_defined?("ScriptFileFormula") && formula.class < ScriptFileFormula
-      problem t('cmd.audit.formula_subclass_deprecated',
+      problem t("cmd.audit.formula_subclass_deprecated",
                 :subclass => 'ScriptFileFormula')
     end
 
     if Object.const_defined?("AmazonWebServicesFormula") && formula.class < AmazonWebServicesFormula
-      problem t('cmd.audit.formula_subclass_deprecated',
+      problem t("cmd.audit.formula_subclass_deprecated",
                 :subclass => 'AmazonWebServicesFormula')
     end
   end
@@ -233,7 +233,7 @@ class FormulaAuditor
     full_name = formula.full_name
 
     if Formula.aliases.include? name
-      problem t('cmd.audit.conflict_with_aliases')
+      problem t("cmd.audit.conflict_with_aliases")
       return
     end
 
@@ -243,7 +243,7 @@ class FormulaAuditor
     end
 
     if !formula.core_formula? && Formula.core_names.include?(name)
-      problem t('cmd.audit.conflict_with_formulae')
+      problem t("cmd.audit.conflict_with_formulae")
       return
     end
 
@@ -268,8 +268,8 @@ class FormulaAuditor
     same_name_tap_formulae.delete(full_name)
 
     if same_name_tap_formulae.size > 0
-      problem t('cmd.audit.conflicts_with_formulae_list',
-                :list => same_name_tap_formulae.join(t('cmd.audit.list_join')))
+      problem t("cmd.audit.conflicts_with_formulae_list",
+                :list => same_name_tap_formulae.join(t("cmd.audit.list_join")))
     end
   end
 
@@ -284,10 +284,10 @@ class FormulaAuditor
           # Don't complain about missing cross-tap dependencies
           next
         rescue FormulaUnavailableError
-          problem t('cmd.audit.cant_find_dependency', :name => dep.name.inspect)
+          problem t("cmd.audit.cant_find_dependency", :name => dep.name.inspect)
           next
         rescue TapFormulaAmbiguityError
-          problem t('cmd.audit.ambiguous_dependency', :name => dep.name.inspect)
+          problem t("cmd.audit.ambiguous_dependency", :name => dep.name.inspect)
           next
         rescue TapFormulaWithOldnameAmbiguityError
           problem "Ambiguous oldname dependency #{dep.name.inspect}."
@@ -299,7 +299,7 @@ class FormulaAuditor
         end
 
         if @@aliases.include?(dep.name)
-          problem t('cmd.audit.alias_should_be',
+          problem t("cmd.audit.alias_should_be",
                     :alias_name => dep.name,
                     :canonical_name => dep.to_formula.full_name)
         end
@@ -314,7 +314,7 @@ class FormulaAuditor
             end
           end
         end.each do |opt|
-          problem t('cmd.audit.dependency_has_no_option',
+          problem t("cmd.audit.dependency_has_no_option",
                     :dependency => dep,
                     :option => opt.name.inspect)
         end
@@ -322,17 +322,17 @@ class FormulaAuditor
         case dep.name
         when *BUILD_TIME_DEPS
           next if dep.build? || dep.run?
-          problem t('cmd.audit.should_be_build_or_run_dependency', :name => dep)
+          problem t("cmd.audit.should_be_build_or_run_dependency", :name => dep)
         when "git"
-          problem t('cmd.audit.dont_use_dependency_git')
+          problem t("cmd.audit.dont_use_dependency_git")
         when "mercurial"
-          problem t('cmd.audit.use_depends_on_hg')
+          problem t("cmd.audit.use_depends_on_hg")
         when "ruby"
-          problem t('cmd.audit.dont_use_dependency', :name => dep)
+          problem t("cmd.audit.dont_use_dependency", :name => dep)
         when "gfortran"
-          problem t('cmd.audit.use_fortran_not_gfortran')
+          problem t("cmd.audit.use_fortran_not_gfortran")
         when "open-mpi", "mpich"
-          problem t('cmd.audit.use_mpi_dependency')
+          problem t("cmd.audit.use_mpi_dependency")
         end
       end
     end
@@ -357,7 +357,7 @@ class FormulaAuditor
     formula.options.each do |o|
       next unless @strict
       if o.name !~ /with(out)?-/ && o.name != "c++11" && o.name != "universal" && o.name != "32-bit"
-        problem t('cmd.audit.migrate_deprecated_option', :option => o.name)
+        problem t("cmd.audit.migrate_deprecated_option", :option => o.name)
       end
     end
   end
@@ -369,14 +369,14 @@ class FormulaAuditor
     desc = formula.desc
 
     unless desc && desc.length > 0
-      problem t('cmd.audit.should_have_desc')
+      problem t("cmd.audit.should_have_desc")
       return
     end
 
     # Make sure the formula name plus description is no longer than 80 characters
     linelength = formula.full_name.length + ": ".length + desc.length
     if linelength > 80
-      problem t('cmd.audit.desc_too_long',
+      problem t("cmd.audit.desc_too_long",
                 :length => linelength,
                 :full_name => formula.full_name)
     end
@@ -394,7 +394,7 @@ class FormulaAuditor
     homepage = formula.homepage
 
     unless homepage =~ %r{^https?://}
-      problem t('cmd.audit.homepage_should_be_http', :url => homepage)
+      problem t("cmd.audit.homepage_should_be_http", :url => homepage)
     end
 
     # Check for http:// GitHub homepage urls, https:// is preferred.
@@ -415,10 +415,10 @@ class FormulaAuditor
     # "Software" is redirected to https://wiki.freedesktop.org/www/Software/project_name
     if homepage =~ %r{^http://((?:www|nice|libopenraw|liboil|telepathy|xorg)\.)?freedesktop\.org/(?:wiki/)?}
       if homepage =~ /Software/
-        problem t('cmd.audit.homepage_freedesktop_https_software_project',
+        problem t("cmd.audit.homepage_freedesktop_https_software_project",
                   :url => homepage)
       else
-        problem t('cmd.audit.homepage_freedesktop_https_project', :url => homepage)
+        problem t("cmd.audit.homepage_freedesktop_https_project", :url => homepage)
       end
     end
 
@@ -493,11 +493,11 @@ class FormulaAuditor
 
   def audit_specs
     if head_only?(formula) && formula.tap.to_s.downcase !~ /-head-only$/
-      problem t('cmd.audit.head_only')
+      problem t("cmd.audit.head_only")
     end
 
     if devel_only?(formula) && formula.tap.to_s.downcase !~ /-devel-only$/
-      problem t('cmd.audit.devel_only')
+      problem t("cmd.audit.devel_only")
     end
 
     %w[Stable Devel HEAD].each do |name|
@@ -506,14 +506,14 @@ class FormulaAuditor
       ra = ResourceAuditor.new(spec).audit
       problems.concat(
         ra.problems.map do |problem|
-          t('cmd.audit.name_problem', :name => name, :problem => problem)
+          t("cmd.audit.name_problem", :name => name, :problem => problem)
         end
       )
 
       spec.resources.each_value do |resource|
         ra = ResourceAuditor.new(resource).audit
         problems.concat ra.problems.map { |problem|
-          t('cmd.audit.resource_problem',
+          t("cmd.audit.resource_problem",
             :name => name,
             :resource => resource.name.inspect,
             :problem => problem)
@@ -527,7 +527,7 @@ class FormulaAuditor
       next unless spec = formula.send(name.downcase)
       version = spec.version
       if version.to_s !~ /\d/
-        problem t('cmd.audit.version_no_digit',
+        problem t("cmd.audit.version_no_digit",
                   :name => name,
                   :version => version)
       end
@@ -535,12 +535,12 @@ class FormulaAuditor
 
     if formula.stable && formula.devel
       if formula.devel.version < formula.stable.version
-        problem t('cmd.audit.devel_older_than_stable',
+        problem t("cmd.audit.devel_older_than_stable",
           :devel => formula.devel.version,
           :stable => formula.stable.version
         )
       elsif formula.devel.version == formula.stable.version
-        problem t('cmd.audit.stable_and_devel_identical')
+        problem t("cmd.audit.stable_and_devel_identical")
       end
     end
 
@@ -550,7 +550,7 @@ class FormulaAuditor
       minor_version = Version.parse(stable.url).to_s.split(".", 3)[1].to_i
 
       if minor_version.odd?
-        problem t('cmd.audit.version_is_devel', :version => stable.version)
+        problem t("cmd.audit.version_is_devel", :version => stable.version)
       end
     end
   end
@@ -559,7 +559,7 @@ class FormulaAuditor
     return unless formula.respond_to?(:patches)
     legacy_patches = Patch.normalize_legacy_patches(formula.patches).grep(LegacyPatch)
     if legacy_patches.any?
-      problem t('cmd.audit.use_patch_dsl')
+      problem t("cmd.audit.use_patch_dsl")
       legacy_patches.each { |p| audit_patch(p) }
     end
   end
@@ -569,32 +569,32 @@ class FormulaAuditor
     when /raw\.github\.com/, %r{gist\.github\.com/raw}, %r{gist\.github\.com/.+/raw},
       %r{gist\.githubusercontent\.com/.+/raw}
       unless patch.url =~ /[a-fA-F0-9]{40}/
-        problem t('cmd.audit.github_patch_needs_rev', :url => patch.url)
+        problem t("cmd.audit.github_patch_needs_rev", :url => patch.url)
       end
     when %r{macports/trunk}
-      problem t('cmd.audit.github_patch_macports', :url => patch.url)
+      problem t("cmd.audit.github_patch_macports", :url => patch.url)
     when %r{^http://trac\.macports\.org}
-      problem t('cmd.audit.macports_patch_use_https', :url => patch.url)
+      problem t("cmd.audit.macports_patch_use_https", :url => patch.url)
     when %r{^http://bugs\.debian\.org}
-      problem t('cmd.audit.debian_patch_use_https', :url => patch.url)
+      problem t("cmd.audit.debian_patch_use_https", :url => patch.url)
     end
   end
 
   def audit_text
     if text =~ /system\s+['"]scons/
-      problem t('cmd.audit.scons_args')
+      problem t("cmd.audit.scons_args")
     end
 
     if text =~ /system\s+['"]xcodebuild/
-      problem t('cmd.audit.xcodebuild_args')
+      problem t("cmd.audit.xcodebuild_args")
     end
 
     if text =~ /xcodebuild[ (]["'*]/ && text !~ /SYMROOT=/
-      problem t('cmd.audit.xcodebuild_symroot')
+      problem t("cmd.audit.xcodebuild_symroot")
     end
 
     if text =~ /Formula\.factory\(/
-      problem t('cmd.audit.formula_factory')
+      problem t("cmd.audit.formula_factory")
     end
 
     if text =~ /system "npm", "install"/ && text !~ %r[opt_libexec}/npm/bin]
@@ -607,217 +607,217 @@ class FormulaAuditor
 
   def audit_line(line, lineno)
     if line =~ /<(Formula|AmazonWebServicesFormula|ScriptFileFormula|GithubGistFormula)/
-      problem t('cmd.audit.class_inheritance_space', :superclass => $1)
+      problem t("cmd.audit.class_inheritance_space", :superclass => $1)
     end
 
     # Commented-out cmake support from default template
     if line =~ /# system "cmake/
-      problem t('cmd.audit.comment_cmake_found')
+      problem t("cmd.audit.comment_cmake_found")
     end
 
     # Comments from default template
     if line =~ /# PLEASE REMOVE/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /# Documentation:/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /# if this fails, try separate make\/make install steps/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /# The url of the archive/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /## Naming --/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /# if your formula requires any X11\/XQuartz components/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /# if your formula fails when building in parallel/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
     if line =~ /# Remove unrecognized options if warned by configure/
-      problem t('cmd.audit.comment_remove_default')
+      problem t("cmd.audit.comment_remove_default")
     end
 
     # FileUtils is included in Formula
     # encfs modifies a file with this name, so check for some leading characters
     if line =~ /[^'"\/]FileUtils\.(\w+)/
-      problem t('cmd.audit.fileutils_class_dont_need', :method => $1)
+      problem t("cmd.audit.fileutils_class_dont_need", :method => $1)
     end
 
     # Check for long inreplace block vars
     if line =~ /inreplace .* do \|(.{2,})\|/
-      problem t('cmd.audit.inreplace_block_var', :block_var => $1)
+      problem t("cmd.audit.inreplace_block_var", :block_var => $1)
     end
 
     # Check for string interpolation of single values.
     if line =~ /(system|inreplace|gsub!|change_make_var!).*[ ,]"#\{([\w.]+)\}"/
-      problem t('cmd.audit.dont_need_to_interpolate', :method => $1, :var => $2)
+      problem t("cmd.audit.dont_need_to_interpolate", :method => $1, :var => $2)
     end
 
     # Check for string concatenation; prefer interpolation
     if line =~ /(#\{\w+\s*\+\s*['"][^}]+\})/
-      problem t('cmd.audit.string_concat_in_interpolation', :interpolation => $1)
+      problem t("cmd.audit.string_concat_in_interpolation", :interpolation => $1)
     end
 
     # Prefer formula path shortcuts in Pathname+
     if line =~ %r{\(\s*(prefix\s*\+\s*(['"])(bin|include|libexec|lib|sbin|share|Frameworks)[/'"])}
-      problem t('cmd.audit.path_should_be',
+      problem t("cmd.audit.path_should_be",
                 :bad_path => "(#{$1}...#{$2})",
                 :good_path => "(#{$3.downcase}+...)")
     end
 
     if line =~ /((man)\s*\+\s*(['"])(man[1-8])(['"]))/
-      problem t('cmd.audit.path_should_be', :bad_path => $1, :good_path => $4)
+      problem t("cmd.audit.path_should_be", :bad_path => $1, :good_path => $4)
     end
 
     # Prefer formula path shortcuts in strings
     if line =~ %r[(\#\{prefix\}/(bin|include|libexec|lib|sbin|share|Frameworks))]
-      problem t('cmd.audit.path_should_be',
+      problem t("cmd.audit.path_should_be",
                 :bad_path => $1,
                 :good_path => "\#{#{$2.downcase}}")
     end
 
     if line =~ %r[((\#\{prefix\}/share/man/|\#\{man\}/)(man[1-8]))]
-      problem t('cmd.audit.path_should_be',
+      problem t("cmd.audit.path_should_be",
                 :bad_path => $1,
                 :good_path => "\#{#{$3}}")
     end
 
     if line =~ %r[((\#\{share\}/(man)))[/'"]]
-      problem t('cmd.audit.path_should_be',
+      problem t("cmd.audit.path_should_be",
                 :bad_path => $1,
                 :good_path => "\#{#{$3}}")
     end
 
     if line =~ %r[(\#\{prefix\}/share/(info|man))]
-      problem t('cmd.audit.path_should_be',
+      problem t("cmd.audit.path_should_be",
                 :bad_path => $1,
                 :good_path => "\#{#{$2}}")
     end
 
     if line =~ /depends_on :(automake|autoconf|libtool)/
-      problem t('cmd.audit.deprecated_symbol', :name => $1)
+      problem t("cmd.audit.deprecated_symbol", :name => $1)
     end
 
     # Commented-out depends_on
     if line =~ /#\s*depends_on\s+(.+)\s*$/
-      problem t('cmd.audit.commented_out_dep', :dep => $1)
+      problem t("cmd.audit.commented_out_dep", :dep => $1)
     end
 
     # No trailing whitespace, please
     if line =~ /[\t ]+$/
-      problem t('cmd.audit.trailing_whitespace', :line_num => lineno)
+      problem t("cmd.audit.trailing_whitespace", :line_num => lineno)
     end
 
     if line =~ /if\s+ARGV\.include\?\s+'--(HEAD|devel)'/
-      problem t('cmd.audit.use_if_argv_build', :build_test => $1.downcase)
+      problem t("cmd.audit.use_if_argv_build", :build_test => $1.downcase)
     end
 
     if line =~ /make && make/
-      problem t('cmd.audit.separate_make_calls')
+      problem t("cmd.audit.separate_make_calls")
     end
 
     if line =~ /^[ ]*\t/
-      problem t('cmd.audit.use_spaces_not_tabs')
+      problem t("cmd.audit.use_spaces_not_tabs")
     end
 
     if line =~ /ENV\.x11/
-      problem t('cmd.audit.use_depends_on_x11')
+      problem t("cmd.audit.use_depends_on_x11")
     end
 
     # Avoid hard-coding compilers
     if line =~ %r{(system|ENV\[.+\]\s?=)\s?['"](/usr/bin/)?(gcc|llvm-gcc|clang)['" ]}
-      problem t('cmd.audit.no_hardcoding_compiler', :env => ENV.cc, :compiler => $3)
+      problem t("cmd.audit.no_hardcoding_compiler", :env => ENV.cc, :compiler => $3)
     end
 
     if line =~ %r{(system|ENV\[.+\]\s?=)\s?['"](/usr/bin/)?((g|llvm-g|clang)\+\+)['" ]}
-      problem t('cmd.audit.no_hardcoding_compiler', :env => ENV.cxx, :compiler => $3)
+      problem t("cmd.audit.no_hardcoding_compiler", :env => ENV.cxx, :compiler => $3)
     end
 
     if line =~ /system\s+['"](env|export)(\s+|['"])/
-      problem t('cmd.audit.use_env_instead_of', :bad => $1)
+      problem t("cmd.audit.use_env_instead_of", :bad => $1)
     end
 
     if line =~ /version == ['"]HEAD['"]/
-      problem t('cmd.audit.use_build_head')
+      problem t("cmd.audit.use_build_head")
     end
 
     if line =~ /build\.include\?[\s\(]+['"]\-\-(.*)['"]/
-      problem t('cmd.audit.no_dashes', :option => $1)
+      problem t("cmd.audit.no_dashes", :option => $1)
     end
 
     if line =~ /build\.include\?[\s\(]+['"]with(out)?-(.*)['"]/
-      problem t('cmd.audit.use_build_with_not_include',
+      problem t("cmd.audit.use_build_with_not_include",
                 :out => $1,
                 :option => $2)
     end
 
     if line =~ /build\.with\?[\s\(]+['"]-?-?with-(.*)['"]/
-      problem t('cmd.audit.use_build_with', :option => $1)
+      problem t("cmd.audit.use_build_with", :option => $1)
     end
 
     if line =~ /build\.without\?[\s\(]+['"]-?-?without-(.*)['"]/
-      problem t('cmd.audit.use_build_without', :option => $1)
+      problem t("cmd.audit.use_build_without", :option => $1)
     end
 
     if line =~ /unless build\.with\?(.*)/
-      problem t('cmd.audit.use_if_build_without', :option => $1)
+      problem t("cmd.audit.use_if_build_without", :option => $1)
     end
 
     if line =~ /unless build\.without\?(.*)/
-      problem t('cmd.audit.use_if_build_with', :option => $1)
+      problem t("cmd.audit.use_if_build_with", :option => $1)
     end
 
     if line =~ /(not\s|!)\s*build\.with?\?/
-      problem t('cmd.audit.dont_negate_build_without')
+      problem t("cmd.audit.dont_negate_build_without")
     end
 
     if line =~ /(not\s|!)\s*build\.without?\?/
-      problem t('cmd.audit.dont_negate_build_with')
+      problem t("cmd.audit.dont_negate_build_with")
     end
 
     if line =~ /ARGV\.(?!(debug\?|verbose\?|value[\(\s]))/
-      problem t('cmd.audit.use_build_instead_of_argv')
+      problem t("cmd.audit.use_build_instead_of_argv")
     end
 
     if line =~ /def options/
-      problem t('cmd.audit.use_new_style_opt_defs')
+      problem t("cmd.audit.use_new_style_opt_defs")
     end
 
     if line =~ /def test$/
-      problem t('cmd.audit.use_new_style_test_defs')
+      problem t("cmd.audit.use_new_style_test_defs")
     end
 
     if line =~ /MACOS_VERSION/
-      problem t('cmd.audit.use_macos_version')
+      problem t("cmd.audit.use_macos_version")
     end
 
     cats = %w[leopard snow_leopard lion mountain_lion].join("|")
     if line =~ /MacOS\.(?:#{cats})\?/
-      problem t('cmd.audit.version_symbol_deprecated', :symbol => $&)
+      problem t("cmd.audit.version_symbol_deprecated", :symbol => $&)
     end
 
     if line =~ /skip_clean\s+:all/
-      problem t('cmd.audit.skip_clean_all_deprecated')
+      problem t("cmd.audit.skip_clean_all_deprecated")
     end
 
     if line =~ /depends_on [A-Z][\w:]+\.new$/
-      problem t('cmd.audit.depends_on_takes_classes')
+      problem t("cmd.audit.depends_on_takes_classes")
     end
 
     if line =~ /^def (\w+).*$/
-      problem t('cmd.audit.define_method_in_class_body', :method => $1.inspect)
+      problem t("cmd.audit.define_method_in_class_body", :method => $1.inspect)
     end
 
     if line =~ /ENV.fortran/ && !formula.requirements.map(&:class).include?(FortranRequirement)
-      problem t('cmd.audit.use_depends_on_fortran')
+      problem t("cmd.audit.use_depends_on_fortran")
     end
 
     if line =~ /JAVA_HOME/i && !formula.requirements.map(&:class).include?(JavaRequirement)
-      problem t('cmd.audit.use_depends_on_java_to_set_java_home')
+      problem t("cmd.audit.use_depends_on_java_to_set_java_home")
     end
 
     if line =~ /depends_on :(.+) (if.+|unless.+)$/
@@ -829,13 +829,13 @@ class FormulaAuditor
     end
 
     if line =~ /(Dir\[("[^\*{},]+")\])/
-      problem t('cmd.audit.unnecessary', :dir_with_path => $1, :path => $2)
+      problem t("cmd.audit.unnecessary", :dir_with_path => $1, :path => $2)
     end
 
     if line =~ /system (["'](#{FILEUTILS_METHODS})["' ])/o
       system = $1
       method = $2
-      problem t('cmd.audit.use_ruby_method_instead_of_system',
+      problem t("cmd.audit.use_ruby_method_instead_of_system",
                 :method => method,
                 :shell_cmd => system)
     end
@@ -849,14 +849,14 @@ class FormulaAuditor
         bad_system = $1
         unless %w[| < > & ; *].any? { |c| bad_system.include? c }
           good_system = bad_system.gsub(" ", "\", \"")
-          problem t('cmd.audit.use_system_alternative',
+          problem t("cmd.audit.use_system_alternative",
                     :good_system => good_system,
                     :bad_system => bad_system)
         end
       end
 
       if line =~ /(require ["']formula["'])/
-        problem t('cmd.audit.is_now_unnecessary', :require_formula => $1)
+        problem t("cmd.audit.is_now_unnecessary", :require_formula => $1)
       end
     end
   end
@@ -865,7 +865,7 @@ class FormulaAuditor
     caveats = formula.caveats
 
     if caveats =~ /setuid/
-      problem t('cmd.audit.caveats_no_setuid')
+      problem t("cmd.audit.caveats_no_setuid")
     end
   end
 
@@ -894,7 +894,7 @@ class FormulaAuditor
       return
     end
 
-    problem t('cmd.audit.installation_empty')
+    problem t("cmd.audit.installation_empty")
   end
 
   def audit_conditional_dep(dep, condition, line)
@@ -903,18 +903,18 @@ class FormulaAuditor
 
     case condition
     when /if build\.include\? ['"]with-#{dep}['"]$/, /if build\.with\? ['"]#{dep}['"]$/
-      problem t('cmd.audit.replace_with_optional_dep',
+      problem t("cmd.audit.replace_with_optional_dep",
                 :line => line.inspect,
                 :dep => quoted_dep)
     when /unless build\.include\? ['"]without-#{dep}['"]$/, /unless build\.without\? ['"]#{dep}['"]$/
-      problem t('cmd.audit.replace_with_recommended_dep',
+      problem t("cmd.audit.replace_with_recommended_dep",
                 :line => line.inspect,
                 :dep => quoted_dep)
     end
   end
 
   def quote_dep(dep)
-    Symbol === dep ? dep.inspect : t('cmd.audit.quoted_dep', :dep => dep)
+    Symbol === dep ? dep.inspect : t("cmd.audit.quoted_dep", :dep => dep)
   end
 
   def audit_check_output(output)
@@ -981,23 +981,23 @@ class ResourceAuditor
 
   def audit_version
     if version.nil?
-      problem t('cmd.audit.missing_version')
+      problem t("cmd.audit.missing_version")
     elsif version.to_s.empty?
-      problem t('cmd.audit.version_empty_string')
+      problem t("cmd.audit.version_empty_string")
     elsif !version.detected_from_url?
       version_text = version
       version_url = Version.detect(url, specs)
       if version_url.to_s == version_text.to_s && version.instance_of?(Version)
-        problem t('cmd.audit.version_redundant', :version => version_text)
+        problem t("cmd.audit.version_redundant", :version => version_text)
       end
     end
 
     if version.to_s =~ /^v/
-      problem t('cmd.audit.version_no_leading_v', :version => version)
+      problem t("cmd.audit.version_no_leading_v", :version => version)
     end
 
     if version.to_s =~ /_\d+$/
-      problem t('cmd.audit.version_trailing_underscore_digit',
+      problem t("cmd.audit.version_trailing_underscore_digit",
                 :version => version)
     end
   end
@@ -1007,28 +1007,28 @@ class ResourceAuditor
 
     case checksum.hash_type
     when :md5
-      problem t('cmd.audit.md5_checksums_deprecated')
+      problem t("cmd.audit.md5_checksums_deprecated")
       return
     when :sha1
-      problem t('cmd.audit.sha1_checksums_deprecated')
+      problem t("cmd.audit.sha1_checksums_deprecated")
       return
     when :sha256 then len = 64
     end
 
     if checksum.empty?
-      problem t('cmd.audit.checksum_empty', :checksum_type => checksum.hash_type)
+      problem t("cmd.audit.checksum_empty", :checksum_type => checksum.hash_type)
     else
       unless checksum.hexdigest.length == len
-        problem t('cmd.audit.checksum_should_be_n_chars',
+        problem t("cmd.audit.checksum_should_be_n_chars",
                   :checksum_type => checksum.hash_type,
                   :count => len)
       end
       unless checksum.hexdigest =~ /^[a-fA-F0-9]+$/
-        problem t('cmd.audit.checksum_invalid_chars',
+        problem t("cmd.audit.checksum_invalid_chars",
                   :checksum_type => checksum.hash_type)
       end
       unless checksum.hexdigest == checksum.hexdigest.downcase
-        problem t('cmd.audit.checksum_should_be_lowercase',
+        problem t("cmd.audit.checksum_should_be_lowercase",
                   :checksum_type => checksum.hash_type)
       end
     end
@@ -1036,7 +1036,7 @@ class ResourceAuditor
 
   def audit_download_strategy
     if url =~ %r{^(cvs|bzr|hg|fossil)://} || url =~ %r{^(svn)\+http://}
-      problem t('cmd.audit.scheme_deprecated',
+      problem t("cmd.audit.scheme_deprecated",
                 :url_scheme => $&,
                 :symbol => $1)
     end
@@ -1045,7 +1045,7 @@ class ResourceAuditor
 
     if using == :git || url_strategy == GitDownloadStrategy
       if specs[:tag] && !specs[:revision]
-        problem t('cmd.audit.git_specify_revision_with_tag')
+        problem t("cmd.audit.git_specify_revision_with_tag")
       end
     end
 
@@ -1053,26 +1053,26 @@ class ResourceAuditor
 
     if using == :ssl3 || \
        (Object.const_defined?("CurlSSL3DownloadStrategy") && using == CurlSSL3DownloadStrategy)
-      problem t('cmd.audit.ssl3_deprecated')
+      problem t("cmd.audit.ssl3_deprecated")
     elsif (Object.const_defined?("CurlUnsafeDownloadStrategy") && using == CurlUnsafeDownloadStrategy) || \
           (Object.const_defined?("UnsafeSubversionDownloadStrategy") && using == UnsafeSubversionDownloadStrategy)
-      problem t('cmd.audit.strategy_deprecated', :strategy => using.name)
+      problem t("cmd.audit.strategy_deprecated", :strategy => using.name)
     end
 
     if using == :cvs
       mod = specs[:module]
 
       if mod == name
-        problem t('cmd.audit.redundant_module_value')
+        problem t("cmd.audit.redundant_module_value")
       end
 
       if url =~ %r{:[^/]+$}
         mod = url.split(":").last
 
         if mod == name
-          problem t('cmd.audit.redundant_cvs_module')
+          problem t("cmd.audit.redundant_cvs_module")
         else
-          problem t('cmd.audit.specify_cvs_module', :module => mod)
+          problem t("cmd.audit.specify_cvs_module", :module => mod)
         end
       end
     end
@@ -1080,7 +1080,7 @@ class ResourceAuditor
     using_strategy = DownloadStrategyDetector.detect("", using)
 
     if url_strategy == using_strategy
-      problem t('cmd.audit.url_using_redundant')
+      problem t("cmd.audit.url_using_redundant")
     end
   end
 

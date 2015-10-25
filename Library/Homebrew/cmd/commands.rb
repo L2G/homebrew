@@ -7,7 +7,7 @@ module Homebrew
       puts_columns cmds.sort
     else
       # Find commands in Homebrew/cmd
-      puts t('cmd.commands.built_in_commands')
+      puts t("cmd.commands.built_in_commands")
       puts_columns internal_commands
 
       # Find commands in Homebrew/dev-cmd
@@ -20,7 +20,7 @@ module Homebrew
       # Find commands in the path
       unless (exts = external_commands).empty?
         puts
-        puts t('cmd.commands.external_commands')
+        puts t("cmd.commands.external_commands")
         puts_columns exts
       end
     end

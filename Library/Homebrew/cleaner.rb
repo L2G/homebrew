@@ -55,7 +55,7 @@ class Cleaner
     # actual files gets removed correctly.
     dirs.reverse_each do |d|
       if d.children.empty?
-        puts t('cleaner.rmdir_empty', :path => d) if ARGV.verbose?
+        puts t("cleaner.rmdir_empty", :path => d) if ARGV.verbose?
         d.rmdir
       end
     end
@@ -95,7 +95,7 @@ class Cleaner
         if ARGV.debug?
           old_perms = path.stat.mode & 0777
           if perms != old_perms
-            puts t('cleaner.fixing_permissions',
+            puts t("cleaner.fixing_permissions",
                    :path => path,
                    :old_perms => old_perms.to_s(8),
                    :new_perms => perms.to_s(8))

@@ -21,14 +21,14 @@ class Pathname
         src.resource.stage { install(*src.files) }
       when Array
         if src.empty?
-          opoo t('extend.pathname.tried_to_install_empty_array_to',
+          opoo t("extend.pathname.tried_to_install_empty_array_to",
                  :path => self)
           return
         end
         src.each { |s| install_p(s, File.basename(s)) }
       when Hash
         if src.empty?
-          opoo t('extend.pathname.tried_to_install_empty_hash_to',
+          opoo t("extend.pathname.tried_to_install_empty_hash_to",
                  :path => self)
           return
         end
@@ -89,7 +89,7 @@ class Pathname
 
   # we assume this pathname object is a file obviously
   def write(content, *open_args)
-    raise t('extend.pathname.will_not_overwrite', :path => self) if exist?
+    raise t("extend.pathname.will_not_overwrite", :path => self) if exist?
     dirname.mkpath
     open("w", *open_args) { |f| f.write(content) }
   end
@@ -153,12 +153,12 @@ class Pathname
 
   # @private
   def cp_path_sub(pattern, replacement)
-    raise t('extend.pathname.does_not_exist', :path => self) unless self.exist?
+    raise t("extend.pathname.does_not_exist", :path => self) unless self.exist?
 
     dst = sub(pattern, replacement)
 
     if self == dst
-      raise t('extend.pathname.same_file', :path => self, :other => dst)
+      raise t("extend.pathname.same_file", :path => self, :other => dst)
     end
 
     if directory?
@@ -359,7 +359,7 @@ class Pathname
   def write_exec_script(*targets)
     targets.flatten!
     if targets.empty?
-      opoo t('extend.pathname.exec_scripts_empty_targets', :path => self)
+      opoo t("extend.pathname.exec_scripts_empty_targets", :path => self)
       return
     end
     mkpath

@@ -8,7 +8,7 @@ require "descriptions"
 module Homebrew
   def update
     unless ARGV.named.empty?
-      abort t('cmd.update.no_formula_names')
+      abort t("cmd.update.no_formula_names")
     end
 
     # check permissions
@@ -58,7 +58,7 @@ module Homebrew
         begin
           updater.pull!
         rescue
-          onoe t('cmd.update.update_tap_failed', :tap => tap)
+          onoe t("cmd.update.update_tap_failed", :tap => tap)
         else
           updated_taps << tap.name if updater.updated?
           report.update(updater.report) do |_key, oldval, newval|
@@ -160,16 +160,16 @@ module Homebrew
             FileUtils.mv(tapd, "#{HOMEBREW_LIBRARY}/Taps/#{user.downcase}/homebrew-#{repo.downcase}")
 
             if tapd_basename.count("-") >= 2
-              opoo t('cmd.update.homebrew_tap_structure_1',
-                     :cont => t('cmd.update.homebrew_tap_structure_2',
+              opoo t("cmd.update.homebrew_tap_structure_1",
+                     :cont => t("cmd.update.homebrew_tap_structure_2",
                                 :tap_path => "#{HOMEBREW_LIBRARY}/Taps/" + 
                                              user.downcase +
                                              "/homebrew-#{repo.downcase}")
               )
             end
           else
-            opoo t('cmd.update.homebrew_tap_structure_1',
-              :cont => t('cmd.update.homebrew_tap_structure_3',
+            opoo t("cmd.update.homebrew_tap_structure_1",
+              :cont => t("cmd.update.homebrew_tap_structure_3",
                          :tap_name => tapd)
             )
           end

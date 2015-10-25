@@ -13,9 +13,9 @@ class SoftwareSpec
   extend Forwardable
 
   PREDEFINED_OPTIONS = {
-    :universal => Option.new("universal", t('software_spec.universal')),
-    :cxx11     => Option.new("c++11", t('software_spec.cxx11')),
-    "32-bit"   => Option.new("32-bit", t('software_spec.thirty_two_bit'))
+    :universal => Option.new("universal", t("software_spec.universal")),
+    :cxx11     => Option.new("c++11", t("software_spec.cxx11")),
+    "32-bit"   => Option.new("32-bit", t("software_spec.thirty_two_bit"))
   }
 
   attr_reader :name, :full_name, :owner
@@ -169,10 +169,10 @@ class SoftwareSpec
 
     if dep.optional? && !option_defined?("with-#{name}")
       options << Option.new("with-#{name}",
-                            t('software_spec.with', :name => name))
+                            t("software_spec.with", :name => name))
     elsif dep.recommended? && !option_defined?("without-#{name}")
       options << Option.new("without-#{name}",
-                            t('software_spec.without', :name => name))
+                            t("software_spec.without", :name => name))
     end
   end
 end

@@ -9,7 +9,7 @@ module Homebrew
     if !ARGV.force?
       ARGV.kegs.each do |keg|
         keg.lock do
-          puts t('cmd.uninstall.uninstalling', :name => keg, :abv => keg.abv)
+          puts t("cmd.uninstall.uninstalling", :name => keg, :abv => keg.abv)
           keg.unlink
           keg.uninstall
           rack = keg.rack
@@ -17,11 +17,11 @@ module Homebrew
 
           if rack.directory?
             versions = rack.subdirs.map(&:basename)
-            puts t('cmd.uninstall.still_installed',
+            puts t("cmd.uninstall.still_installed",
                    :name => keg.name,
-                   :versions => versions.join(t('cmd.uninstall.comma')),
+                   :versions => versions.join(t("cmd.uninstall.comma")),
                    :count => versions.length)
-            puts t('cmd.uninstall.remove_all', :name => keg.name)
+            puts t("cmd.uninstall.remove_all", :name => keg.name)
           end
         end
       end
@@ -31,7 +31,7 @@ module Homebrew
         name = rack.basename
 
         if rack.directory?
-          puts t('cmd.uninstall.uninstalling', :name => name, :abv => rack.abv)
+          puts t("cmd.uninstall.uninstalling", :name => name, :abv => rack.abv)
           rack.subdirs.each do |d|
             keg = Keg.new(d)
             keg.unlink
@@ -44,7 +44,7 @@ module Homebrew
     end
   rescue MultipleVersionsInstalledError => e
     ofail e
-    puts t('cmd.uninstall.must_remove_all', :name => e.name)
+    puts t("cmd.uninstall.must_remove_all", :name => e.name)
   ensure
     # If we delete Cellar/newname, then Cellar/oldname symlink
     # can become broken and we have to remove it.

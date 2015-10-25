@@ -295,7 +295,7 @@ module Superenv
     when /gcc-(4\.(8|9)|5)/
       append "HOMEBREW_CCCFG", "x", ""
     else
-      raise t('extend.env.cxx11_not_supported', :name => homebrew_cc)
+      raise t("extend.env.cxx11_not_supported", :name => homebrew_cc)
     end
   end
 

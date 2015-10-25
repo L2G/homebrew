@@ -10,7 +10,7 @@ module Homebrew
     raise FormulaUnspecifiedError if ARGV.named.empty?
 
     if ARGV.include? "--head"
-      raise t('cmd.install.head_uppercase')
+      raise t("cmd.install.head_uppercase")
     end
 
     ARGV.named.each do |name|
@@ -92,9 +92,9 @@ module Homebrew
       else
         ofail e.message
         query = query_regexp(e.name)
-        ohai t('cmd.install.searching_formulae')
+        ohai t("cmd.install.searching_formulae")
         puts_columns(search_formulae(query))
-        ohai t('cmd.install.searching_taps')
+        ohai t("cmd.install.searching_taps")
         puts_columns(search_taps(query))
 
         # If they haven't updated in 48 hours (172800 seconds), that
@@ -114,13 +114,13 @@ module Homebrew
   def check_ppc
     case Hardware::CPU.type
     when :ppc, :dunno
-      abort t('cmd.install.unsupported_arch')
+      abort t("cmd.install.unsupported_arch")
     end
   end
 
   def check_writable_install_location
-    raise t('cmd.install.cannot_write_dir', :path => HOMEBREW_CELLAR) if HOMEBREW_CELLAR.exist? && !HOMEBREW_CELLAR.writable_real?
-    raise t('cmd.install.cannot_write_dir', :path => HOMEBREW_PREFIX) unless HOMEBREW_PREFIX.writable_real? || HOMEBREW_PREFIX.to_s == "/usr/local"
+    raise t("cmd.install.cannot_write_dir", :path => HOMEBREW_CELLAR) if HOMEBREW_CELLAR.exist? && !HOMEBREW_CELLAR.writable_real?
+    raise t("cmd.install.cannot_write_dir", :path => HOMEBREW_PREFIX) unless HOMEBREW_PREFIX.writable_real? || HOMEBREW_PREFIX.to_s == "/usr/local"
   end
 
   def check_xcode
@@ -139,15 +139,15 @@ module Homebrew
 
   def check_macports
     unless MacOS.macports_or_fink.empty?
-      opoo t('cmd.install.macports_or_fink_installed_1')
-      puts t('cmd.install.macports_or_fink_installed_2')
+      opoo t("cmd.install.macports_or_fink_installed_1")
+      puts t("cmd.install.macports_or_fink_installed_2")
     end
   end
 
   def check_cellar
     FileUtils.mkdir_p HOMEBREW_CELLAR unless File.exist? HOMEBREW_CELLAR
   rescue
-    raise t('cmd.install.cannot_create_dir',
+    raise t("cmd.install.cannot_create_dir",
             :path => HOMEBREW_CELLAR,
             :parent => HOMEBREW_CELLAR.parent)
   end

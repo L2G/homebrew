@@ -17,11 +17,11 @@ module Homebrew
       (ARGV.resolved_formulae - outdated).each do |f|
         if f.rack.directory?
           version = f.rack.subdirs.map { |d| Keg.new(d).version }.max
-          onoe t('cmd.upgrade.formula_version_already_installed',
+          onoe t("cmd.upgrade.formula_version_already_installed",
                  :name => f.full_name,
                  :version => version)
         else
-          onoe t('cmd.upgrade.formula_already_installed', :name => f.full_name)
+          onoe t("cmd.upgrade.formula_already_installed", :name => f.full_name)
         end
       end
       exit 1 if outdated.empty?
@@ -33,23 +33,23 @@ module Homebrew
     end
 
     unless outdated.empty?
-      oh1 t('cmd.upgrade.upgrading_outdated_pkg', :count => outdated.length)
+      oh1 t("cmd.upgrade.upgrading_outdated_pkg", :count => outdated.length)
       puts outdated.map { |f|
-        t('cmd.upgrade.formula_name_and_version',
+        t("cmd.upgrade.formula_name_and_version",
           :name => f.full_name,
           :version => f.pkg_version)
-      }.join(t('cmd.upgrade.list_join'))
+      }.join(t("cmd.upgrade.list_join"))
     else
-      oh1 t('cmd.upgrade.no_pkgs_to_upgrade')
+      oh1 t("cmd.upgrade.no_pkgs_to_upgrade")
     end
 
     unless upgrade_pinned? || pinned.empty?
-      oh1 t('cmd.upgrade.not_upgrading_pinned_pkg', :count => pinned.length)
+      oh1 t("cmd.upgrade.not_upgrading_pinned_pkg", :count => pinned.length)
       puts pinned.map do |f|
-        t('cmd.upgrade.formula_name_and_version',
+        t("cmd.upgrade.formula_name_and_version",
           :name => f.full_name,
           :version => f.pkg_version)
-      end.join(t('cmd.upgrade.list_join'))
+      end.join(t("cmd.upgrade.list_join"))
     end
 
     outdated.each do |f|
@@ -75,7 +75,7 @@ module Homebrew
     fi.debug               = ARGV.debug?
     fi.prelude
 
-    oh1 t('cmd.upgrade.upgrading_formula', :name => f.full_name)
+    oh1 t("cmd.upgrade.upgrading_formula", :name => f.full_name)
 
     # first we unlink the currently active keg for this formula otherwise it is
     # possible for the existing build to interfere with the build we are about to

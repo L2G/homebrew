@@ -69,7 +69,7 @@ module HomebrewArgvExtension
           raise MultipleVersionsInstalledError.new(rack.basename)
         end
       rescue FormulaUnavailableError
-        raise t('extend.argv.multiple_kegs', :rack => rack)
+        raise t("extend.argv.multiple_kegs", :rack => rack)
       end
     end
   end

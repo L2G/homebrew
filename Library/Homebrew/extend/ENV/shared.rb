@@ -206,24 +206,24 @@ module SharedEnvExtension
     flags = []
 
     if fc
-      ohai t('extend.env.alternative_fc')
-      puts t('extend.env.unsupported')
+      ohai t("extend.env.alternative_fc")
+      puts t("extend.env.unsupported")
       self["F77"] ||= fc
 
       if ARGV.include? "--default-fortran-flags"
         flags = FC_FLAG_VARS.reject { |key| self[key] }
       elsif values_at(*FC_FLAG_VARS).compact.empty?
-        opoo t('extend.env.no_fc_flags')
+        opoo t("extend.env.no_fc_flags")
       end
 
     else
       if (gfortran = which("gfortran", (HOMEBREW_PREFIX/"bin").to_s))
-        ohai t('extend.env.gfortran_homebrew')
+        ohai t("extend.env.gfortran_homebrew")
       elsif (gfortran = which("gfortran", ORIGINAL_PATHS.join(File::PATH_SEPARATOR)))
-        ohai t('extend.env.gfortran_other', :path => gfortran)
+        ohai t("extend.env.gfortran_other", :path => gfortran)
       end
       if gfortran
-        puts t('extend.env.can_change_fc')
+        puts t("extend.env.can_change_fc")
         self["FC"] = self["F77"] = gfortran
         flags = FC_FLAG_VARS
       end
@@ -259,11 +259,11 @@ module SharedEnvExtension
     begin
       gcc_formula = gcc_version_formula(name)
     rescue FormulaUnavailableError => e
-      raise t('extend.env.gcc_formula_not_found', :name => e.name)
+      raise t("extend.env.gcc_formula_not_found", :name => e.name)
     end
 
     unless gcc_formula.opt_prefix.exist?
-      raise t('extend.env.gcc_not_installed', :name => gcc_formula.full_name)
+      raise t("extend.env.gcc_not_installed", :name => gcc_formula.full_name)
     end
   end
 
@@ -289,7 +289,7 @@ module SharedEnvExtension
       when GNU_GCC_REGEXP
         other
       else
-        raise t('extend.env.invalid_value',
+        raise t("extend.env.invalid_value",
                 :source => source,
                 :other => other)
       end
